@@ -1,0 +1,43 @@
+﻿using ChasBWare.SpotLight.Definitions.Enums;
+using ChasBWare.SpotLight.Definitions.Utility;
+using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Infrastructure.ViewModels;
+
+namespace ChasBWare.SpotLight.Infrastructure.Utility
+{
+    internal static class GrouperHelper
+    {
+        public static DateGroups GroupDate(this DateTime value)
+        {
+            var deltaDays = (DateTime.Now - value).TotalDays;
+            return deltaDays switch
+            {
+                < 1 => DateGroups.Today,
+                < 2 => DateGroups.Yesterday,
+                < 7 => DateGroups.ThisWeek,
+                < 14 => DateGroups.LastWeek,
+                < 31 => DateGroups.LastMonth,
+                _ => DateGroups.Older
+            };
+        }
+
+        internal static IGrouper<IPlaylistViewModel>[] GetPlaylistGroupers()
+        {
+            return [new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.LastAccessed),
+                                                    i => i.LastAccessed.GroupDate(),
+                                                    SortDirection.Ascending,
+                                                    new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name))),
+
+                    new Grouper<IPlaylistViewModel>(nameof(PlaylistViewModel.PlaylistType),
+                                                    i => i.PlaylistType,
+                                                    SortDirection.Ascending,
+                                                    new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name))),
+
+                    new Grouper<IPlaylistViewModel>(nameof(PlaylistViewModel.Owner),
+                                                    i => i.Owner,
+                                                    SortDirection.Ascending,
+                                                    new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)))];
+        }
+
+    }
+}

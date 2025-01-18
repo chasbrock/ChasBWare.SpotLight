@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SpotifyAPI.Web" Version="7.2.1" />
+    <PackageReference Include="SpotifyAPI.Web.Auth" Version="7.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChasBWare.SpotLight.Domain\ChasBWare.SpotLight.Domain.csproj" />
+    <ProjectReference Include="..\ChasBWare.SpotLight.Interfaces\ChasBWare.SpotLight.Definitions.csproj" />
+  </ItemGroup>
+
+</Project>

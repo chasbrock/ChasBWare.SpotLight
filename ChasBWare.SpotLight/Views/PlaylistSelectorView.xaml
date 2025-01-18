@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChasBWare.SpotLight.Views.PlaylistSelectorView">
+    <VerticalStackLayout>
+         <Picker ItemsSource="{Binding Groupers}"
+                 ItemDisplayBinding="{Binding Name}"
+                 SelectedItem="{Binding SelectedGrouper}"/>
+          
+        <CollectionView ItemsSource="{Binding GroupedItems}"
+                VerticalScrollBarVisibility="Always"
+                SelectionMode="Single"
+                         IsGrouped="True"
+                          SelectedItem="{Binding SelectedItem}" >
+
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate >
+                    <Label Text="{Binding Key}"
+                            BackgroundColor="LightGray"
+                            FontSize="14"
+                            FontAttributes="Bold" />
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
+          
+            <CollectionView.ItemTemplate>
+                <DataTemplate >
+                    <VerticalStackLayout Padding="16,0,1,0">
+                        <Label Text="{Binding Name}"  HorizontalOptions="Fill" FontSize="14" FontAttributes="Bold"/>
+                        <Label Text="{Binding Owner}" HorizontalOptions="Fill" FontSize="10" FontAttributes="Italic"/>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentView>

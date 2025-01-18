@@ -1,0 +1,75 @@
+﻿using System.Collections.ObjectModel;
+
+using ChasBWare.SpotLight.Definitions.Utility;
+using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Domain.Enums;
+
+namespace ChasBWare.SpotLight.Infrastructure.ViewModels
+{
+    public abstract class BaseSortedListViewModel<T>
+                        : BaseListViewModel<T>,
+                          ISortedListViewModel<T> where T : class
+    {
+        private IPropertyComparer<T> _selectedSorter;
+        private ObservableCollection<T> _sortedItems = [];
+
+        protected BaseSortedListViewModel(IServiceProvider serviceProvider,
+                                          IPropertyComparer<T>[] sorters)
+                : base(serviceProvider)                          
+        {
+            Sorters = sorters;
+            _selectedSorter = Sorters[0];
+        }
+                   
+        public IPropertyComparer<T>[] Sorters { get; }
+
+        public IPropertyComparer<T> SelectedSorter
+        {
+            get => _selectedSorter;
+            set
+            {
+                if (SetField(ref _selectedSorter, value) &&
+                    _selectedSorter != null)
+                {
+                    UpdateSorting();
+                }
+            }
+        }
+
+        public ObservableCollection<T> SortedItems 
+        { 
+            get => _sortedItems;
+            set => SetField(ref _sortedItems, value);
+        }
+
+        protected void UpdateSorting()
+        {
+            if (_selectedSorter == null)
+            {
+                SortedItems = new ObservableCollection<T>(Items);
+            }
+            else
+            {
+                var sorted = Items.ToList();
+                sorted.Sort(_selectedSorter);
+                SortedItems = new ObservableCollection<T>(sorted);
+            }
+        }
+
+        protected override void LoadStatusChanged(LoadState loadStatus)
+        {
+            UpdateSorting();
+        }
+
+        protected override void SelectedItemChanged(T? selectedItem)
+        {
+            if (selectedItem != null)
+            {
+                InitialiseSelectedItem(selectedItem);
+            }
+        }
+
+        protected abstract void InitialiseSelectedItem(T selectedItem);
+
+    }
+}

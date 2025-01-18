@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChasBWare.SpotLight", "ChasBWare.SpotLight\ChasBWare.SpotLight.csproj", "{58D09579-9837-417B-9A90-3EB5A04DF440}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChasBWare.SpotLight.Domain", "ChasBWare.SpotLight.Domain\ChasBWare.SpotLight.Domain.csproj", "{D4CB4E02-B59A-4F03-AFDF-B1918D3C00C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChasBWare.SpotLight.Infrastructure", "ChasBWare.SpotLight.Infrastructure\ChasBWare.SpotLight.Infrastructure.csproj", "{A8BEB150-2D15-4E61-8E4D-3D099DE62DBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChasBWare.SpotLight.Definitions", "ChasBWare.SpotLight.Interfaces\ChasBWare.SpotLight.Definitions.csproj", "{81D76AA6-0599-4363-9C55-D2165652BB68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChasBWare.SpotLight.Spotify", "ChasBWare.SpotLight.Spotify\ChasBWare.SpotLight.Spotify.csproj", "{BD6447E5-9BC4-4440-B448-4C7C68B60E9F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58D09579-9837-417B-9A90-3EB5A04DF440}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58D09579-9837-417B-9A90-3EB5A04DF440}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58D09579-9837-417B-9A90-3EB5A04DF440}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58D09579-9837-417B-9A90-3EB5A04DF440}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4CB4E02-B59A-4F03-AFDF-B1918D3C00C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4CB4E02-B59A-4F03-AFDF-B1918D3C00C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4CB4E02-B59A-4F03-AFDF-B1918D3C00C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4CB4E02-B59A-4F03-AFDF-B1918D3C00C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8BEB150-2D15-4E61-8E4D-3D099DE62DBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8BEB150-2D15-4E61-8E4D-3D099DE62DBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8BEB150-2D15-4E61-8E4D-3D099DE62DBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8BEB150-2D15-4E61-8E4D-3D099DE62DBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81D76AA6-0599-4363-9C55-D2165652BB68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81D76AA6-0599-4363-9C55-D2165652BB68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81D76AA6-0599-4363-9C55-D2165652BB68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81D76AA6-0599-4363-9C55-D2165652BB68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD6447E5-9BC4-4440-B448-4C7C68B60E9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD6447E5-9BC4-4440-B448-4C7C68B60E9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD6447E5-9BC4-4440-B448-4C7C68B60E9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD6447E5-9BC4-4440-B448-4C7C68B60E9F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
