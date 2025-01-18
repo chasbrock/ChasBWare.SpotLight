@@ -5,7 +5,7 @@ using SpotifyAPI.Web;
 namespace ChasBWare.SpotLight.Spotify.Classes
 {
 
-    public class SpotifyActionManager(ILogger<SpotifyActionManager> _logger,
+    public class SpotifyActionManager(ILogger _logger,
                                       ISpotifyConnectionManager _spotifyConnectionManager) 
                : ISpotifyActionManager
     {

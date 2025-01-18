@@ -6,12 +6,12 @@
          <Picker ItemsSource="{Binding Groupers}"
                  ItemDisplayBinding="{Binding Name}"
                  SelectedItem="{Binding SelectedGrouper}"/>
-          
+        <ScrollView Orientation="Vertical">
         <CollectionView ItemsSource="{Binding GroupedItems}"
-                VerticalScrollBarVisibility="Always"
-                SelectionMode="Single"
-                         IsGrouped="True"
-                          SelectedItem="{Binding SelectedItem}" >
+                        SelectionMode="Single"
+                        IsGrouped="True"
+                        VerticalOptions="Fill"
+                        SelectedItem="{Binding SelectedItem}" >
 
             <CollectionView.GroupHeaderTemplate>
                 <DataTemplate >
@@ -31,5 +31,6 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+        </ScrollView>
     </VerticalStackLayout>
 </ContentView>

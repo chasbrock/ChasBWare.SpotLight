@@ -8,7 +8,7 @@ using SpotifyAPI.Web.Auth;
 namespace ChasBWare.SpotLight.Spotify.Classes
 {
 
-    public class SpotifyConnectionManager(ILogger<SpotifyConnectionManager> _logger,
+    public class SpotifyConnectionManager(ILogger _logger,
                                           ISpotyConnectionSession _session,
                                           IMessageService<ConnectionStatusChangedMessage> _messageService) 
                : ISpotifyConnectionManager

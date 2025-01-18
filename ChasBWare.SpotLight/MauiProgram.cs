@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using ChasBWare.SpotLight.DependencyInjection;
+using CommunityToolkit.Maui;
+using Microsoft.Maui.Foldable;
 
 namespace ChasBWare.SpotLight
 {
@@ -8,14 +10,16 @@ namespace ChasBWare.SpotLight
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
-            builder
-                .UseMauiApp<App>()
-                .ConfigureFonts(fonts =>
-                {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
-            builder.RegisterAll();
+            builder.UseMauiApp<App>()
+                   .UseMauiCommunityToolkit()
+                   .UseFoldable()
+                   .RegisterAllMine()
+                   .ConfigureFonts(fonts =>
+                   {
+                       fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                       fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                   });
+            
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

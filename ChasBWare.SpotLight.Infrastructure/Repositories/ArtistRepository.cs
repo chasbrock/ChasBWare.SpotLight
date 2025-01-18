@@ -7,7 +7,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
 {
 
     public class ArtistRepository(IDbContext _dbContext,
-                                  ILogger<ArtistRepository> _logger)
+                                  ILogger _logger)
                : IArtistRepository
     {
         public async Task<int> Add(Artist artist)

@@ -22,7 +22,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
     /// </summary>
     internal static partial class DIServiceInitialiser
     {
-        public static void RegisterAll(this MauiAppBuilder builder) 
+        public static MauiAppBuilder RegisterAllMine(this MauiAppBuilder builder) 
         {
             builder.Services.RegiserSpotify()
                             .RegisterMessageHandlers()
@@ -32,6 +32,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
                             .RegisterViewModels()
                             .RegisterTasks()
                             .RegisterLogging();
+            return builder;
         }
 
         public static IServiceCollection RegiserSpotify(this IServiceCollection services)
@@ -66,8 +67,6 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddTransient<HatedItemsRepository, HatedItemsRepository>()
                            .AddTransient<IPlaylistRepository, PlaylistRepository>()
                            .AddTransient<IRecentItemRepository, RecentItemRepository>()
-                           .AddTransient<IPlaylistRepository, PlaylistRepository>()
-                           .AddTransient<IPlaylistRepository, PlaylistRepository>()
                            .AddTransient<ISpotifyArtistRepository, SpotifyArtistRepository>()
                            .AddTransient<ISpotifyPlaylistRepository, SpotifyPlaylistRepository>()
                            .AddTransient<ISpotifyTrackRepository, SpotifyTrackRepository>()
@@ -129,7 +128,6 @@ namespace ChasBWare.SpotLight.DependencyInjection
         /// <returns></returns>
         public static IServiceCollection RegisterLogging(this IServiceCollection services)
         {
-
             using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
             ILogger logger = factory.CreateLogger("Program");
 

@@ -6,8 +6,16 @@ using Microsoft.Extensions.Logging;
 
 namespace ChasBWare.SpotLight.Infrastructure.Repositories
 {
+
+    public class Pair<TX, TY> 
+    {
+        public TX? X { get; set; }
+        public TY? Y { get; set; }
+    }
+
+
     public class PlaylistRepository(IDbContext _dbContext,
-                                    Logger<PlaylistRepository> _logger)
+                                    ILogger _logger)
                : IPlaylistRepository
     {
 
@@ -18,32 +26,26 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
                 return [];
             }
 
+            List<Tuple<Playlist, DateTime>> items = [];
             var connection = await _dbContext.GetConnection();
             if (connection != null)
             {
                 var sql = RepositoryHelper.GetPlaylists;
-                var found = await connection.QueryAsync<(string Id, string Name, string Owner, string Description,
-                                                            string Image, PlaylistType PlaylistType, DateTime ReleaseDate, string Uri,
-                                                            DateTime LastAccessed)>(sql, userId, playlistType, isSaved);
+                var found = await connection.QueryAsync<Pair<Playlist, DateTime>>(sql, userId, playlistType, isSaved);
                 if (found != null)
                 {
-                    return found.Select(r => new Tuple<Playlist, DateTime>(new Playlist
+                    foreach (var pair in found)
                     {
-                        Id = r.Id,
-                        Name = r.Name,
-                        Owner = r.Owner,
-                        Description = r.Description,
-                        Image = r.Image,
-                        PlaylistType = r.PlaylistType,
-                        ReleaseDate = r.ReleaseDate,
-                        Uri = r.Uri
-                    },
-                    r.LastAccessed)).ToList();
+                        if (pair.X != null)
+                        {
+                            items.Add(new Tuple<Playlist, DateTime>(pair.X, pair.Y));
+                        }
+                    }
                 }
             }
             _logger.LogError("Could not access db connection");
 
-            return [];
+            return items;
         }
 
         public async Task<int> UpdateLastAccessed(string userId, string playlistId, DateTime lastAccessed)

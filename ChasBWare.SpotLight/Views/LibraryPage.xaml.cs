@@ -7,8 +7,6 @@ public partial class LibraryPage : ContentPage
 	public LibraryPage(ILibraryViewModel viewModel)
 	{
 		InitializeComponent();
-
 		BindingContext = viewModel;
-
     }
 }

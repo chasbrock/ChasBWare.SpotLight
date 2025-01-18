@@ -6,10 +6,10 @@ using Microsoft.Extensions.Logging;
 namespace ChasBWare.SpotLight.Infrastructure.Repositories
 {
     public class UserRepository(IDbContext _dbContext,
-                                ILogger<UserRepository> _logger)
+                                ILogger _logger)
                : IUserRepository
     {
-        public User CurrentUser { get; set; } = new User { Id = string.Empty };
+        public User CurrentUser { get; set; } = new User { Id = "chasbrock" };
 
         public async Task<User?> GetUser(string userId) 
         {

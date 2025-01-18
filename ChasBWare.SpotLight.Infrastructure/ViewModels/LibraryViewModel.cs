@@ -16,6 +16,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
              : base(serviceProvider, GrouperHelper.GetPlaylistGroupers())
         {
             currentTrackChangedMessage.Register(OnTrackChangedMessage);
+            Initialise();
         }
 
         public void ExecuteLibrayCommand(IPlaylistViewModel? selectedItem)

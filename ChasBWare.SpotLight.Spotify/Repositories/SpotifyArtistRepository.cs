@@ -1,11 +1,11 @@
 ﻿using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Mappings.Mappers;
-using ChasBWare.SpotLight.Spotify.Classes;
+using ChasBWare.SpotLight.Spotify.Interfaces;
 
 namespace ChasBWare.SpotLight.Spotify.Repositories
 {
-    public class SpotifyArtistRepository(SpotifyActionManager _actionManager) 
+    public class SpotifyArtistRepository(ISpotifyActionManager _actionManager) 
                : ISpotifyArtistRepository
     {
         public async Task<List<Playlist>> LoadArtistAlbums(string artistId)

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
+             x:DataType="vm:TrackViewModel"
+             x:Class="ChasBWare.SpotLight.Views.TrackView">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="60" />
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Button Command="{Binding PlayTrackCommand}" CommandParameter="{Binding}"
+                Grid.Column="0" HorizontalOptions="Fill"
+                Background="White"
+                Text="{Binding ButtonText}" FontFamily="Webdings"/>
+   
+        <Label Text="{Binding Duration}" Grid.Column="1" 
+                   FontSize="12" Padding="8,0">
+            <Label.Resources>
+                <Style TargetType="{x:Type Label}" BasedOn="{StaticResource HatedStyle}" />
+            </Label.Resources>
+        </Label>
+
+        <Label Text="{Binding Name}" Grid.Column="2"
+                   FontSize="12" FontAttributes="Bold"  Padding="8,0">
+            <Label.Resources>
+                <Style TargetType="{x:Type Label}" BasedOn="{StaticResource HatedStyle}" />
+            </Label.Resources>
+        </Label>
+
+        <Label Text="{Binding Artists}" Grid.Column="3" 
+                   FontSize="10" FontAttributes="Italic" Padding="8,0">
+            <Label.Resources>
+                <Style TargetType="{x:Type Label}" BasedOn="{StaticResource HatedStyle}" />
+            </Label.Resources>
+        </Label>
+
+        <Label Text="{Binding Album}" Grid.Column="4"
+               FontSize="10" Padding="8,0">
+            <Label.Resources>
+                <Style TargetType="{x:Type Label}" BasedOn="{StaticResource HatedStyle}" />
+            </Label.Resources>
+        </Label>
+
+     </Grid>
+</ContentView>

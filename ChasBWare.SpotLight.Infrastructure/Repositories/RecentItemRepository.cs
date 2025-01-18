@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 namespace ChasBWare.SpotLight.Infrastructure.Repositories
 {
     public class RecentItemRepository(IDbContext _dbContext,
-                                      ILogger<RecentItemRepository> _logger)
+                                      ILogger _logger)
                : IRecentItemRepository
     {
         public async Task<int> UpdateLastAccessed(string? userId, string itemId, DateTime lastAccessed, bool isSaved)

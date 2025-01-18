@@ -12,7 +12,7 @@ namespace ChasBWare.SpotLight.Domain.DbContext
                    SQLiteOpenFlags.Create |
                    SQLiteOpenFlags.SharedCache;
         }
-
-        public string FullPath { get => Path.Combine(FileSystem.AppDataDirectory, Filename); }
+        //  public string FullPath { get => Path.Combine(FileSystem.AppDataDirectory, Filename); }
+        public string FullPath { get => @"C:\Users\Charlie Brock\AppData\Local\SpotLight.db3"; }
     }
 }

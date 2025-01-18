@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 namespace ChasBWare.SpotLight.Infrastructure.Repositories
 {
     public class TrackRepository(IDbContext _dbContext,
-                                 Logger<TrackRepository> _logger)
+                                 ILogger _logger)
                : ITrackRepository
     {
         public async Task<List<Track>> GetPlaylistTracks(string playlistId)

@@ -2,11 +2,11 @@
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Mappings.Mappers;
-using ChasBWare.SpotLight.Spotify.Classes;
+using ChasBWare.SpotLight.Spotify.Interfaces;
 
 namespace ChasBWare.SpotLight.Spotify.Repositories
 {
-    public class SpotifyPlaylistRepository(SpotifyActionManager _actionManager)
+    public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
                : ISpotifyPlaylistRepository
     {
         public async Task<List<Tuple<Playlist, DateTime>>> GetPlaylists(PlaylistType playlistType)
