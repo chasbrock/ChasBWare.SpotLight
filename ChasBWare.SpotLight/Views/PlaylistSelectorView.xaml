@@ -1,36 +1,71 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
+             xmlns:vu="clr-namespace:ChasBWare.SpotLight.Infrastructure.Utility;assembly=ChasBWare.SpotLight.Infrastructure"
+             x:DataType="vm:LibraryViewModel"
              x:Class="ChasBWare.SpotLight.Views.PlaylistSelectorView">
-    <VerticalStackLayout>
-         <Picker ItemsSource="{Binding Groupers}"
-                 ItemDisplayBinding="{Binding Name}"
-                 SelectedItem="{Binding SelectedGrouper}"/>
-        <ScrollView Orientation="Vertical">
-        <CollectionView ItemsSource="{Binding GroupedItems}"
-                        SelectionMode="Single"
-                        IsGrouped="True"
-                        VerticalOptions="Fill"
-                        SelectedItem="{Binding SelectedItem}" >
 
-            <CollectionView.GroupHeaderTemplate>
-                <DataTemplate >
-                    <Label Text="{Binding Key}"
-                            BackgroundColor="LightGray"
-                            FontSize="14"
-                            FontAttributes="Bold" />
-                </DataTemplate>
-            </CollectionView.GroupHeaderTemplate>
-          
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Visibility x:Key="Visible">Visible</Visibility>
+            <Visibility x:Key="Collapsed">Collapsed</Visibility>
+            <tk:BoolToObjectConverter x:Key="BoolToVisibilityConverter" 
+                TrueObject="{StaticResource Collapsed}" 
+                FalseObject="{StaticResource Visible}"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Picker ItemsSource="{Binding GrouperNames}"
+                              Background="Navy"  TextColor="White"
+                              FontSize="14" FontAttributes="Bold"  
+                              SelectedItem="{Binding SelectedGrouperName}" 
+                              Grid.Row="0"/>
+
+        <CollectionView ItemsSource="{Binding GroupedItems}"
+                        VerticalScrollBarVisibility="Always"
+                        SelectionMode="Single" 
+                        Grid.Row="1">
+
             <CollectionView.ItemTemplate>
-                <DataTemplate >
-                    <VerticalStackLayout Padding="16,0,1,0">
-                        <Label Text="{Binding Name}"  HorizontalOptions="Fill" FontSize="14" FontAttributes="Bold"/>
-                        <Label Text="{Binding Owner}" HorizontalOptions="Fill" FontSize="10" FontAttributes="Italic"/>
-                    </VerticalStackLayout>
+                <DataTemplate x:DataType="vu:PlaylistGroup">
+                    <tk:Expander IsExpanded="{Binding IsExpanded}" Direction="Down">
+                        <tk:Expander.Header>
+                            <Label Text="{Binding Key}" HorizontalOptions="Fill"
+                                   Background="DarkBlue"  TextColor="White"
+                                   FontSize="14" FontAttributes="Bold" Margin="0,1"/>
+                        </tk:Expander.Header>
+
+                        <CollectionView ItemsSource="{Binding Items}"
+                                        VerticalScrollBarVisibility="Always"
+                                        SelectionMode="Single"
+                                        SelectedItem="{Binding SelectedItem}"
+                                        Margin="8,2">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="vm:PlaylistViewModel">
+                                    <Border Margin="8,4">
+                                        <VerticalStackLayout Margin="2">
+                                            <Label Text="{Binding Name}" HorizontalOptions="Fill" FontAttributes="Bold"/>
+                                            <Label Text="{Binding Owner}" HorizontalOptions="Fill" FontAttributes="Italic"
+                                                   IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}}, Path=ShowOwner, 
+                                                              Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </tk:Expander>
+
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        </ScrollView>
-    </VerticalStackLayout>
+    </Grid>
 </ContentView>
+

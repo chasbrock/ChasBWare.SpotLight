@@ -88,13 +88,13 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
             return [];
         }
 
-        public async Task<List<Playlist>> LoadArtistAlbums(string artistId)
+        public async Task<List<RecentPlaylist>> LoadArtistAlbums(string artistId)
         {
             var connection = await _dbContext.GetConnection();
             if (connection != null)
             {
                 var sql = RepositoryHelper.GetArtistAlbums;
-                return await connection.QueryAsync<Playlist>(sql, artistId);
+                return await connection.QueryAsync<RecentPlaylist>(sql, artistId);
             }
             _logger.LogError("Could not access db connection");
             return [];

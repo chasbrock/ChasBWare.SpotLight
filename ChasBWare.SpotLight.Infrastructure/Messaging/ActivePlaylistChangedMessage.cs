@@ -3,7 +3,7 @@
 namespace ChasBWare.SpotLight.Infrastructure.Messaging
 {
 
-    public class ActivePlaylistChangedMessage(Playlist payload) : Message<Playlist>(payload)
+    public class ActivePlaylistChangedMessage(RecentPlaylist payload) : Message<RecentPlaylist>(payload)
     {
     }
 }

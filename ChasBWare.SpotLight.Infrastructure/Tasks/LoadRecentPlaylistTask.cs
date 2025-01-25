@@ -13,7 +13,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
     {
         public async void Execute(IRecentViewModel<IPlaylistViewModel> viewModel, PlaylistType playlistType)
         {
-            var items = await _playlistRepository.GetPlaylists(_userRepository.CurrentUser.Id, playlistType, true);
+            var items = await _playlistRepository.GetPlaylists(_userRepository.CurrentUserId, playlistType, true);
             if (items.Count == 0)
             {
                 _dispatcher.Dispatch(() =>
@@ -25,8 +25,8 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                         var playlistViewModel = _serviceProvider.GetService<IPlaylistViewModel>();
                         if (playlistViewModel != null)
                         {
-                            playlistViewModel.Model = item.Item1;
-                            playlistViewModel.LastAccessed = item.Item2;
+                            playlistViewModel.Model = item;
+                            playlistViewModel.LastAccessed = item.LastAccessed;
                             viewModel.Items.Add(playlistViewModel);
                         }
                     }

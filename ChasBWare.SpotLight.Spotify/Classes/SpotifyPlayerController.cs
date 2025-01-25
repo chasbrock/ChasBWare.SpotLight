@@ -111,7 +111,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
         }
 
-        public async Task<List<Device>> GetAvailableDevices()
+        public async Task<List<SpotifyAPI.Web.Device>> GetAvailableDevices()
         {
             var client = await _spotifyConnectionManager.GetClient();
             try

@@ -8,7 +8,7 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// get list of available devices
         /// </summary>
         /// <returns></returns>
-        Task<List<Device>> GetAvailableDevices();
+        Task<List<SpotifyAPI.Web.Device>> GetAvailableDevices();
 
         /// <summary>
         /// make this the active device

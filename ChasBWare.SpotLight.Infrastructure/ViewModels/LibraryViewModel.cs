@@ -1,4 +1,5 @@
-﻿using ChasBWare.SpotLight.Definitions.Messaging;
+﻿using System.Windows.Input;
+using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Tasks;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Enums;
@@ -11,6 +12,8 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                        : BaseGroupedListViewModel<IPlaylistViewModel>,
                          ILibraryViewModel
     {
+        private bool _showOwner = true;
+
         public LibraryViewModel(IServiceProvider serviceProvider,
                                 IMessageService<CurrentTrackChangedMessage> currentTrackChangedMessage)
              : base(serviceProvider, GrouperHelper.GetPlaylistGroupers())
@@ -18,6 +21,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             currentTrackChangedMessage.Register(OnTrackChangedMessage);
             Initialise();
         }
+
 
         public void ExecuteLibrayCommand(IPlaylistViewModel? selectedItem)
         {
@@ -40,11 +44,27 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             loadPlaylistsTask?.Execute(this);
         }
 
-        protected override void InitialiseSelectedItem(IPlaylistViewModel item) 
-        { 
+        public bool ShowOwner 
+        {
+            get => _showOwner;
+            set => SetField(ref _showOwner, value);
         }
 
+        protected override void InitialiseSelectedItem(IPlaylistViewModel item) 
+        {
+            item.IsTracksExpanded = true;
+            item.LastAccessed = DateTime.Now;
+            var task = _serviceProvider.GetService<IUpdateLastAccessedTask>();
 
+            task?.Execute(item.Id, item.LastAccessed, true);
+        }
+
+        protected override void UpdateGroupings()
+        {
+            ShowOwner = SelectedGrouperName != nameof(PlaylistViewModel.Owner);
+            base.UpdateGroupings();
+        }
+        
         private void OnTrackChangedMessage(CurrentTrackChangedMessage message)
         {
             // if there is no playlist selected then try and find the one playing
@@ -63,7 +83,5 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                 }
             }
         }
-
-     
     }
 }

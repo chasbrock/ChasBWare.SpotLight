@@ -49,9 +49,10 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
         /// param: Artistid 
         /// </summary>
         public const string GetArtistAlbums =
-@"select pl.*
+@"select pl.*, ri.LastAccessed
     from Playlist pl 
     join ArtistPlaylist apl on pl.Id = apl.PlaylistId
+    left join RecentItem ri on ri.ItemId = pl.Id
    where apl.ArtistId = ?";
 
         /// <summary>
@@ -61,22 +62,12 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
         /// param: IsSaved 
         /// </summary>
         public const string GetPlaylists =
-   @"select pl.*
+   @"select pl.*, ri.LastAccessed
     from Playlist pl
     join RecentItem ri on ri.ItemId = pl.Id
    where ri.UserId = ?
      and pl.PlaylistType = ?
      and ri.IsSaved = ?";
-
-        /// <summary>
-        /// load all tracks for playlist
-        /// param: PlaylistId
-        /// </summary>
-        public const string LoadPlaylistTracks =
-@"select t.*
-    from Track t
-    join PlaylistTrack plt on t.Id = plt.TrackId
-   where plt.PlaylistId= ?";
 
         /// <summary>
         /// find id of first artist thatowns this album
@@ -97,7 +88,8 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
 @"select t.*
     from Track t
     join PlaylistTrack plt on plt.TrackId = t.Id
-   where plt.PlaylistId = ?";
+   where plt.PlaylistId = ?
+   order by plt.TrackOrder";
 
         /// <summary>
         /// select all hated items regarless of type

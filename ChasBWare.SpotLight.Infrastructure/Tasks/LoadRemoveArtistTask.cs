@@ -10,7 +10,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
     {
         public async void Execute(IRecentArtistsViewModel viewModel, string artistId)
         {
-           await _artistRepository.Remove(_userRepository.CurrentUser.Id, artistId);
+           await _artistRepository.Remove(_userRepository.CurrentUserId, artistId);
         }
     }
 

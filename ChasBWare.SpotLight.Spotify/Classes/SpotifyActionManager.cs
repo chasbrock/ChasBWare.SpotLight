@@ -23,8 +23,8 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, "Failed to connect to access user");
-                throw;
+                _logger.LogError(ex, "Failed to connect to access user");
+                return new PrivateUser();
             }
         }
         
@@ -43,8 +43,8 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, "Failed to connect to access user");
-                throw;
+                _logger.LogError(ex, "Failed to connect to access user");
+                return [];
             }
         }
 
@@ -63,8 +63,8 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, "Failed to connect to access user");
-                throw;
+                _logger.LogError(ex, "Failed to connect to access user");
+                return [];
             }
         }
 
@@ -83,8 +83,8 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, "Failed to connect to access user");
-                throw;
+                _logger.LogError(ex, "Failed to connect to access user");
+                return [];
             }
         }
 
@@ -104,7 +104,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to connect to access user");
-                throw;
+                return [];
             }
         }
 
@@ -124,8 +124,8 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, "Failed to connect to access user");
-                throw;
+                _logger.LogError(ex, "Failed to connect to access user");
+                return [];
             }
         }
 
@@ -138,9 +138,9 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, "Failed to connect to access user");
+                _logger.LogError(ex, "Failed to connect to access user");
                 throw;
-            }
+             }
         }
 
         public async Task<List<FullTrack>> GetArtistTopTracks(string artistId)
@@ -153,8 +153,8 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, "Failed to connect to access user");
-                throw;
+                _logger.LogError(ex, "Failed to connect to access user");
+                return [];
             }
         }
 
@@ -172,8 +172,8 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, "Failed to connect to access user");
-                throw;
+                _logger.LogError(ex, "Failed to connect to access user");
+                return [];
             }
         }
 
@@ -188,8 +188,8 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, "Failed to connect to access user");
-                throw;
+                _logger.LogError(ex, "Failed to connect to access user");
+                return [];
             }
         }
 
@@ -215,8 +215,8 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, "Failed to connect to access user");
-                throw;
+                _logger.LogError(ex, "Failed to connect to access user");
+                return [];
             }
         }
 

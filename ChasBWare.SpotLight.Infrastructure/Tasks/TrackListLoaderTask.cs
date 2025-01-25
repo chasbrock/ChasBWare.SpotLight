@@ -15,6 +15,11 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
     {
         public async void Execute(IPlaylistViewModel viewModel)
         {
+            if (!_hatedService.Initialised) 
+            {
+                _hatedService.Refresh();
+            }
+        
             //try to get from db first
             var tracks = await _trackRepository.GetPlaylistTracks(viewModel.Id);
             if (tracks.Count == 0)

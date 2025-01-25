@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
+             xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
+             x:DataType="vm:LibraryViewModel"
+             x:Class="ChasBWare.SpotLight.Pages.LibraryPage">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <LinearGradientBrush.GradientStops>
+                <GradientStop Offset="0.1" Color="LightSkyBlue" />
+                <GradientStop Offset="1" Color="Lavender" />
+            </LinearGradientBrush.GradientStops>
+        </LinearGradientBrush>
+    </ContentPage.Background>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <v:PlaylistSelectorView BindingContext="{Binding}" Grid.Column="0" VerticalOptions="Fill"/>
+        <v:PlaylistView BindingContext="{Binding SelectedItem}" Grid.Column="1" VerticalOptions="Fill"/>
+    </Grid>
+    
+</ContentPage>

@@ -25,14 +25,12 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// <summary>
         /// async load playlist list for current user
         /// </summary>
-        /// <param name="offset"></param>
         /// <returns></returns>
         Task<IEnumerable<SavedAlbum>> GetCurrentUsersAlbums();
 
         /// <summary>
         /// async load tracks for playlist list
         /// </summary>
-        /// <param name="offset"></param>
         /// <returns></returns>
         Task<List<FullTrack>> GetPlaylistTracks(string playlistId);
 
@@ -76,7 +74,6 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// <summary>
         /// gets all albums for artist
         /// </summary>
-        /// <param name="offset"></param>
         /// <returns></returns>
         Task<List<FullTrack>> GetArtistTopTracks(string artistId);
 

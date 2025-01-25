@@ -23,6 +23,17 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                    
         public IPropertyComparer<T>[] Sorters { get; }
 
+        public List<string> SorterNames
+        {
+            get => Sorters.Select(g => g.PropertyName).ToList();
+        }
+
+        public string SelectedSorterName
+        {
+            get => SelectedSorter?.PropertyName ?? string.Empty;
+            set { SelectedSorter = Sorters.FirstOrDefault(g => g.PropertyName == value) ?? Sorters.First(); }
+        }
+
         public IPropertyComparer<T> SelectedSorter
         {
             get => _selectedSorter;

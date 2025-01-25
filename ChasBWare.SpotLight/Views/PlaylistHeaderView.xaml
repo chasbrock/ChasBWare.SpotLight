@@ -4,15 +4,7 @@
              xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
              x:DataType="vm:PlaylistViewModel"
              x:Class="ChasBWare.SpotLight.Views.PlaylistHeaderView">
-    <ContentView.Background>
-        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-            <LinearGradientBrush.GradientStops>
-                <GradientStop Offset="0.1" Color="LightSeaGreen" />
-                <GradientStop Offset="1" Color="Lavender" />
-            </LinearGradientBrush.GradientStops>
-        </LinearGradientBrush>
-    </ContentView.Background>
-    <Grid>
+      <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80"/>
             <ColumnDefinition Width="*"/>
@@ -45,7 +37,7 @@
                        VerticalOptions="Center" 
                        Grid.Column="0" Margin="10,0" />
 
-                <Label Text="{Binding Path=ReleaseDate, StringFormat=MMMM yyyy}" 
+                <Label Text="{Binding Path=ReleaseDate, StringFormat='{0:MMMM yyyy}'}" 
                         FontSize="14" FontAttributes="None"
                         VerticalOptions="Center" 
                         Grid.Column="1" Margin="10,0" />
@@ -53,12 +45,12 @@
                 <ImageButton Command="{Binding Path=PlayTracklistCommand}" CommandParameter="{Binding}"
                              VerticalOptions="Center" HorizontalOptions="Center" 
                              Grid.Column="2" 
-                             Source="../Images/icons8-play-button-48.png" Margin="4"/>
+                             Source="icons8_play_button.png" Margin="4"/>
 
                 <ImageButton Command="{Binding Path=AddToQueueCommand}" CommandParameter="{Binding}"
                              VerticalOptions="Center" HorizontalOptions="Center" 
                              Grid.Column="3"
-                             Source="../Images/icons8-add-song-64.png" Margin="4"/>
+                             Source="icons8_add_song.png" Margin="4"/>
 
 
             </Grid>

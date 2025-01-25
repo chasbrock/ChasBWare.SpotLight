@@ -7,18 +7,27 @@ using ChasBWare.SpotLight.Spotify.Interfaces;
 namespace ChasBWare.SpotLight.Spotify.Repositories
 {
     public class SpotifyTrackRepository(ISpotifyActionManager _actionManager)
-              : ISpotifyTrackRepository
+               : ISpotifyTrackRepository
     {
         public async Task<List<Track>> GetPlaylistTracks(string playlistId, PlaylistType playlistType)
         {
-            var fullTracks = await _actionManager.GetPlaylistTracks(playlistId);
-            if (fullTracks != null)
-            { 
-                return fullTracks.Select(ft => ft.CopyToTrack()).ToList();
+            if (playlistType == PlaylistType.Playlist)
+            {
+                var fullTracks = await _actionManager.GetPlaylistTracks(playlistId);
+                if (fullTracks != null)
+                {
+                    return fullTracks.Select(ft => ft.CopyToTrack()).ToList();
+                }
+            }
+            else
+            {
+                var simpleTracks = await _actionManager.GetAlbumTracks(playlistId);
+                if (simpleTracks != null)
+                {
+                    return simpleTracks.Select(ft => ft.CopyToTrack()).OrderBy(t=>t.TrackNumber).ToList();
+                }
             }
             return [];
         }
-
-    
     }
 }

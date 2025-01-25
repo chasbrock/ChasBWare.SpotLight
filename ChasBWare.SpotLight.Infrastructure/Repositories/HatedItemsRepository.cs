@@ -9,7 +9,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
                                  ILogger _logger)
                : IHatedItemsRepository
     {
-        public async Task<HashSet<string>> GetHatedItems(string userId)
+        public async Task<HashSet<string>> GetItems(string userId)
         {
             var connection = await _dbContext.GetConnection();
             if (connection != null)

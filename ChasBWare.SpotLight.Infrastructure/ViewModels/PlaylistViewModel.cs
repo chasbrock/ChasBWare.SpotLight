@@ -16,10 +16,9 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
     {
         private readonly IServiceProvider _provider;
         private readonly IMessageService<PlayTracklistMessage> _messageService;
-        private bool _isTracksExpanded = true;
-        private Playlist _model = new() { Id = "" };
-        private DateTime _lastAccessed;
-
+        private bool _isTracksExpanded = false;
+        private RecentPlaylist _model = new() { Id = "" };
+       
         public PlaylistViewModel(ITrackListViewModel tracksViewModel,
                                  IServiceProvider provider,
                                  IMessageService<PlayTracklistMessage> messageService)
@@ -29,7 +28,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             _messageService = messageService;
         }
 
-        public Playlist Model 
+        public RecentPlaylist Model 
        { 
             get => _model;
             set
@@ -57,13 +56,11 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         public string Id
         {
             get => Model.Id ?? "";
-            set => SetField(Model, value);
         }
 
         public string? Image
         {
             get => Model.Image;
-            set => SetField(Model, value);
         }
 
         public bool IsTracksExpanded
@@ -99,38 +96,38 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         public string Name
         {
             get => Model.Name??"";
-            set => SetField(Model, value);
         }
 
         public string Owner
         {
             get => Model.Owner?? "";
-            set => SetField(Model, value);
         }
 
         public PlaylistType PlaylistType
         {
             get => Model.PlaylistType;
-            set => SetField(Model, value);
         }
 
         public DateTime ReleaseDate
         {
             get => Model.ReleaseDate;
-            set => SetField(Model, value);
         }
 
         public string Uri
         {
             get => Model.Uri;
-            set => SetField(Model, value);
         }
 
         public DateTime LastAccessed
         {
-            get => _lastAccessed;
-            set => SetField(ref _lastAccessed, value); 
+            get => Model.LastAccessed;
+            set => SetField(Model.LastAccessed, value); 
 
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

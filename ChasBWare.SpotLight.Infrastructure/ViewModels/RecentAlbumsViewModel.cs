@@ -35,16 +35,16 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             // TODO
         }
 
-        private IPlaylistViewModel? AddItemToList(Playlist Playlist, DateTime lastAccessed)
+        private IPlaylistViewModel? AddItemToList(RecentPlaylist playlist, DateTime lastAccessed)
         {
-            var viewModel = Items.FirstOrDefault(a => a.Model.Id == Playlist.Id);
+            var viewModel = Items.FirstOrDefault(a => a.Model.Id == playlist.Id);
             if (viewModel == null)
             {
                 viewModel = _serviceProvider.GetService<IPlaylistViewModel>();
                 if (viewModel != null)
                 {
-                    viewModel.Model = Playlist;
-                Items.Add(viewModel);
+                    viewModel.Model = playlist;
+                    Items.Add(viewModel);
                 }
             }
             

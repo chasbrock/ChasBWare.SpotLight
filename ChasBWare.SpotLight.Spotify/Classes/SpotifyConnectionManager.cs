@@ -68,7 +68,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
         }
         
 
-        private void AuthoriseConnection()
+        private async void AuthoriseConnection()
         {
             try
             {
@@ -90,7 +90,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
 
                         Status = ConnectionStatus.Connected;
                     };
-                server.Start();
+                await server.Start();
 
                 LoginRequest loginRequest = new(server.BaseUri,
                                                 _session.ClientId,
@@ -113,7 +113,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                              Scopes.UserReadPrivate,
                              Scopes.UserReadRecentlyPlayed]
                 };
-                BrowserUtil.Open(loginRequest.ToUri());
+                await Browser.Default.OpenAsync(loginRequest.ToUri(), BrowserLaunchMode.SystemPreferred);
 
                 _logger.LogInformation("Getting spotify authorising connection");
             }

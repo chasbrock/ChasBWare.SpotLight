@@ -16,33 +16,34 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
     {
         public async void Execute(ILibraryViewModel viewModel)
         {
-            if (_userRepository.CurrentUser?.Id == null ||
-                viewModel.LoadStatus != LoadState.NotLoaded)
+            if (viewModel.LoadStatus != LoadState.NotLoaded)
             {
                 return;
             }
 
             viewModel.LoadStatus = LoadState.Loading;
             // load albums
-            var albums = await _playlistRepository.GetPlaylists(_userRepository.CurrentUser.Id, PlaylistType.Album, true);
+            var albums = await _playlistRepository.GetPlaylists(_userRepository.CurrentUserId, PlaylistType.Album, true);
             if (albums.Count == 0)
             {
                 albums = await _spotifyPlaylistRepository.GetPlaylists(PlaylistType.Album);
+                await _playlistRepository.AddPlaylists(albums, _userRepository.CurrentUserId, true);
             }
             AddPlaylistsToModel(viewModel, albums, true);
 
             //load playlists
-            var playlists = await _playlistRepository.GetPlaylists(_userRepository.CurrentUser.Id, PlaylistType.Playlist, true);
+            var playlists = await _playlistRepository.GetPlaylists(_userRepository.CurrentUserId, PlaylistType.Playlist, true);
             if (playlists.Count == 0)
             {
                 playlists = await _spotifyPlaylistRepository.GetPlaylists(PlaylistType.Playlist);
+                await _playlistRepository.AddPlaylists(playlists, _userRepository.CurrentUserId, true);
             }
             AddPlaylistsToModel(viewModel, playlists, false);
             viewModel.LoadStatus = LoadState.Loaded;
 
         }
 
-        private void AddPlaylistsToModel(ILibraryViewModel viewModel, List<Tuple<Playlist, DateTime>> items, bool clearList)
+        private void AddPlaylistsToModel(ILibraryViewModel viewModel, List<RecentPlaylist> items, bool clearList)
         {
              _dispatcher.Dispatch(() =>
              {
@@ -56,9 +57,9 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                      var playlistViewModel = _serviceProvider.GetService<IPlaylistViewModel>();
                      if (playlistViewModel != null)
                      {
-                         playlistViewModel.Model = item.Item1;
-                         playlistViewModel.LastAccessed = item.Item2;
-                         playlistViewModel.IsTracksExpanded = true;
+                         playlistViewModel.Model = item;
+                         playlistViewModel.LastAccessed = item.LastAccessed;
+                         playlistViewModel.IsTracksExpanded = false;
                          viewModel.Items.Add(playlistViewModel);
                      } 
                 }

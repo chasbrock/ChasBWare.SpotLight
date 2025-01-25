@@ -1,9 +1,11 @@
-﻿namespace ChasBWare.SpotLight.Definitions.Utility
+﻿using ChasBWare.SpotLight.Definitions.ViewModels;
+
+namespace ChasBWare.SpotLight.Definitions.Utility
 {
-    public interface IGrouper<TValue>
+    public interface IGrouper<T> where T : class
     {
         string Name { get; }
 
-        List<GroupHolder<TValue>> BuildGroups(List<TValue> values);
+        List<IGroupHolder<T>> BuildGroups(IGroupedListViewModel<T> owner, List<T> values);
     }
 }

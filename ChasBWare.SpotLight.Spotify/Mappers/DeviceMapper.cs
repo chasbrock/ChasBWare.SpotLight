@@ -6,7 +6,7 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
 {
     public static class DeviceMapper
     {
-        public static DeviceModel CopyToDevice(this Device source)
+        public static DeviceModel CopyToDevice(this SpotifyAPI.Web.Device source)
         {
             return new DeviceModel
             {

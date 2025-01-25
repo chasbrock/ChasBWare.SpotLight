@@ -48,6 +48,6 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
         /// </summary>
         /// <param name="artistId"></param>
         /// <returns></returns>
-        Task<List<Playlist>> LoadArtistAlbums(string artistId);
+        Task<List<RecentPlaylist>> LoadArtistAlbums(string artistId);
     }
 }

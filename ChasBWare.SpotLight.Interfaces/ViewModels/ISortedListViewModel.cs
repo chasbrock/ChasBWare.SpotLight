@@ -10,5 +10,7 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
         ObservableCollection<T> SortedItems { get; }
         IPropertyComparer<T>[] Sorters { get; }
         IPropertyComparer<T> SelectedSorter { get; set; }
+        List<string> SorterNames { get; }
+        string SelectedSorterName { get; set; }
     }
 }

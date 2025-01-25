@@ -1,29 +1,67 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
+             xmlns:vm="clr-namespace:ChasBWare.SpotLight.Definitions.ViewModels;assembly=ChasBWare.SpotLight.Definitions"
              xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
-             x:DataType="vm:TrackListViewModel"
+             x:DataType="vm:ITrackListViewModel"
              x:Class="ChasBWare.SpotLight.Views.TrackListView">
-    <VerticalStackLayout>
+   
+    <Grid RowDefinitions="Auto" VerticalOptions="Fill">
+      
         <CollectionView ItemsSource="{Binding Path=Items}" 
                         VerticalScrollBarVisibility="Always"
                         SelectionMode="Single"
-                        SelectedItem="{Binding SelectedItem}">
-            <CollectionView.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <LinearGradientBrush.GradientStops>
-                        <GradientStop Offset="0.1" Color="Lavender" />
-                        <GradientStop Offset="1" Color="WhiteSmoke" />
-                    </LinearGradientBrush.GradientStops>
-                </LinearGradientBrush>
-            </CollectionView.Background>
+                        SelectedItem="{Binding SelectedItem}"
+                        Grid.Row="0">
             <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <v:TrackView BindingContext="{Binding Items}" 
-                                 x:DataType="vm:TrackViewModel"/>
+                <DataTemplate x:DataType="vm:ITrackViewModel">
+                    <Grid ColumnDefinitions="20,60,250,250,Auto">
+                        <Grid.Resources >
+                            <Style x:Key="HatedStyle" TargetType="Label">
+                                 <Setter Property="TextColor" Value="Black"/>
+                                 <Style.Triggers>
+                                     <DataTrigger TargetType="Label" Binding="{Binding IsHated}" Value="False">
+                                         <Setter Property="TextColor" Value="Black"/>
+                                      </DataTrigger>
+                                     <DataTrigger TargetType="Label"  Binding="{Binding IsHated}" Value="True">
+                                         <Setter Property="TextColor" Value="Gray"/>
+                                      </DataTrigger>
+                                 </Style.Triggers>
+                            </Style>
+
+                        </Grid.Resources>
+                    
+                        <Label Text="{Binding Duration}" Grid.Column="1" VerticalOptions="Center"
+                               FontSize="12" Padding="8,0">
+                            <Label.Resources>
+                                <Style TargetType="{x:Type Label}" BasedOn="{StaticResource HatedStyle}" />
+                            </Label.Resources>
+                        </Label>
+
+                        <Label Text="{Binding Name}" Grid.Column="2" VerticalOptions="Center"
+                               FontSize="12" FontAttributes="Bold"  Padding="8,0">
+                            <Label.Resources>
+                                <Style TargetType="{x:Type Label}" BasedOn="{StaticResource HatedStyle}" />
+                            </Label.Resources>
+                        </Label>
+
+                        <Label Text="{Binding Artists}" Grid.Column="3" VerticalOptions="Center"
+                               FontSize="10" FontAttributes="Italic" Padding="8,0" >
+                            <Label.Resources>
+                                <Style TargetType="{x:Type Label}" BasedOn="{StaticResource HatedStyle}" />
+                            </Label.Resources>
+                        </Label>
+
+                        <Label Text="{Binding Album}" Grid.Column="4" VerticalOptions="Center"
+                                FontSize="10" Padding="8,0">
+                            <Label.Resources>
+                                <Style TargetType="{x:Type Label}" BasedOn="{StaticResource HatedStyle}" />
+                            </Label.Resources>
+                        </Label>
+                     
+                    </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-    </VerticalStackLayout>
+    </Grid>
 </ContentView>

@@ -4,51 +4,68 @@ using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using Microsoft.Extensions.Logging;
 
+using SQLite;
+
 namespace ChasBWare.SpotLight.Infrastructure.Repositories
 {
-
-    public class Pair<TX, TY> 
-    {
-        public TX? X { get; set; }
-        public TY? Y { get; set; }
-    }
-
-
     public class PlaylistRepository(IDbContext _dbContext,
                                     ILogger _logger)
                : IPlaylistRepository
     {
 
-        public async Task<List<Tuple<Playlist, DateTime>>> GetPlaylists(string? userId, PlaylistType playlistType, bool isSaved)
-        {
-            if (userId == null) 
-            {
-                return [];
-            }
+        private static Random randy = new Random();
 
-            List<Tuple<Playlist, DateTime>> items = [];
+        public async Task<List<RecentPlaylist>> GetPlaylists(string userId, PlaylistType playlistType, bool isSaved)
+        {
+      
             var connection = await _dbContext.GetConnection();
             if (connection != null)
             {
                 var sql = RepositoryHelper.GetPlaylists;
-                var found = await connection.QueryAsync<Pair<Playlist, DateTime>>(sql, userId, playlistType, isSaved);
-                if (found != null)
+                return await connection.QueryAsync<RecentPlaylist>(sql, userId, playlistType, isSaved);
+            }
+            _logger.LogError("Could not access db connection");
+
+            return [];
+        }
+
+        public async Task<int> AddPlaylists(List<RecentPlaylist> playlists, string userId, bool isSaved)
+        {
+            var count = 0;
+
+            var connection = await _dbContext.GetConnection();
+            if (connection != null)
+            {
+                foreach(var playlist in playlists) 
                 {
-                    foreach (var pair in found)
+                    if (playlist.Id != null)
                     {
-                        if (pair.X != null)
-                        {
-                            items.Add(new Tuple<Playlist, DateTime>(pair.X, pair.Y));
-                        }
+                        count += await AddPlaylist(connection, playlist);
+
+                        // TODO remove this bit
+                        var lastAccessed = DateTime.Today.AddDays(-randy.NextDouble() * 40);
+
+                        await UpdateLastAccessed(userId, playlist.Id, lastAccessed, isSaved);
                     }
                 }
             }
             _logger.LogError("Could not access db connection");
 
-            return items;
+            return count;
         }
 
-        public async Task<int> UpdateLastAccessed(string userId, string playlistId, DateTime lastAccessed)
+        private async Task<int> AddPlaylist(SQLiteAsyncConnection connection, RecentPlaylist playlist)
+        {
+            var found = await connection.Table<Playlist>().FirstOrDefaultAsync(p => p.Id == playlist.Id);
+            if (found == null)
+            {
+                return await connection.InsertAsync(playlist.ToPlaylist());
+            }
+            return 0;
+        }
+
+
+        public async Task<int> UpdateLastAccessed(string userId, string playlistId, DateTime lastAccessed, bool isSaved)
         {
             var connection = await _dbContext.GetConnection();
             if (connection != null)
@@ -60,7 +77,14 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
                 {
                     // not IsSaved is always false for artists, simply not the 
                     // way spotify works
-                    return await connection.InsertAsync(new RecentItem { UserId = userId, ItemId = playlistId, LastAccessed = lastAccessed });
+                    return await connection.InsertAsync(
+                    new RecentItem
+                    {
+                        UserId = userId,
+                        ItemId = playlistId,
+                        LastAccessed = lastAccessed,
+                        IsSaved = isSaved
+                    });
                 }
                 recentItem.LastAccessed = lastAccessed;
                 return await connection.UpdateAsync(recentItem);

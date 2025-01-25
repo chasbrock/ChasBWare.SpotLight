@@ -8,11 +8,14 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
 
     public static class PlaylistModelMapper
     {
-        public static Playlist? CopyToPlaylist(this FullPlaylist source)
+        public static RecentPlaylist? CopyToPlaylist(this FullPlaylist source)
         {
             if (source.Id == null)
+            {
                 return null;
-            return new Playlist
+            }
+
+            return new RecentPlaylist
             {
                 Id = source.Id,
                 Description = source.Description ?? string.Empty,
@@ -24,13 +27,15 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
             };
         }
 
-        public static Playlist? CopyToPlaylist(this SavedAlbum source)
+        public static RecentPlaylist? CopyToPlaylist(this SavedAlbum source)
         {
             if (source.Album == null)
+            {
                 return null;
+            }
 
             var owners = source.Album.Artists?.Select(a => a.Name);
-            return new Playlist
+            return new RecentPlaylist
             {
                 Id = source.Album.Id,
                 Description = source.Album.Name,
@@ -43,10 +48,10 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
             };
         }
 
-        public static Playlist CopyToPlaylist(this SimpleAlbum source)
+        public static RecentPlaylist CopyToPlaylist(this SimpleAlbum source)
         {
             var owners = source.Artists?.Select(a => a.Name);
-            return new Playlist
+            return new RecentPlaylist
             {
                 Id = source.Id,
                 Description = string.Empty,

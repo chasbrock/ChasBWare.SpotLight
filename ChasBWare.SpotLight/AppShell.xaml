@@ -4,13 +4,18 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:ChasBWare.SpotLight"
-    xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
+    xmlns:v="clr-namespace:ChasBWare.SpotLight.Pages"
     Shell.FlyoutBehavior="Flyout"
     Title="ChasBWare.SpotLight">
-
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate v:LibraryPage}"
-        Route="MainPage" />
-
+       
+    <FlyoutItem Title="Library">
+        <Tab>
+            <ShellContent ContentTemplate="{DataTemplate  v:LibraryPage}" />
+        </Tab>
+    </FlyoutItem>
+    <FlyoutItem Title="Artists">
+        <Tab>
+            <ShellContent ContentTemplate="{DataTemplate v:ArtistPage}" />
+        </Tab>
+    </FlyoutItem>
 </Shell>

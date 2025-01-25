@@ -3,8 +3,24 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
              x:DataType="vm:TrackViewModel"
-             x:Class="ChasBWare.SpotLight.Views.TrackView">
-    <Grid>
+             x:Class="ChasBWare.SpotLight.Views.TrackView"
+             >
+    <ContentView.Resources>
+        <Style x:Key="HatedStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="Black"/>
+            <Style.Triggers>
+                <DataTrigger TargetType="Label" Binding="{Binding IsHated}" Value="False">
+                    <Setter Property="TextColor" Value="Black"/>
+                </DataTrigger>
+                <DataTrigger TargetType="Label" Binding="{Binding IsHated}" Value="True">
+                    <Setter Property="TextColor" Value="Gray"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+    </ContentView.Resources>
+   
+   <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20" />
             <ColumnDefinition Width="60" />
@@ -13,33 +29,33 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <Button Command="{Binding PlayTrackCommand}" CommandParameter="{Binding}"
-                Grid.Column="0" HorizontalOptions="Fill"
+     <!--   <Button Command="{Binding PlayTrackCommand}" CommandParameter="{Binding}"
+                Grid.Column="0" HorizontalOptions="Fill" VerticalOptions="Center"
                 Background="White"
                 Text="{Binding ButtonText}" FontFamily="Webdings"/>
-   
-        <Label Text="{Binding Duration}" Grid.Column="1" 
-                   FontSize="12" Padding="8,0">
+        -->
+        <Label Text="{Binding Duration}" Grid.Column="1" VerticalOptions="Center"
+               FontSize="12" Padding="8,0">
             <Label.Resources>
                 <Style TargetType="{x:Type Label}" BasedOn="{StaticResource HatedStyle}" />
             </Label.Resources>
         </Label>
 
-        <Label Text="{Binding Name}" Grid.Column="2"
+        <Label Text="{Binding Name}" Grid.Column="2" VerticalOptions="Center"
                    FontSize="12" FontAttributes="Bold"  Padding="8,0">
             <Label.Resources>
                 <Style TargetType="{x:Type Label}" BasedOn="{StaticResource HatedStyle}" />
             </Label.Resources>
         </Label>
 
-        <Label Text="{Binding Artists}" Grid.Column="3" 
+        <Label Text="{Binding Artists}" Grid.Column="3" VerticalOptions="Center"
                    FontSize="10" FontAttributes="Italic" Padding="8,0">
             <Label.Resources>
                 <Style TargetType="{x:Type Label}" BasedOn="{StaticResource HatedStyle}" />
             </Label.Resources>
         </Label>
 
-        <Label Text="{Binding Album}" Grid.Column="4"
+        <Label Text="{Binding Album}" Grid.Column="4" VerticalOptions="Center"
                FontSize="10" Padding="8,0">
             <Label.Resources>
                 <Style TargetType="{x:Type Label}" BasedOn="{StaticResource HatedStyle}" />

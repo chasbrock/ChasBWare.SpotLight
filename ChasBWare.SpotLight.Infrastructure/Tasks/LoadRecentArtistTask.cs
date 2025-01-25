@@ -13,7 +13,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
     {
         public async void Execute(IRecentArtistsViewModel viewModel)
         {
-            var items = await _artistRepository.GetRecentArtists(_userRepository.CurrentUser.Id);
+            var items = await _artistRepository.GetRecentArtists(_userRepository.CurrentUserId);
             if (items.Count == 0)
             {
                 _dispatcher.Dispatch(() =>

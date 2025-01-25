@@ -20,8 +20,4 @@
     <ProjectReference Include="..\ChasBWare.SpotLight.Interfaces\ChasBWare.SpotLight.Definitions.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

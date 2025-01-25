@@ -11,7 +11,7 @@ namespace ChasBWare.SpotLight.Domain.DbContext
             if (_database is not null)
                 return _database;
 
-            _database = new SQLiteAsyncConnection(_dbSettings.FullPath, _dbSettings.Flags);
+            _database = new SQLiteAsyncConnection(_dbSettings.FullPath, _dbSettings.Flags, true);
             await _database.CreateTableAsync<AppSetting>();
             await _database.CreateTableAsync<Artist>();
             await _database.CreateTableAsync<Playlist>();

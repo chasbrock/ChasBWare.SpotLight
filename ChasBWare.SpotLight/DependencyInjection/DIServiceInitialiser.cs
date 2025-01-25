@@ -1,5 +1,6 @@
 ﻿using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Repositories;
+using ChasBWare.SpotLight.Definitions.Services;
 using ChasBWare.SpotLight.Definitions.Tasks;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.DbContext;
@@ -8,10 +9,10 @@ using ChasBWare.SpotLight.Infrastructure.Repositories;
 using ChasBWare.SpotLight.Infrastructure.Services;
 using ChasBWare.SpotLight.Infrastructure.Tasks;
 using ChasBWare.SpotLight.Infrastructure.ViewModels;
+using ChasBWare.SpotLight.Pages;
 using ChasBWare.SpotLight.Spotify.Classes;
 using ChasBWare.SpotLight.Spotify.Interfaces;
 using ChasBWare.SpotLight.Spotify.Repositories;
-using ChasBWare.SpotLight.Views;
 
 using Microsoft.Extensions.Logging;
 
@@ -24,23 +25,33 @@ namespace ChasBWare.SpotLight.DependencyInjection
     {
         public static MauiAppBuilder RegisterAllMine(this MauiAppBuilder builder) 
         {
-            builder.Services.RegiserSpotify()
+            builder.Services.RegisterDbContext()
+                            .RegisterLogging()
                             .RegisterMessageHandlers()
-                            .RegisterDbContext()
                             .RegisterRepositories()
-                            .RegisterViews()
-                            .RegisterViewModels()
+                            .RegisterServices()
+                            .RegisterSpotify()
                             .RegisterTasks()
-                            .RegisterLogging();
+                            .RegisterViewModels()
+                            .RegisterViews();
+
             return builder;
         }
 
-        public static IServiceCollection RegiserSpotify(this IServiceCollection services)
+  
+        public static IServiceCollection RegisterDbContext(this IServiceCollection services)
         {
-            return services.AddSingleton<ISpotifyActionManager, SpotifyActionManager>()
-                           .AddSingleton<ISpotifyConnectionManager, SpotifyConnectionManager>()
-                           .AddSingleton<ISpotifyPlayerController, SpotifyPlayerController>()
-                           .AddSingleton<ISpotyConnectionSession, SpotyConnectionSession>();
+            return services.AddTransient<IDbContext, SpotLightDbContext>()
+                           .AddTransient<IDbSettings, DefaultDbSettings>();
+        }
+
+        public static IServiceCollection RegisterLogging(this IServiceCollection services)
+        {
+            using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+            ILogger logger = factory.CreateLogger("Program");
+
+            return services.AddLogging(builder => builder.AddConsole())
+                           .AddSingleton(logger);
         }
 
         public static IServiceCollection RegisterMessageHandlers(this IServiceCollection services)
@@ -54,17 +65,11 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            ;
         }
 
-        public static IServiceCollection RegisterDbContext(this IServiceCollection services)
-        {
-            return services.AddTransient<IDbContext, SpotLightDbContext>()
-                           .AddTransient<IDbSettings, DefaultDbSettings>();
-        }
-
         public static IServiceCollection RegisterRepositories(this IServiceCollection services)
         {
             return services.AddTransient<IAppSettingsRepository, AppSettingsRepository>()
                            .AddTransient<IArtistRepository, ArtistRepository>()
-                           .AddTransient<HatedItemsRepository, HatedItemsRepository>()
+                           .AddTransient<IHatedItemsRepository, HatedItemsRepository>()
                            .AddTransient<IPlaylistRepository, PlaylistRepository>()
                            .AddTransient<IRecentItemRepository, RecentItemRepository>()
                            .AddTransient<ISpotifyArtistRepository, SpotifyArtistRepository>()
@@ -75,16 +80,35 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            ;
         }
 
-        public static IServiceCollection RegisterViews(this IServiceCollection services)
+        public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
-            return services.AddSingleton<MainPage>()
-                           .AddSingleton<LibraryPage>();
+            return services.AddSingleton<IHatedService, HatedService>();
+        }
+
+        public static IServiceCollection RegisterSpotify(this IServiceCollection services)
+        {
+            return services.AddSingleton<ISpotifyActionManager, SpotifyActionManager>()
+                           .AddSingleton<ISpotifyConnectionManager, SpotifyConnectionManager>()
+                           .AddSingleton<ISpotifyPlayerController, SpotifyPlayerController>()
+                           .AddSingleton<ISpotyConnectionSession, SpotyConnectionSession>();
+        }
+
+        public static IServiceCollection RegisterTasks(this IServiceCollection services)
+        {
+            return services.AddTransient<IArtistAlbumsLoaderTask, ArtistAlbumsLoaderTask>()
+                           .AddTransient<ILibraryLoaderTask, LibraryLoaderTask>()
+                           .AddTransient<ILoadRecentArtistTask, LoadRecentArtistTask>()
+                           .AddTransient<ILoadRecentPlaylistTask, LoadRecentPlaylistTask>()
+                           .AddTransient<ILoadRemoveArtistTask, LoadRemoveArtistTask>()
+                           .AddTransient<ITrackListLoaderTask, TrackListLoaderTask>()
+                           .AddTransient<IUpdateLastAccessedTask, UpdateLastAccessedTask>()
+                   ;
         }
 
         public static IServiceCollection RegisterViewModels(this IServiceCollection services)
         {
-            return services.AddSingleton<IMainWindowViewModel, MainWindowViewModel>()
-                           .AddSingleton<IRecentArtistsViewModel, RecentArtistsViewModel>()
+            return services.AddSingleton<MainWindowViewModel>()
+                           .AddSingleton<RecentArtistsViewModel>()
                            .AddSingleton<IRecentAlbumsViewModel, RecentAlbumsViewModel>()
                            .AddSingleton<IRecentPlaylistsViewModel, RecentPlaylistsViewModel>()
                            .AddSingleton<ILibraryViewModel, LibraryViewModel>()
@@ -104,35 +128,10 @@ namespace ChasBWare.SpotLight.DependencyInjection
             ;
         }
 
-        /// <summary>
-        /// register viewModels
-        /// </summary>
-        /// <param name="services">extension client</param>
-        /// <returns></returns>
-        public static IServiceCollection RegisterTasks(this IServiceCollection services)
+        public static IServiceCollection RegisterViews(this IServiceCollection services)
         {
-            return services.AddTransient<IArtistAlbumsLoaderTask, ArtistAlbumsLoaderTask>()
-                           .AddTransient<ILibraryLoaderTask, LibraryLoaderTask>()
-                           .AddTransient<ILoadRecentArtistTask, LoadRecentArtistTask>()
-                           .AddTransient<ILoadRecentPlaylistTask, LoadRecentPlaylistTask>()
-                           .AddTransient<ILoadRemoveArtistTask, LoadRemoveArtistTask>()
-                           .AddTransient<ITrackListLoaderTask, TrackListLoaderTask>()
-                           .AddTransient<IUpdateLastAccessedTask, UpdateLastAccessedTask>()
-                   ;
-        }
-
-        /// <summary>
-        /// attach and set up logging.
-        /// </summary>
-        /// <param name="services">extension client</param>
-        /// <returns></returns>
-        public static IServiceCollection RegisterLogging(this IServiceCollection services)
-        {
-            using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
-            ILogger logger = factory.CreateLogger("Program");
-
-            return services.AddLogging(builder => builder.AddConsole())
-                           .AddSingleton(logger);
+            return services.AddSingleton<ArtistPage>()
+                           .AddSingleton<LibraryPage>();
         }
 
     }

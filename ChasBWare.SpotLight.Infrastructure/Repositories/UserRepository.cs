@@ -9,7 +9,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
                                 ILogger _logger)
                : IUserRepository
     {
-        public User CurrentUser { get; set; } = new User { Id = "chasbrock" };
+        public string CurrentUserId { get; set; } =  "chasbrock" ;
 
         public async Task<User?> GetUser(string userId) 
         {

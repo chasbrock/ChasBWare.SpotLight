@@ -15,19 +15,16 @@ namespace ChasBWare.SpotLight.Spotify.Classes
         /// <summary>
         /// default details for connecting to spotify
         /// </summary>
-        /// <see cref="https://johnnycrazy.github.io/SpotifyAPI-NET/docs/configuration"/>
         public SpotifyClientConfig GetDefaultConfig { get; set; } = SpotifyClientConfig.CreateDefault();
 
         /// <summary>
         /// unique app id from spotify
         /// </summary>
-        /// <see cref="https://developer.spotify.com/dashboard"/>
         public string ClientId { get; set; } = "f8eb5326c4b3445a9dcd079ee11812a0";
 
         /// <summary>
         /// unique id created for me by spotify
         /// </summary>
-        /// <see cref="https://developer.spotify.com/dashboard"/>
         public string ClientSecret { get; set; } = "bae2baff23fa4204b50efb260df14fc2";
 
         public int RedirectPort { get; set; } = defaultPort;

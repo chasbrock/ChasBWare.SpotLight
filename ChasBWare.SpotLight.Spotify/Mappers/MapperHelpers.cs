@@ -23,7 +23,7 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
             return new DateTime(year, month, day);
         }
 
-        public static string? GetMediumImage(this List<Image>? images)
+        public static string? GetMediumImage(this List<SpotifyAPI.Web.Image>? images)
         {
             if (images == null || images.Count == 0)
                 return null;

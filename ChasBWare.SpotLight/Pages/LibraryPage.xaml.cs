@@ -1,6 +1,6 @@
 using ChasBWare.SpotLight.Definitions.ViewModels;
 
-namespace ChasBWare.SpotLight.Views;
+namespace ChasBWare.SpotLight.Pages;
 
 public partial class LibraryPage : ContentPage
 {

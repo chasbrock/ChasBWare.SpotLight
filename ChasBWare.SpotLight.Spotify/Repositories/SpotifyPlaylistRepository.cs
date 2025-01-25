@@ -9,7 +9,7 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
     public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
                : ISpotifyPlaylistRepository
     {
-        public async Task<List<Tuple<Playlist, DateTime>>> GetPlaylists(PlaylistType playlistType)
+        public async Task<List<RecentPlaylist>> GetPlaylists(PlaylistType playlistType)
         {
             return playlistType switch
             {
@@ -19,9 +19,9 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
             };
         }
 
-        private async Task<List<Tuple<Playlist, DateTime>>> GetCurrentUsersAlbums()
+        private async Task<List<RecentPlaylist>> GetCurrentUsersAlbums()
         {
-            List<Tuple<Playlist, DateTime>> playlists = [];
+            List<RecentPlaylist> playlists = [];
             var savedAlbums = await _actionManager.GetCurrentUsersAlbums();
             if (savedAlbums != null)
             {
@@ -30,16 +30,17 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
                     var playlist = savedAlbum.CopyToPlaylist();
                     if (playlist != null)
                     {
-                        playlists.Add(new Tuple<Playlist, DateTime>(playlist, DateTime.Now));
+                        playlist.LastAccessed = DateTime.Now;
+                        playlists.Add(playlist);
                     }
                 }
             }
             return playlists; 
         }
 
-        private async Task<List<Tuple<Playlist, DateTime>>> GetCurrentUsersPlaylists()
+        private async Task<List<RecentPlaylist>> GetCurrentUsersPlaylists()
         {
-            List<Tuple<Playlist, DateTime>> playlists = [];
+            List<RecentPlaylist> playlists = [];
             var fullPlaylists = await _actionManager.GetCurrentUsersPlaylists();
             if (fullPlaylists != null)
             {
@@ -48,7 +49,8 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
                     var playlist = fullPlaylist.CopyToPlaylist();
                     if (playlist != null)
                     {
-                        playlists.Add(new Tuple<Playlist, DateTime>(playlist, DateTime.Now));
+                        playlist.LastAccessed = DateTime.Now;
+                        playlists.Add(playlist);
                     }
                 }
             }

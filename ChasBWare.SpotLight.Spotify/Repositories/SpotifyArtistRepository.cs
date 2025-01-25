@@ -8,7 +8,7 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
     public class SpotifyArtistRepository(ISpotifyActionManager _actionManager) 
                : ISpotifyArtistRepository
     {
-        public async Task<List<Playlist>> LoadArtistAlbums(string artistId)
+        public async Task<List<RecentPlaylist>> LoadArtistAlbums(string artistId)
         {
             var savedAlbums = await _actionManager.GetArtistAlbums(artistId);
             if (savedAlbums != null) 

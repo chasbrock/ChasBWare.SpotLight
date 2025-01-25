@@ -1,9 +1,7 @@
-﻿using ChasBWare.SpotLight.Domain.Entities;
-
-namespace ChasBWare.SpotLight.Definitions.Repositories
+﻿namespace ChasBWare.SpotLight.Definitions.Repositories
 {
     public interface IUserRepository
     {
-        User CurrentUser { get; set; } 
+        string CurrentUserId { get; set; } 
     }
 }
