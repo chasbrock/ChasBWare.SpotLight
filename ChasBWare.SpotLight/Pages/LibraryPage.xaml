@@ -4,7 +4,9 @@
              xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
              xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
              x:DataType="vm:LibraryViewModel"
-             x:Class="ChasBWare.SpotLight.Pages.LibraryPage">
+             x:Class="ChasBWare.SpotLight.Pages.LibraryPage"
+             Shell.NavBarIsVisible="False"
+            >
 
     <ContentPage.Background>
         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">

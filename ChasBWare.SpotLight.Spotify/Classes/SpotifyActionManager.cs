@@ -6,19 +6,17 @@ namespace ChasBWare.SpotLight.Spotify.Classes
 {
 
     public class SpotifyActionManager(ILogger _logger,
-                                      ISpotifyConnectionManager _spotifyConnectionManager) 
+                                      ISpotifyConnectionManager _spotifyConnectionManager)
                : ISpotifyActionManager
     {
-        public string UserCountry { get; set; } = "GB";
-
+  
         public async Task<PrivateUser> GetUserDetails()
         {
             var client = await _spotifyConnectionManager.GetClient();
             try
             {
                 var currentUser = await client.UserProfile.Current();
-                UserCountry = currentUser.Country;
-
+ 
                 return currentUser;
             }
             catch (Exception ex)
@@ -143,12 +141,12 @@ namespace ChasBWare.SpotLight.Spotify.Classes
              }
         }
 
-        public async Task<List<FullTrack>> GetArtistTopTracks(string artistId)
+        public async Task<List<FullTrack>> GetArtistTopTracks(string artistId, string userCountry)
         {
             var client = await _spotifyConnectionManager.GetClient();
             try
             {
-                var topTracks = await client.Artists.GetTopTracks(artistId, new ArtistsTopTracksRequest(UserCountry));
+                var topTracks = await client.Artists.GetTopTracks(artistId, new ArtistsTopTracksRequest(userCountry));
                 return topTracks.Tracks;
             }
             catch (Exception ex)

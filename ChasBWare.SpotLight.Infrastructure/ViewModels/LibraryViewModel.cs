@@ -12,8 +12,6 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                        : BaseGroupedListViewModel<IPlaylistViewModel>,
                          ILibraryViewModel
     {
-        private bool _showOwner = true;
-
         public LibraryViewModel(IServiceProvider serviceProvider,
                                 IMessageService<CurrentTrackChangedMessage> currentTrackChangedMessage)
              : base(serviceProvider, GrouperHelper.GetPlaylistGroupers())
@@ -44,12 +42,6 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             loadPlaylistsTask?.Execute(this);
         }
 
-        public bool ShowOwner 
-        {
-            get => _showOwner;
-            set => SetField(ref _showOwner, value);
-        }
-
         protected override void InitialiseSelectedItem(IPlaylistViewModel item) 
         {
             item.IsTracksExpanded = true;
@@ -59,12 +51,6 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             task?.Execute(item.Id, item.LastAccessed, true);
         }
 
-        protected override void UpdateGroupings()
-        {
-            ShowOwner = SelectedGrouperName != nameof(PlaylistViewModel.Owner);
-            base.UpdateGroupings();
-        }
-        
         private void OnTrackChangedMessage(CurrentTrackChangedMessage message)
         {
             // if there is no playlist selected then try and find the one playing

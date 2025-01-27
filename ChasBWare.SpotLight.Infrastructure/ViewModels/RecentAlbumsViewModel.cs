@@ -32,7 +32,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         protected override void InitialiseSelectedItem(IPlaylistViewModel item)
         {
-            // TODO
+            item.IsTracksExpanded = true;
         }
 
         private IPlaylistViewModel? AddItemToList(RecentPlaylist playlist, DateTime lastAccessed)
@@ -60,11 +60,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         private void OnSetActiveAlbum(ActiveAlbumChangedMessage message)
         {
             SelectedItem = AddItemToList(message.Payload, DateTime.Now);
-        }
-
-        public void ExecuteLibrayCommand(IPlaylistViewModel? selectedItem)
-        {
-            
+            UpdateSorting();
         }
     }
 }

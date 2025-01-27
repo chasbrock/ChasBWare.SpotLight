@@ -14,7 +14,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
         public async void Execute(IRecentArtistsViewModel viewModel)
         {
             var items = await _artistRepository.GetRecentArtists(_userRepository.CurrentUserId);
-            if (items.Count == 0)
+            if (items.Count > 0)
             {
                 _dispatcher.Dispatch(() =>
                 {
@@ -31,6 +31,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                         }
                     }
                     viewModel.LoadStatus = LoadState.Loaded;
+                    viewModel.UpdateSorting();
                 });
             }
         }

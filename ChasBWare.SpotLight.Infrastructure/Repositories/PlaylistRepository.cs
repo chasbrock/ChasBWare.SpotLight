@@ -45,7 +45,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
                         // TODO remove this bit
                         var lastAccessed = DateTime.Today.AddDays(-randy.NextDouble() * 40);
 
-                        await UpdateLastAccessed(userId, playlist.Id, lastAccessed, isSaved);
+                        await RepositoryHelper.UpdateLastAccessed(connection, userId, playlist.Id, lastAccessed, isSaved);
                     }
                 }
             }
@@ -62,35 +62,6 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
                 return await connection.InsertAsync(playlist.ToPlaylist());
             }
             return 0;
-        }
-
-
-        public async Task<int> UpdateLastAccessed(string userId, string playlistId, DateTime lastAccessed, bool isSaved)
-        {
-            var connection = await _dbContext.GetConnection();
-            if (connection != null)
-            {
-                var recentItem = await connection.Table<RecentItem>()
-                                                 .FirstOrDefaultAsync(ri => ri.UserId == userId &&
-                                                                            ri.ItemId == playlistId);
-                if (recentItem == null)
-                {
-                    // not IsSaved is always false for artists, simply not the 
-                    // way spotify works
-                    return await connection.InsertAsync(
-                    new RecentItem
-                    {
-                        UserId = userId,
-                        ItemId = playlistId,
-                        LastAccessed = lastAccessed,
-                        IsSaved = isSaved
-                    });
-                }
-                recentItem.LastAccessed = lastAccessed;
-                return await connection.UpdateAsync(recentItem);
-            }
-            _logger.LogError("Could not access db connection");
-            return -1;
         }
 
         public async Task<bool> RemoveSavedItem(string userId, string playlistId)

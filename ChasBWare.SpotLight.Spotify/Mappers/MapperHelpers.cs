@@ -33,5 +33,16 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
                 return sorted[1].Url;
             return sorted[0].Url;
         }
+
+
+        public static string? GetSmallImage(this List<SpotifyAPI.Web.Image>? images)
+        {
+            if (images == null || images.Count == 0)
+                return null;
+
+            var smallest = images.OrderBy(i => i.Width).FirstOrDefault();
+
+            return smallest?.Url;
+        }
     }
 }

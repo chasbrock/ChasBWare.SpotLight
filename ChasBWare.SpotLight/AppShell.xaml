@@ -7,7 +7,7 @@
     xmlns:v="clr-namespace:ChasBWare.SpotLight.Pages"
     Shell.FlyoutBehavior="Flyout"
     Title="ChasBWare.SpotLight">
-       
+
     <FlyoutItem Title="Library">
         <Tab>
             <ShellContent ContentTemplate="{DataTemplate  v:LibraryPage}" />
@@ -18,4 +18,10 @@
             <ShellContent ContentTemplate="{DataTemplate v:ArtistPage}" />
         </Tab>
     </FlyoutItem>
+    <FlyoutItem Title="Album">
+        <Tab>
+            <ShellContent ContentTemplate="{DataTemplate v:AlbumPage}" />
+        </Tab>
+    </FlyoutItem>
+
 </Shell>

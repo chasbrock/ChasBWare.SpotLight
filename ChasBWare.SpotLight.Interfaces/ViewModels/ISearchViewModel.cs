@@ -9,8 +9,8 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
         string SearchText { get; set; }
         bool IsPopupOpen { get; set; }
         ObservableCollection<T> Items { get; }
+        T? SelectedItem { get; set; }
 
-        void Initialise();
         void OpenInViewer(T viewModel);
     }
 }

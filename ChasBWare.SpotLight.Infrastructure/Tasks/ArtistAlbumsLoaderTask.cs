@@ -1,11 +1,13 @@
 ﻿using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks;
 using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks
 {
     public class ArtistAlbumsLoaderTask(IArtistRepository _artistRepository,
+                                        IUserRepository _userRepository, 
                                         ISpotifyArtistRepository _spotifyArtistRepository,
                                         IServiceProvider _serviceProvider,
                                         IDispatcher _dispatcher) 
@@ -18,7 +20,8 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
             if (albums.Count == 0 )
             {
                 albums = await _spotifyArtistRepository.LoadArtistAlbums(viewModel.Id);
-            } 
+                await _artistRepository.AddRecentArtistAndAlbums(_userRepository.CurrentUserId, viewModel.Model, albums);
+            }
 
             _dispatcher.Dispatch(() =>
             {
@@ -35,6 +38,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                 }
 
                 viewModel.LoadStatus = LoadState.Loaded;
+                viewModel.UpdateSorting();
             });
         }
     }

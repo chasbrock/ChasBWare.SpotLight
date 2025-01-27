@@ -4,10 +4,9 @@
              xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
              xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
              xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:DataType="vm:RecentArtistsViewModel"
-             x:Class="ChasBWare.SpotLight.Pages.ArtistPage"
-             Title="Artists">
-
+             x:DataType="vm:RecentAlbumsViewModel" 
+             x:Class="ChasBWare.SpotLight.Pages.AlbumPage"
+             Title="Albums">
     <ContentPage.Background>
         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
             <LinearGradientBrush.GradientStops>
@@ -16,25 +15,25 @@
             </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
     </ContentPage.Background>
-   
-   <Grid ColumnDefinitions="300,*">
+
+    <Grid ColumnDefinitions="300,*">
 
         <Grid Grid.Column="0" RowDefinitions="Auto,*">
-  
+
             <Picker ItemsSource="{Binding SorterNames}"
-                    Background="DarkBlue"  TextColor="White"
-                    FontSize="14" FontAttributes="Bold"  
-                    SelectedItem="{Binding SelectedSorterName}" 
-                    Grid.Row="0"/>
+                   Background="DarkBlue"  TextColor="White"
+                   FontSize="14" FontAttributes="Bold"  
+                   SelectedItem="{Binding SelectedSorterName}" 
+                   Grid.Row="0"/>
 
             <CollectionView ItemsSource="{Binding SortedItems}"
-                        VerticalScrollBarVisibility="Always"
-                        SelectionMode="Single" 
-                        SelectedItem="{Binding SelectedItem}"
-                        Grid.Row="1">
+                       VerticalScrollBarVisibility="Always"
+                       SelectionMode="Single" 
+                       SelectedItem="{Binding SelectedItem}"
+                       Grid.Row="1">
 
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="vm:ArtistViewModel">
+                    <DataTemplate x:DataType="vm:PlaylistViewModel">
                         <Border Margin="8,4">
                             <VerticalStackLayout Margin="2">
                                 <Label Text="{Binding Name}" HorizontalOptions="Fill" FontAttributes="Bold"/>
@@ -51,29 +50,29 @@
 
                 <tk:Expander.Header>
                     <SearchBar SearchCommand="{Binding SearchViewModel.ExecuteSearchCommand}"
-                               Text="{Binding SearchViewModel.SearchText}"
-                               Placeholder="Search for Artist..." />
+                             Text="{Binding SearchViewModel.SearchText}"
+                             Placeholder="Search for Albums..." />
                 </tk:Expander.Header>
                 <CollectionView ItemsSource="{Binding SearchViewModel.Items}"
-                                ItemsLayout="HorizontalList"
-                                SelectionMode="Single"
-                                SelectedItem="{Binding SearchViewModel.SelectedItem}">
-                   <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="vm:ArtistViewModel">
+                              ItemsLayout="HorizontalList"
+                              SelectionMode="Single"
+                              SelectedItem="{Binding SearchViewModel.SelectedItem}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:PlaylistViewModel">
                             <Border Margin="8,4">
-                                 <Grid Margin="2" RowDefinitions="128,Auto">
+                                <Grid Margin="2" RowDefinitions="128,Auto,Auto">
                                     <Image Source="{Binding Image}" 
-                                           VerticalOptions="Center" HorizontalOptions="Center" 
-                                           Margin="4" Grid.Row="0"/>
+                                         VerticalOptions="Center" HorizontalOptions="Center" 
+                                         Margin="4" Grid.Row="0"/>
                                     <Label Text="{Binding Name}" HorizontalOptions="Fill" FontAttributes="Bold" Grid.Row="1"/>
-                                 </Grid>
-                        </Border>
+                                    <Label Text="{Binding Owner}" HorizontalOptions="Fill" FontAttributes="Italic" Grid.Row="2"/>
+                                </Grid>
+                            </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </tk:Expander>
-            <v:PlaylistListView BindingContext="{Binding SelectedItem}" VerticalOptions="Fill" Grid.Row="1"/>
+            <v:PlaylistView BindingContext="{Binding SelectedItem}" VerticalOptions="Fill" Grid.Row="1"/>
         </Grid>
-
     </Grid>
 </ContentPage>

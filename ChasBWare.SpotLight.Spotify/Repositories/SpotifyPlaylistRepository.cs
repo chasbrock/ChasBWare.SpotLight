@@ -1,14 +1,23 @@
 ﻿using ChasBWare.SpotLight.Definitions.Repositories;
+using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Mappings.Mappers;
 using ChasBWare.SpotLight.Spotify.Interfaces;
+using SpotifyAPI.Web;
 
 namespace ChasBWare.SpotLight.Spotify.Repositories
 {
     public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
                : ISpotifyPlaylistRepository
     {
+        public async Task<List<RecentPlaylist>> FindAlbums(string searchText)
+        {
+            var simpleAlbums = await _actionManager.FindAlbums(searchText);
+            return simpleAlbums.Select(sa => sa.CopyToPlaylist()).ToList();
+        }
+
+
         public async Task<List<RecentPlaylist>> GetPlaylists(PlaylistType playlistType)
         {
             return playlistType switch

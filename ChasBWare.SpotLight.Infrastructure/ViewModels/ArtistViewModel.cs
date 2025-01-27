@@ -7,7 +7,7 @@ using ChasBWare.SpotLight.Infrastructure.Utility;
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
     public class ArtistViewModel(IServiceProvider serviceProvider)
-               : BaseSortedListViewModel<IPlaylistViewModel>(serviceProvider, SorterHelper.GetPlaylistSorters()),
+               : PlaylistListViewModel(serviceProvider),
                  IArtistViewModel
     {
         private Artist _model = new() { Id = "" };

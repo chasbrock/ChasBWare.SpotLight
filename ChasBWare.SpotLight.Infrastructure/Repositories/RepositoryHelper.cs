@@ -1,4 +1,5 @@
-﻿using ChasBWare.SpotLight.Domain.Entities;
+﻿using ChasBWare.SpotLight.Domain.DbContext;
+using ChasBWare.SpotLight.Domain.Entities;
 using SQLite;
 using System.Collections;
 
@@ -48,5 +49,31 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
                             .DeleteAsync(ri => ri.Id == artistId);
         }
 
+
+        public static async Task<int> UpdateLastAccessed(SQLiteAsyncConnection connection,
+                                                         string userId,
+                                                         string itemId,
+                                                         DateTime lastAccessed,
+                                                         bool isSaved)
+        {
+            var recentItem = await connection.Table<RecentItem>()
+                                             .FirstOrDefaultAsync(ri => ri.UserId == userId &&
+                                                                        ri.ItemId == itemId);
+            if (recentItem == null)
+            {
+                // not IsSaved is always false for artists, simply not the 
+                // way spotify works
+                return await connection.InsertAsync(
+                new RecentItem
+                {
+                    UserId = userId,
+                    ItemId = itemId,
+                    LastAccessed = lastAccessed,
+                    IsSaved = isSaved
+                });
+            }
+            recentItem.LastAccessed = lastAccessed;
+            return await connection.UpdateAsync(recentItem);
+        }
     }
 }

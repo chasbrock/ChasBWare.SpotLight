@@ -17,7 +17,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
             {
                 var found = await connection.Table<Artist>()
                                             .FirstOrDefaultAsync(a => a.Id == artist.Id);
-                if (found != null)
+                if (found == null)
                 {
                     return await connection.InsertAsync(artist);
                 }
@@ -100,33 +100,6 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
             return [];
         }
 
-        public async Task<int> UpdateLastAccessed(string userId, string artistId, DateTime lastAccessed)
-        {
-            var connection = await _dbContext.GetConnection();
-            if (connection != null)
-            {
-                var recentItem = await connection.Table<RecentItem>()
-                                                 .FirstOrDefaultAsync(ri => ri.UserId == userId &&
-                                                                            ri.ItemId == artistId);
-                if (recentItem == null)
-                {
-                    // not IsSaved is always false for artists, simply not the 
-                    // way spotify works
-                    return await connection.InsertAsync(
-                        new RecentItem
-                        {
-                            UserId = userId,
-                            ItemId = artistId,
-                            LastAccessed = lastAccessed
-                        });
-                }
-                recentItem.LastAccessed = lastAccessed;
-                return await connection.UpdateAsync(recentItem);
-            }
-            _logger.LogError("Could not access db connection");
-            return -1;
-        }
-
         public async Task<int> LinkAlbumToArtist(string artistId, string playListId)
         {
             var connection = await _dbContext.GetConnection();
@@ -143,6 +116,46 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
             _logger.LogError("Could not access db connection");
             return -1;
         }
-      
+
+        public async Task AddRecentArtistAndAlbums(string currentUserId, Artist artist, List<RecentPlaylist> albums)
+        {
+            if (artist.Id == null)
+            {
+                return;
+            }
+
+            var connection = await _dbContext.GetConnection();
+            if (connection != null)
+            {
+                var existingArtist = await connection.Table<Artist>()
+                                                     .FirstOrDefaultAsync(a => a.Id == artist.Id);
+                if (existingArtist == null)
+                {
+                    await connection.InsertAsync(artist);
+                }
+
+               await RepositoryHelper.UpdateLastAccessed(connection, currentUserId, artist.Id, DateTime.Now, true);
+
+                foreach (var album in albums) 
+                {
+                    var existingPlaylist = await connection.Table<Playlist>()
+                                                           .FirstOrDefaultAsync(p => p.Id == album.Id);
+                    if (existingPlaylist == null)
+                    {
+                        await connection.InsertAsync(album.ToPlaylist());
+                    }
+
+                    var existingLink = await connection.Table<ArtistPlaylist>()
+                                                       .FirstOrDefaultAsync(ap => ap.ArtistId == artist.Id &&
+                                                                                  ap.PlaylistId == album.Id);
+                    if (existingLink == null)
+                    {
+                        await connection.InsertAsync(new ArtistPlaylist { ArtistId = artist.Id, PlaylistId = album.Id });
+                    }
+                }
+            }
+            _logger.LogError("Could not access db connection");
+
+        }
     }
 }

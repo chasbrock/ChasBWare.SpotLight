@@ -102,18 +102,21 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddTransient<ILoadRemoveArtistTask, LoadRemoveArtistTask>()
                            .AddTransient<ITrackListLoaderTask, TrackListLoaderTask>()
                            .AddTransient<IUpdateLastAccessedTask, UpdateLastAccessedTask>()
+                           .AddTransient<ISearchForArtistTask, SearchForArtistTask>()
+                           .AddTransient<ISearchForAlbumTask, SearchForAlbumTask>()
                    ;
         }
 
         public static IServiceCollection RegisterViewModels(this IServiceCollection services)
         {
             return services.AddSingleton<MainWindowViewModel>()
-                           .AddSingleton<RecentArtistsViewModel>()
+                           .AddSingleton<IRecentArtistsViewModel, RecentArtistsViewModel>()
                            .AddSingleton<IRecentAlbumsViewModel, RecentAlbumsViewModel>()
                            .AddSingleton<IRecentPlaylistsViewModel, RecentPlaylistsViewModel>()
                            .AddSingleton<ILibraryViewModel, LibraryViewModel>()
-                         //  .AddSingleton<ISearchArtistsViewModel, SearchArtistsViewModel>()
-                         //  .AddSingleton<ISearchAlbumsViewModel, SearchAlbumsViewModel>()
+                           .AddTransient<IPlaylistListViewModel, PlaylistListViewModel>()
+                           .AddSingleton<ISearchArtistsViewModel, SearchArtistsViewModel>()
+                           .AddSingleton<ISearchAlbumsViewModel, SearchAlbumsViewModel>()
                          //  .AddSingleton<ISearchPlaylistsViewModel, SearchPlaylistsViewModel>()
                           // .AddSingleton<IPlayerControlViewModel, PlayerControlViewModel>()
                           // .AddSingleton<IConnectionStatusViewModel, ConnectionStatusViewModel>()

@@ -1,6 +1,4 @@
-﻿
-
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Tasks;
@@ -12,6 +10,8 @@ using ChasBWare.SpotLight.Infrastructure.Utility;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
+
+
     public class PlaylistViewModel : Notifyable, IPlaylistViewModel
     {
         private readonly IServiceProvider _provider;
@@ -121,7 +121,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         public DateTime LastAccessed
         {
             get => Model.LastAccessed;
-            set => SetField(Model.LastAccessed, value); 
+            set => SetField(Model, value); 
 
         }
 

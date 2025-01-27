@@ -8,8 +8,6 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
     /// </summary>
     public interface ISpotifyActionManager
     {
-        string UserCountry { get; set; }
-
         /// <summary>
         /// get details of current user on local machine
         /// </summary>
@@ -75,7 +73,7 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// gets all albums for artist
         /// </summary>
         /// <returns></returns>
-        Task<List<FullTrack>> GetArtistTopTracks(string artistId);
+        Task<List<FullTrack>> GetArtistTopTracks(string artistId, string userCountry);
 
 
      /*   

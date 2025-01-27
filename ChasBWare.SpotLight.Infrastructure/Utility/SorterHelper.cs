@@ -19,5 +19,12 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
                       new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)),
                       new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Owner))];
         }
+
+        internal static IPropertyComparer<IPlaylistViewModel>[] GetPlaylistListSorters()
+        {
+            return [  new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.ReleaseDate)),
+                      new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)),
+                      new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.LastAccessed))];
+        }
     }
 }

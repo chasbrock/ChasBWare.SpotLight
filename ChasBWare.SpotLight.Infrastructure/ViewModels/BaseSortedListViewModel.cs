@@ -53,7 +53,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             set => SetField(ref _sortedItems, value);
         }
 
-        protected void UpdateSorting()
+        public void UpdateSorting()
         {
             if (_selectedSorter == null)
             {

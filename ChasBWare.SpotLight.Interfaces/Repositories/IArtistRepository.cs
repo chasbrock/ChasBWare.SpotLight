@@ -27,15 +27,6 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
         Task<List<Tuple<Artist, DateTime>>> GetRecentArtists(string? userId);
 
         /// <summary>
-        /// update / add last acees for artist,
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="artistId"></param>
-        /// <param name="lastAccessed"></param>
-        /// <returns></returns>
-        Task<int> UpdateLastAccessed(string userId, string artistId, DateTime lastAccessed);
-
-        /// <summary>
         /// link an album to an artist
         /// </summary>
         /// <param name="artistId"></param>
@@ -49,5 +40,6 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
         /// <param name="artistId"></param>
         /// <returns></returns>
         Task<List<RecentPlaylist>> LoadArtistAlbums(string artistId);
+        Task AddRecentArtistAndAlbums(string currentUserId, Artist artist, List<RecentPlaylist> albums);
     }
 }

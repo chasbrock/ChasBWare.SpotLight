@@ -11,7 +11,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
     public class RecentArtistsViewModel : BaseRecentViewModel<IArtistViewModel>, IRecentArtistsViewModel
     {
-
+      
         public RecentArtistsViewModel(IServiceProvider serviceProvider,
                                       ISearchArtistsViewModel searchViewModel,
                                       IMessageService<ActiveArtistChangedMessage> activeArtistChangedMessageService)
@@ -19,8 +19,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         {
             activeArtistChangedMessageService.Register(OnSetActiveArtist);
         }
-      
-
+          
         protected override void LoadRecentItems()
         {
             var task = _serviceProvider.GetService<ILoadRecentArtistTask>();
@@ -39,12 +38,6 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         protected override void InitialiseSelectedItem(IArtistViewModel item)
         {
-            item.LastAccessed = DateTime.Now;
-
-            var task = _serviceProvider.GetService<IUpdateLastAccessedTask>();
-            task?.Execute(item.Id, item.LastAccessed, false);
-
-            NotifyAll();
             LoadAlbums(item);
         }
 
@@ -60,12 +53,6 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                     Items.Add(viewModel);
                 }
              }
-
-            if (viewModel != null)
-            {
-                var task = _serviceProvider.GetService<IUpdateLastAccessedTask>();
-                task?.Execute(viewModel.Id, lastAccessed, false);
-            }
 
             return viewModel;
         }
@@ -83,6 +70,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         private void OnSetActiveArtist(ActiveArtistChangedMessage message)
         {
             SelectedItem = AddItemToList(message.Payload, DateTime.Now);
+            UpdateSorting();
         }
 
     }
