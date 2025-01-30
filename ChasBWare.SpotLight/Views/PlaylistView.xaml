@@ -6,15 +6,14 @@
              xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="vm:PlaylistViewModel"
              x:Class="ChasBWare.SpotLight.Views.PlaylistView">
-    <Grid>
+    <Grid VerticalOptions="Fill" >
         <tk:Expander IsExpanded="{Binding IsTracksExpanded, Mode=TwoWay}" Direction="Down" > 
         
         <tk:Expander.Header>
             <v:PlaylistHeaderView BindingContext="{Binding}" HorizontalOptions="Fill"/>
         </tk:Expander.Header>
-
-        <v:TrackListView BindingContext="{Binding TracksViewModel}" VerticalOptions="Fill"/>
-    </tk:Expander>
+                <v:TrackListView BindingContext="{Binding TracksViewModel}" Margin="0,0,0,8"/>
+        </tk:Expander>
     </Grid>
 </ContentView>
 

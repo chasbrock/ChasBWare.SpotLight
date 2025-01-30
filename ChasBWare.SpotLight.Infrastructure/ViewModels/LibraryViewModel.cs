@@ -1,5 +1,6 @@
 ﻿using System.Windows.Input;
 using ChasBWare.SpotLight.Definitions.Messaging;
+using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Enums;
@@ -13,14 +14,18 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                          ILibraryViewModel
     {
         public LibraryViewModel(IServiceProvider serviceProvider,
+                                IPlayerControlViewModel playerControlViewModel,
                                 IMessageService<CurrentTrackChangedMessage> currentTrackChangedMessage)
              : base(serviceProvider, GrouperHelper.GetPlaylistGroupers())
         {
             currentTrackChangedMessage.Register(OnTrackChangedMessage);
+            PlayerControlViewModel = playerControlViewModel;
             Initialise();
+            LoadSettings();
         }
 
-
+        public IPlayerControlViewModel PlayerControlViewModel { get; }
+       
         public void ExecuteLibrayCommand(IPlaylistViewModel? selectedItem)
         {
             if (selectedItem != null)
@@ -31,17 +36,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             }
         }
 
-        public void Initialise()
-        {
-            if (LoadStatus != LoadState.NotLoaded)
-            {
-                return;
-            }
-
-            var loadPlaylistsTask = _serviceProvider.GetService<ILibraryLoaderTask>();
-            loadPlaylistsTask?.Execute(this);
-        }
-
+  
         protected override void InitialiseSelectedItem(IPlaylistViewModel item) 
         {
             item.IsTracksExpanded = true;
@@ -49,6 +44,12 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             var task = _serviceProvider.GetService<IUpdateLastAccessedTask>();
 
             task?.Execute(item.Id, item.LastAccessed, true);
+        }
+
+        private void Initialise()
+        {   
+            var loadPlaylistsTask = _serviceProvider.GetService<ILibraryLoaderTask>();
+            loadPlaylistsTask?.Execute(this);
         }
 
         private void OnTrackChangedMessage(CurrentTrackChangedMessage message)

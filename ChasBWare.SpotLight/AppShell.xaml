@@ -4,24 +4,16 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:ChasBWare.SpotLight"
-    xmlns:v="clr-namespace:ChasBWare.SpotLight.Pages"
+    xmlns:p="clr-namespace:ChasBWare.SpotLight.Pages"
+    xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
     Shell.FlyoutBehavior="Flyout"
     Title="ChasBWare.SpotLight">
 
-    <FlyoutItem Title="Library">
-        <Tab>
-            <ShellContent ContentTemplate="{DataTemplate  v:LibraryPage}" />
-        </Tab>
-    </FlyoutItem>
-    <FlyoutItem Title="Artists">
-        <Tab>
-            <ShellContent ContentTemplate="{DataTemplate v:ArtistPage}" />
-        </Tab>
-    </FlyoutItem>
-    <FlyoutItem Title="Album">
-        <Tab>
-            <ShellContent ContentTemplate="{DataTemplate v:AlbumPage}" />
-        </Tab>
-    </FlyoutItem>
+    <TabBar FlyoutDisplayOptions="AsMultipleItems" Shell.NavBarIsVisible="False">
+        <ShellContent ContentTemplate="{DataTemplate  p:LibraryPage}" Title="Library" Route="Library"/>
+        <ShellContent ContentTemplate="{DataTemplate p:ArtistPage}" Title="Artists" Route="Artists"/>
+        <ShellContent ContentTemplate="{DataTemplate p:AlbumPage}" Title="Albums" Route="Albums"/>
+        <ShellContent ContentTemplate="{DataTemplate p:DevicesPage}" Title="Devices" Route="Devices"/>
+    </TabBar>
 
 </Shell>

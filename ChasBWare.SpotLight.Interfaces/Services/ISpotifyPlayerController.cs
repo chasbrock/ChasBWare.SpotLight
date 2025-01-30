@@ -1,34 +1,22 @@
-﻿using SpotifyAPI.Web;
+﻿using ChasBWare.SpotLight.Domain.Entities;
 
-namespace ChasBWare.SpotLight.Spotify.Interfaces
+namespace ChasBWare.SpotLight.Definitions.Services
 {
     public interface ISpotifyPlayerController
     {
-        /// <summary>
-        /// get list of available devices
-        /// </summary>
-        /// <returns></returns>
-        Task<List<SpotifyAPI.Web.Device>> GetAvailableDevices();
-
-        /// <summary>
-        /// make this the active device
-        /// </summary>
-        /// <param name="deviceId"></param>
-        /// <returns>true if success</returns>
-        Task<bool> SetDeviceAsActive(string deviceId);
-       
+    
         /// <summary>
         /// retreave the currently playing track from spotify
         /// </summary>
         /// <returns></returns>
-        Task<CurrentlyPlaying> GetCurrentPlayingTrack();
-        
+        Task<PlayingTrack?> GetCurrentPlayingTrack();
+
         /// <summary>
         /// get the spotify queue
         /// </summary>
         /// <returns></returns>
-        Task<QueueResponse> GetQueue();
-        
+        Task<Tuple<Track, List<Track>>> GetQueue();
+
         /// <summary>
         /// pause currently playing track
         /// </summary>
@@ -50,25 +38,25 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// <param name="position"></param>
         /// <returns>the track id that is actually playing</returns>
         Task<bool> ResumePlayback(string trackUri, int position);
-       
+
         /// <summary>
         /// set volume for current device
         /// </summary>
         /// <param name="volume"></param>
         /// <returns></returns>
         Task<bool> SetVolume(int volume);
-        
-        /// <summary>
-        /// skip forward
-        /// </summary>
-        /// <returns>the track id that is actually playing</returns>
-        Task<CurrentlyPlaying> SkipNext();
 
         /// <summary>
         /// skip forward
         /// </summary>
         /// <returns>the track id that is actually playing</returns>
-        Task<CurrentlyPlaying> SkipPrevious();
-       
+        Task<PlayingTrack?> SkipNext();
+
+        /// <summary>
+        /// skip forward
+        /// </summary>
+        /// <returns>the track id that is actually playing</returns>
+        Task<PlayingTrack?> SkipPrevious();
+
     }
 }

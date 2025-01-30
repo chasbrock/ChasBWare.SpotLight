@@ -11,7 +11,6 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
     public partial class TrackViewModel(IMessageService<PlayTracklistMessage> _messageService)
                        : Notifyable, ITrackViewModel
     {
-        private bool _isSelected = false;
         private bool _isHated = false;
 
         public Track Track { get; set; } = new Track { Id = "" };
@@ -20,12 +19,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         public ICommand PlayTrackCommand { get; } = new Command<ITrackViewModel>(vm => vm.PlayTrackList());
         public IPlaylistViewModel? Playlist { get; set; }
 
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set => SetField(ref _isSelected, value);
-        }
-
+       
         // [WriteableDataIndex(4)]
         public string Album
         {
@@ -67,34 +61,13 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             get => _isHated;
             set => SetField(ref _isHated, value);
         }
-
-        public string ButtonText
-        {
-            get
-            {
-                switch (Status)
-                {
-                    case TrackStatus.Paused:
-                        return "4";  // webdings = play arrow
-                    case TrackStatus.Playing:
-                        return ";";  // webdings = pause double bar
-                    default:
-                        if (IsSelected)
-                        {
-                            return "4";
-                        }
-                        return string.Empty;
-                }
-            }
-        }
-
+                
         public TrackStatus Status
         {
             get => Track.Status;
             set
             {
                 SetField(Track, value);
-                Notify(nameof(ButtonText));
             }
         }
 

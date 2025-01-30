@@ -1,8 +1,9 @@
 ﻿using System.Collections.ObjectModel;
-
+using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Infrastructure.Utility;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
@@ -53,7 +54,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             set => SetField(ref _sortedItems, value);
         }
 
-        public void UpdateSorting()
+        public async void UpdateSorting()
         {
             if (_selectedSorter == null)
             {
@@ -64,6 +65,26 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                 var sorted = Items.ToList();
                 sorted.Sort(_selectedSorter);
                 SortedItems = new ObservableCollection<T>(sorted);
+            }
+
+            var settingsRepo = _serviceProvider.GetService<IAppSettingsRepository>();
+            if (settingsRepo != null)
+            {
+                await settingsRepo.Save(this.BuildKey(nameof(SelectedSorterName)), SelectedSorterName);
+            }
+        }
+
+
+        protected override async void LoadSettings()
+        {
+            var settingsRepo = _serviceProvider.GetService<IAppSettingsRepository>();
+            if (settingsRepo != null)
+            {
+                var found = await settingsRepo.Load(this.BuildKey(nameof(SelectedSorterName)));
+                if (found != null)
+                {
+                    SelectedSorterName = found;
+                }
             }
         }
 

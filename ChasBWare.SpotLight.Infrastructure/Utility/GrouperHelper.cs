@@ -8,7 +8,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
     {
         public static DateGroups GroupDate(this DateTime value)
         {
-            var deltaDays = (DateTime.Now - value).TotalDays;
+            var deltaDays = (DateTime.Today - value.Date).TotalDays;
             return deltaDays switch
             {
                 < 1 => DateGroups.Today,

@@ -9,7 +9,36 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                                       ISpotifyConnectionManager _spotifyConnectionManager)
                : ISpotifyActionManager
     {
-  
+        public async Task<bool> SetDeviceAsActive(string deviceId)
+        {
+            var client = await _spotifyConnectionManager.GetClient();
+            try
+            {
+                var request = new PlayerTransferPlaybackRequest([deviceId]);
+                return await client.Player.TransferPlayback(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Failed to connect to access user");
+                throw;
+            }
+        }
+
+        public async Task<List<SpotifyAPI.Web.Device>> GetAvailableDevices()
+        {
+            var client = await _spotifyConnectionManager.GetClient();
+            try
+            {
+                var devicesResponse = await client.Player.GetAvailableDevices();
+                return devicesResponse != null ? devicesResponse.Devices : [];
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Failed to connect to access user");
+                throw;
+            }
+        }
+
         public async Task<PrivateUser> GetUserDetails()
         {
             var client = await _spotifyConnectionManager.GetClient();

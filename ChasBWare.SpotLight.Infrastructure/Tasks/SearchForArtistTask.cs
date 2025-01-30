@@ -7,7 +7,12 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
     public class SearchForArtistTask(IDispatcher _dispatcher, ISpotifyArtistRepository _artistRepository)
          : ISearchForArtistTask
     {
-        public async void Execute(ISearchArtistsViewModel viewModel)
+        public void Execute(ISearchArtistsViewModel viewModel)
+        {
+            Task.Run(() => RunTask(viewModel));
+        }
+
+        private async void RunTask(ISearchArtistsViewModel viewModel)
         {
             if (string.IsNullOrWhiteSpace(viewModel.SearchText))
             {

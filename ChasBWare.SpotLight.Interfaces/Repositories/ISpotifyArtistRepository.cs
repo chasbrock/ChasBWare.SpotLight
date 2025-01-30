@@ -16,5 +16,4 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
 
     }
 
-
 }

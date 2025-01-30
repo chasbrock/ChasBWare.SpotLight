@@ -1,15 +1,13 @@
-﻿using ChasBWare.SpotLight.Definitions.Messaging;
-using ChasBWare.SpotLight.Domain.Enums;
+﻿using ChasBWare.SpotLight.Domain.Enums;
 
-namespace ChasBWare.SpotLight.Spotify.Classes
+namespace ChasBWare.SpotLight.Definitions.Messaging
 {
-
     public class ConnectionStatusChangedMessageArgs(ConnectionStatus status)
     {
         public ConnectionStatus ConnectionStatus { get; } = status;
     }
 
-    public class ConnectionStatusChangedMessage: IMessage<ConnectionStatusChangedMessageArgs>
+    public class ConnectionStatusChangedMessage : IMessage<ConnectionStatusChangedMessageArgs>
     {
         public ConnectionStatusChangedMessage(ConnectionStatus status)
         {

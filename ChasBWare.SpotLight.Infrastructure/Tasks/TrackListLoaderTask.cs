@@ -6,20 +6,25 @@ using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks
 {
-    public class TrackListLoaderTask(ITrackRepository _trackRepository,
+    public class TrackListLoaderTask(IServiceProvider _serviceProvider,
+                                     IDispatcher _dispatcher,
+                                     ITrackRepository _trackRepository,
                                      ISpotifyTrackRepository _spotifyTrackRepository,
-                                     IServiceProvider _serviceProvider,
-                                     IHatedService _hatedService,
-                                     IDispatcher _dispatcher)
+                                     IHatedService _hatedService)
                : ITrackListLoaderTask
     {
-        public async void Execute(IPlaylistViewModel viewModel)
+        public void Execute(IPlaylistViewModel viewModel)
         {
-            if (!_hatedService.Initialised) 
+            Task.Run(() => RunTask(viewModel));
+        }
+
+        private async void RunTask(IPlaylistViewModel viewModel)
+        {
+            if (!_hatedService.Initialised)
             {
                 _hatedService.Refresh();
             }
-        
+
             //try to get from db first
             var tracks = await _trackRepository.GetPlaylistTracks(viewModel.Id);
             if (tracks.Count == 0)
@@ -28,26 +33,26 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                 await _trackRepository.AddTracksToPlaylist(viewModel.Id, tracks);
             }
 
-            if (tracks != null)
+            _dispatcher.Dispatch(() =>
             {
-                _dispatcher.Dispatch(() =>
+                viewModel.TracksViewModel.Items.Clear();
+                if (tracks != null)
                 {
-                    viewModel.TracksViewModel.Items.Clear();
 
                     foreach (var track in tracks)
                     {
                         var trackViewModel = _serviceProvider.GetService<ITrackViewModel>();
                         if (trackViewModel != null)
-                        {   
+                        {
                             trackViewModel.Playlist = viewModel;
                             trackViewModel.Track = track;
                             trackViewModel.IsHated = _hatedService.IsHated(track.Id);
-                            viewModel.TracksViewModel.Items.Add(trackViewModel); 
+                            viewModel.TracksViewModel.Items.Add(trackViewModel);
                         }
                     }
                     viewModel.TracksViewModel.LoadStatus = LoadState.Loaded;
-                });
-            }
+                }
+            });
         }
     }
 }

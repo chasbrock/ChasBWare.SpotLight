@@ -1,4 +1,7 @@
-﻿using ChasBWare.SpotLight.Domain.Enums;
+﻿using ChasBWare.SpotLight.Definitions.Services;
+using ChasBWare.SpotLight.Domain.Entities;
+using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Mappings.Mappers;
 using ChasBWare.SpotLight.Spotify.Interfaces;
 using Microsoft.Extensions.Logging;
 using SpotifyAPI.Web;
@@ -9,15 +12,21 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                                          ISpotifyConnectionManager _spotifyConnectionManager) 
                : ISpotifyPlayerController
     {
-        public async Task<CurrentlyPlaying> SkipNext()
+        public async Task<PlayingTrack?> SkipNext()
         {
             var client = await _spotifyConnectionManager.GetClient();
             try
             {
                 await client.Player.SkipNext();
                 Thread.Sleep(100);
-                return await client.Player.GetCurrentlyPlaying(new PlayerCurrentlyPlayingRequest());
-               
+                var currentlPlaying = await client.Player.GetCurrentlyPlaying(new PlayerCurrentlyPlayingRequest());
+                
+                return currentlPlaying?.CopyToPlayingTrack();
+            }
+            catch (APIException apiEx)
+            {
+                _logger.LogError(apiEx, "failed to skip previous");
+                return null;
             }
             catch (Exception ex)
             {
@@ -26,14 +35,20 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
         }
 
-        public async Task<CurrentlyPlaying> SkipPrevious()
+        public async Task<PlayingTrack?> SkipPrevious()
         {
             var client = await _spotifyConnectionManager.GetClient();
             try
             {
                 await client.Player.SkipPrevious();
                 Thread.Sleep(100);
-                return await client.Player.GetCurrentlyPlaying(new PlayerCurrentlyPlayingRequest());
+                var currentlPlaying = await client.Player.GetCurrentlyPlaying(new PlayerCurrentlyPlayingRequest());
+                return currentlPlaying?.CopyToPlayingTrack();
+            }
+            catch (APIException apiEx)
+            {
+                _logger.LogError(apiEx, "failed to skip previous");
+                return null;
             }
             catch (Exception ex)
             {
@@ -55,6 +70,11 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                 };
                 return await client.Player.ResumePlayback(request);
             }
+            catch (APIException apiEx)
+            {
+                _logger.LogError(apiEx, "failed to start playback");
+                return false;
+            }
             catch (Exception ex)
             {
                 _logger.LogCritical(ex, "Failed to connect to access user");
@@ -67,13 +87,18 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             var client = await _spotifyConnectionManager.GetClient();
             try
             {
-                PlayerResumePlaybackRequest request = new() 
-                { 
+                PlayerResumePlaybackRequest request = new()
+                {
                     ContextUri = trackUri,
                     PositionMs = position,
-                    
+
                 };
                 return await client.Player.ResumePlayback(request);
+            }
+            catch (APIException apiEx) 
+            {
+                _logger.LogError(apiEx, "failed to resume playback");
+                return false;
             }
             catch (Exception ex)
             {
@@ -88,6 +113,11 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             try
             {
                 return await client.Player.PausePlayback();
+            }
+            catch (APIException apiEx)
+            {
+                _logger.LogError(apiEx, "failed to pause playback");
+                return false;
             }
             catch (Exception ex)
             {
@@ -110,42 +140,16 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                 throw;
             }
         }
-
-        public async Task<List<SpotifyAPI.Web.Device>> GetAvailableDevices()
+               
+        public async Task<Tuple<Track,List<Track>>> GetQueue()
         {
             var client = await _spotifyConnectionManager.GetClient();
             try
             {
-                var devicesResponse = await client.Player.GetAvailableDevices();
-                return devicesResponse != null ? devicesResponse.Devices : [];
-            }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex, "Failed to connect to access user");
-                throw;
-            }
-        }
-
-        public async Task<CurrentlyPlayingContext> GetCurrentPlayback()
-        {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                return await client.Player.GetCurrentPlayback();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex, "Failed to connect to access user");
-                throw;
-            }
-        }
-
-        public async Task<QueueResponse> GetQueue()
-        {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                return await client.Player.GetQueue();
+                var queue = await client.Player.GetQueue();
+                var current = queue.CurrentlyPlaying.CopyToTrack();
+                var tracks = queue.Queue.Select(pi => pi.CopyToTrack()).ToList();
+                return new Tuple<Track, List<Track>>(current, tracks);
             }
             catch (Exception ex)
             {
@@ -169,7 +173,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
         }
 
-        public async Task<CurrentlyPlaying> GetCurrentPlayingTrack()
+        public async Task<PlayingTrack?> GetCurrentPlayingTrack()
         {
             var attempts = 3;
             while (attempts -- > 0)
@@ -177,11 +181,18 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                 var client = await _spotifyConnectionManager.GetClient();
                 try
                 {
-                    return await client.Player.GetCurrentlyPlaying(new PlayerCurrentlyPlayingRequest());
+                    var currentlyPlaying = await client.Player.GetCurrentlyPlaying(new PlayerCurrentlyPlayingRequest());
+                    return currentlyPlaying.CopyToPlayingTrack();
                 }
                 catch (APIUnauthorizedException)
                 {
                     _spotifyConnectionManager.Status = ConnectionStatus.TokenExpired;
+                }
+                catch (HttpRequestException httpEx)
+                {
+                    _logger.LogCritical(httpEx, "Failed to connect tto server");
+                    _spotifyConnectionManager.Status = ConnectionStatus.NotConnected;
+                    return null;
                 }
                 catch (Exception ex)
                 {
@@ -192,19 +203,6 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             throw new Exception("failed to access spotify");
         }
 
-        public async Task<bool> SetDeviceAsActive(string deviceId)
-        {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                var request = new PlayerTransferPlaybackRequest([deviceId]);
-                return await client.Player.TransferPlayback(request);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex, "Failed to connect to access user");
-                throw;
-            }
-        }
+    
     }
 }

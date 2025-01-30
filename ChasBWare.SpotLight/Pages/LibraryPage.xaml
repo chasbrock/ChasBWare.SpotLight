@@ -17,13 +17,12 @@
         </LinearGradientBrush>
     </ContentPage.Background>
     
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <v:PlaylistSelectorView BindingContext="{Binding}" Grid.Column="0" VerticalOptions="Fill"/>
-        <v:PlaylistView BindingContext="{Binding SelectedItem}" Grid.Column="1" VerticalOptions="Fill"/>
+    <Grid RowDefinitions="*,Auto">
+        <Grid ColumnDefinitions="300,*" Grid.Row="0">
+            <v:PlaylistSelectorView BindingContext="{Binding}" Grid.Column="0" VerticalOptions="Fill"/>
+            <v:PlaylistView BindingContext="{Binding SelectedItem}" Grid.Column="1" VerticalOptions="Fill"/>
+        </Grid>
+        <v:PlayerControlView BindingContext="{Binding PlayerControlViewModel}" Grid.Row="1"/>
     </Grid>
     
 </ContentPage>

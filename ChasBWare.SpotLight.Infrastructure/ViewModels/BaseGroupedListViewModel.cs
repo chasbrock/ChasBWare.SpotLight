@@ -1,6 +1,9 @@
-﻿using ChasBWare.SpotLight.Definitions.Utility;
+﻿using System.Windows.Input;
+using ChasBWare.SpotLight.Definitions.Repositories;
+using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Infrastructure.Utility;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
@@ -18,7 +21,10 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         {
             Groupers = groupers;
             _selectedGrouper = Groupers[0];
+            ItemSelectedCommand = new Command(t => SelectedItem = (T)t);
         }
+
+        public ICommand ItemSelectedCommand { get; private set; }
 
         public List<string> GrouperNames
         {
@@ -28,7 +34,11 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         public string SelectedGrouperName
         {
             get => SelectedGrouper?.Name ?? string.Empty;
-            set { SelectedGrouper = Groupers.FirstOrDefault(g => g.Name == value) ?? Groupers.First(); }
+            set
+            {
+                SelectedGrouper = Groupers.FirstOrDefault(g => g.Name == value) ?? Groupers.First();
+                Notify(nameof(SelectedGrouperName));
+            }
         }
 
         public List<IGroupHolder<T>> GroupedItems
@@ -53,9 +63,27 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             }
         }
 
-         protected virtual void UpdateGroupings()
+        protected override async void LoadSettings()
+        {
+            var settingsRepo = _serviceProvider.GetService<IAppSettingsRepository>();
+            if (settingsRepo != null)
+            {
+                var found = await settingsRepo.Load(this.BuildKey(nameof(SelectedGrouperName)));
+                if (found != null)
+                {
+                    SelectedGrouperName = found;
+                }
+            }
+        }
+
+        protected virtual async void UpdateGroupings()
         {
             GroupedItems = _selectedGrouper.BuildGroups(this, Items);
+            var settingsRepo = _serviceProvider.GetService<IAppSettingsRepository>();
+            if (settingsRepo != null)
+            {
+               await settingsRepo.Save(this.BuildKey(nameof(SelectedGrouperName)), SelectedGrouperName);
+            }
         }
 
         protected override void LoadStatusChanged(LoadState loadStatus)
@@ -63,12 +91,14 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             UpdateGroupings();
         }
 
-        protected override void SelectedItemChanged(T? selectedItem)
+        protected override void SelectedItemChanged(T selectedItem)
         {
-            if (selectedItem != null)
-            {
-                InitialiseSelectedItem(selectedItem);
+            if (IsUpdating) 
+            { 
+                return;
             }
+                    
+            InitialiseSelectedItem(selectedItem);
         }
 
         protected abstract void InitialiseSelectedItem(T selectedItem);

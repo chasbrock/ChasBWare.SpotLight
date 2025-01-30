@@ -7,6 +7,17 @@
              xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="vm:PlaylistListViewModel"
              x:Class="ChasBWare.SpotLight.Views.PlaylistListView">
+
+    <ContentView.Resources>
+
+        <Style x:Key="RoundedBorder" TargetType="Border">
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            <Setter Property="Background" Value="Lavender" />
+            <Setter Property="Stroke" Value="MidnightBlue" />
+        </Style>
+    </ContentView.Resources>
+
     <Grid RowDefinitions="Auto,*">
 
         <Picker ItemsSource="{Binding SorterNames}"
@@ -22,7 +33,9 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:PlaylistViewModel">
-                    <v:PlaylistView BindingContext="{Binding}" VerticalOptions="Fill" Margin="0,0,0,8"/>
+                    <Border Style="{StaticResource RoundedBorder}">
+                    <v:PlaylistView BindingContext="{Binding}" VerticalOptions="Fill"/>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

@@ -9,7 +9,12 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                                     ISpotifyPlaylistRepository _playlistRepository)
                : ISearchForAlbumTask
     {
-        public async void Execute(ISearchAlbumsViewModel viewModel)
+        public void Execute(ISearchAlbumsViewModel viewModel)
+        {
+            Task.Run(() => RunTask(viewModel));
+        }
+
+        private async void RunTask(ISearchAlbumsViewModel viewModel)
         {
             if (string.IsNullOrWhiteSpace(viewModel.SearchText))
             {

@@ -11,7 +11,12 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                                      IDispatcher _dispatcher)
                : ILoadRecentPlaylistTask
     {
-        public async void Execute(IRecentViewModel<IPlaylistViewModel> viewModel, PlaylistType playlistType)
+        public  void Execute(IRecentViewModel<IPlaylistViewModel> viewModel, PlaylistType playlistType)
+        {
+            Task.Run(() => RunTask(viewModel, playlistType));
+        }
+
+        private async void RunTask(IRecentViewModel<IPlaylistViewModel> viewModel, PlaylistType playlistType)
         {
             var items = await _playlistRepository.GetPlaylists(_userRepository.CurrentUserId, playlistType, true);
             if (items.Count == 0)

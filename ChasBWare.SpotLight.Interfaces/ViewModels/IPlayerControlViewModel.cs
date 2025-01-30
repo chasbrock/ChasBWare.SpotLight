@@ -8,10 +8,9 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
         ICommand PlayCommand { get; }
         ICommand PauseCommand { get; }
         ICommand ForwardCommand { get; }
-        ICurrentDeviceViewModel CurrentDevice { get; }
-        IConnectionStatusViewModel ConnectionStatusViewModel { get; }
+        IDeviceViewModel CurrentDevice { get; set; }
 
-        int ProgressPercent { get; set; }
+        double ProgressPercent { get; set; }
         string ProgressText { get; set; }
         bool IsPlaying { get; set; }
         bool IsPaused { get; }

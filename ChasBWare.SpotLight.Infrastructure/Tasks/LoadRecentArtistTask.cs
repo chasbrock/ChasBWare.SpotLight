@@ -11,7 +11,12 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                                       IDispatcher _dispatcher)
                 : ILoadRecentArtistTask
     {
-        public async void Execute(IRecentArtistsViewModel viewModel)
+        public  void Execute(IRecentArtistsViewModel viewModel)
+        {
+            Task.Run(() => RunTask(viewModel));
+        }
+
+        private async void RunTask(IRecentArtistsViewModel viewModel)
         {
             var items = await _artistRepository.GetRecentArtists(_userRepository.CurrentUserId);
             if (items.Count > 0)

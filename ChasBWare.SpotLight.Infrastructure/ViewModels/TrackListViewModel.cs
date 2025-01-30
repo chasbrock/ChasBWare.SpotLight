@@ -21,16 +21,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         public ITrackViewModel? SelectedItem
         {
             get => _selectedItem;
-            set
-            {
-                if (SetField(ref _selectedItem, value))
-                {
-                    foreach (var track in Items)
-                    {
-                        track.IsSelected = track == _selectedItem;
-                    }
-                }
-            }
+            set => SetField(ref _selectedItem, value);
         }
 
         public bool ShowHatedTracks

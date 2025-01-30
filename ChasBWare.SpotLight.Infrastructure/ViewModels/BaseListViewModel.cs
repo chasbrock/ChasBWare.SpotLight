@@ -19,6 +19,9 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             _serviceProvider = serviceProvider;
         }
 
+        public bool IsUpdating{ get; set;}
+           
+
         public List<T> Items
         {
             get => _items;
@@ -34,6 +37,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                 }
             }
         }
+
         public LoadState LoadStatus
         {
             get => _loadStatus;
@@ -47,23 +51,26 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             }
         }
 
+
         public T? SelectedItem
         {
             get => _selectedItem;
             set
             {
-                if (SetField(ref _selectedItem, value) && _selectedItem != null)
+                if (SetField(ref _selectedItem, value) && _selectedItem != null && !IsUpdating)
                 {
                     SelectedItemChanged(_selectedItem);
                 }
             }
         }
 
+        protected abstract void LoadSettings();
+
         protected virtual void LoadStatusChanged(LoadState loadStatus) 
         { 
         }
 
-        protected virtual void SelectedItemChanged(T? selectedItem)
+        protected virtual void SelectedItemChanged(T selectedItem)
         {
         }
     }

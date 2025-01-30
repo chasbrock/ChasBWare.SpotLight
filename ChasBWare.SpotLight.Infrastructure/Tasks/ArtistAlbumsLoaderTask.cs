@@ -6,18 +6,24 @@ using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks
 {
-    public class ArtistAlbumsLoaderTask(IArtistRepository _artistRepository,
-                                        IUserRepository _userRepository, 
+    public class ArtistAlbumsLoaderTask(IServiceProvider _serviceProvider,
+                                        IDispatcher _dispatcher,
                                         ISpotifyArtistRepository _spotifyArtistRepository,
-                                        IServiceProvider _serviceProvider,
-                                        IDispatcher _dispatcher) 
+                                        IArtistRepository _artistRepository,
+                                        IUserRepository _userRepository)
                : IArtistAlbumsLoaderTask
     {
-        public async void Execute(IArtistViewModel viewModel)
+        public void Execute(IArtistViewModel viewModel)
+        {
+            Task.Run(() => RunTask(viewModel));
+        }
+
+        private async void RunTask(IArtistViewModel viewModel)
+        
         {
             // try to get from database
             var albums = await _artistRepository.LoadArtistAlbums(viewModel.Id);
-            if (albums.Count == 0 )
+            if (albums.Count == 0)
             {
                 albums = await _spotifyArtistRepository.LoadArtistAlbums(viewModel.Id);
                 await _artistRepository.AddRecentArtistAndAlbums(_userRepository.CurrentUserId, viewModel.Model, albums);

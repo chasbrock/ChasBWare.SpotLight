@@ -6,9 +6,6 @@
              xmlns:vu="clr-namespace:ChasBWare.SpotLight.Infrastructure.Utility;assembly=ChasBWare.SpotLight.Infrastructure"
              x:DataType="vm:LibraryViewModel"
              x:Class="ChasBWare.SpotLight.Views.PlaylistSelectorView">
-
-   
-
     <Grid RowDefinitions="Auto,*">
         
         <Picker ItemsSource="{Binding GrouperNames}"
@@ -34,13 +31,20 @@
                         <CollectionView ItemsSource="{Binding Items}"
                                         VerticalScrollBarVisibility="Always"
                                         SelectionMode="Single"
-                                        SelectedItem="{Binding SelectedItem}"
                                         Margin="8,2">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="vm:PlaylistViewModel">
                                     <Border Margin="8,4">
                                         <VerticalStackLayout Margin="2">
-                                            <Label Text="{Binding Name}" HorizontalOptions="Fill" FontAttributes="Bold"/>
+                                            <Label Text="{Binding Name}" HorizontalOptions="Fill" FontAttributes="Bold">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding x:DataType='vm:LibraryViewModel', 
+                                                                                            Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}},
+                                                                                            Path=ItemSelectedCommand}"
+                                                                           CommandParameter="{Binding}" 
+                                                                           NumberOfTapsRequired="1"/>
+                                                </Label.GestureRecognizers>
+                                            </Label>
                                             <Label Text="{Binding Owner}" HorizontalOptions="Fill" FontAttributes="Italic"/>
                                         </VerticalStackLayout>
                                     </Border>

@@ -8,6 +8,19 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
     /// </summary>
     public interface ISpotifyActionManager
     {
+            /// <summary>
+        /// make this the active device
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <returns>true if success</returns>
+        Task<bool> SetDeviceAsActive(string deviceId);
+
+        /// <summary>
+        /// get list of available devices
+        /// </summary>
+        /// <returns></returns>
+        Task<List<SpotifyAPI.Web.Device>> GetAvailableDevices();
+
         /// <summary>
         /// get details of current user on local machine
         /// </summary>

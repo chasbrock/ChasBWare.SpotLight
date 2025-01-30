@@ -14,13 +14,17 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                                    IDispatcher _dispatcher)
                : ILibraryLoaderTask
     {
-        public async void Execute(ILibraryViewModel viewModel)
+        public void Execute(ILibraryViewModel viewModel)
         {
             if (viewModel.LoadStatus != LoadState.NotLoaded)
             {
                 return;
             }
+            Task.Run(() => RunTask(viewModel));
+        }
 
+        private async void RunTask(ILibraryViewModel viewModel)
+        {
             viewModel.LoadStatus = LoadState.Loading;
             // load albums
             var albums = await _playlistRepository.GetPlaylists(_userRepository.CurrentUserId, PlaylistType.Album, true);
@@ -39,8 +43,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                 await _playlistRepository.AddPlaylists(playlists, _userRepository.CurrentUserId, true);
             }
             AddPlaylistsToModel(viewModel, playlists, false);
-            viewModel.LoadStatus = LoadState.Loaded;
-
+  
         }
 
         private void AddPlaylistsToModel(ILibraryViewModel viewModel, List<RecentPlaylist> items, bool clearList)
@@ -63,7 +66,12 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                          viewModel.Items.Add(playlistViewModel);
                      } 
                 }
-            });
+
+                 if (!clearList)
+                 {
+                     viewModel.LoadStatus = LoadState.Loaded;
+                 };
+             });
         }
     }
 }

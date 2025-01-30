@@ -22,7 +22,6 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
         int TrackNumber { get; }
 
         bool IsHated { get; set; }
-        bool IsSelected { get; set; }
         TrackStatus Status { get; set; }
         void PlayTrackList();
     }

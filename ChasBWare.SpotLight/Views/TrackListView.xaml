@@ -3,9 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ChasBWare.SpotLight.Definitions.ViewModels;assembly=ChasBWare.SpotLight.Definitions"
              xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
+             xmlns:c="clr-namespace:ChasBWare.SpotLight.Converters"
              x:DataType="vm:ITrackListViewModel"
              x:Class="ChasBWare.SpotLight.Views.TrackListView">
-   
+
+    <ContentView.Resources>
+
+        <ResourceDictionary>
+            <c:TrackStatusToStringConverter x:Key="ImageSource"
+                PausedValue="icons8_play_button_small.png"
+                PlayingValue="icons8_pause_button_small.png"/>
+        </ResourceDictionary>
+
+    </ContentView.Resources>
+
     <Grid RowDefinitions="Auto" VerticalOptions="Fill">
       
         <CollectionView ItemsSource="{Binding Path=Items}" 
@@ -15,7 +26,7 @@
                         Grid.Row="0">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:ITrackViewModel">
-                    <Grid ColumnDefinitions="20,60,250,250,Auto">
+                    <Grid ColumnDefinitions="40,60,250,250,Auto" RowDefinitions="20">
                         <Grid.Resources >
                             <Style x:Key="HatedStyle" TargetType="Label">
                                  <Setter Property="TextColor" Value="Black"/>
@@ -30,7 +41,10 @@
                             </Style>
 
                         </Grid.Resources>
-                    
+
+                        <Image Source="{Binding Status, Converter={StaticResource ImageSource}}"  
+                                     Grid.Column="0"/>
+
                         <Label Text="{Binding Duration}" Grid.Column="1" VerticalOptions="Center"
                                FontSize="12" Padding="8,0">
                             <Label.Resources>

@@ -1,11 +1,9 @@
 ﻿using ChasBWare.SpotLight.Definitions.ViewModels;
 
-
 namespace ChasBWare.SpotLight.Definitions.Tasks
 {
-    public interface ILoadRemoveArtistTask
+    public interface ILoadAvailableDevicesTask 
     {
-        void Execute(IRecentArtistsViewModel viewModel, string userId);
+        void Execute(IDeviceListViewModel viewModel);
     }
-
 }

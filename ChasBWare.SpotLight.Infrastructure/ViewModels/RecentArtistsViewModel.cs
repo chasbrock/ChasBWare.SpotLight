@@ -13,13 +13,29 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
     {
       
         public RecentArtistsViewModel(IServiceProvider serviceProvider,
+                                      IPlayerControlViewModel playerControlViewModel,
                                       ISearchArtistsViewModel searchViewModel,
                                       IMessageService<ActiveArtistChangedMessage> activeArtistChangedMessageService)
                     : base(serviceProvider, searchViewModel, SorterHelper.GetArtistSorters())
         {
+            PlayerControlViewModel = playerControlViewModel;
             activeArtistChangedMessageService.Register(OnSetActiveArtist);
+            LoadSettings();
         }
-          
+
+        public IPlayerControlViewModel PlayerControlViewModel { get; }
+
+        public bool ShowResults 
+        {
+            get => SelectedItem != null ;
+        }
+
+        protected override void SelectedItemChanged(IArtistViewModel? selectedItem) 
+        {
+            base.SelectedItemChanged(selectedItem);
+            Notify(nameof(ShowResults));
+        }
+
         protected override void LoadRecentItems()
         {
             var task = _serviceProvider.GetService<ILoadRecentArtistTask>();
@@ -31,7 +47,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             if (SelectedItem != null)
             {
                 Items.Remove(SelectedItem);
-                var task = _serviceProvider.GetService<ILoadRemoveArtistTask>();
+                var task = _serviceProvider.GetService<IRemoveArtistTask>();
                 task?.Execute( this,  SelectedItem.Id);
             }
         }

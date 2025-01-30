@@ -1,15 +1,24 @@
-﻿namespace ChasBWare.SpotLight
+﻿using ChasBWare.SpotLight.Definitions.Utility;
+
+namespace ChasBWare.SpotLight
 {
     public partial class App : Application
     {
-        public App()
+        private readonly IServiceProvider _serviceProvider;
+
+        public App(IServiceProvider serviceProvider) : base()
         {
+            _serviceProvider = serviceProvider;
             InitializeComponent();
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new AppShell());
+            var appShell = new AppShell();
+            var navigator = _serviceProvider.GetService<INavigator>() as Navigator;
+            navigator?.SetShell(appShell);
+
+            return new Window(appShell);
         }
     }
 }

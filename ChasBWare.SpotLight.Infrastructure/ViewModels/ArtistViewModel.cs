@@ -2,10 +2,10 @@
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
-using ChasBWare.SpotLight.Infrastructure.Utility;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
+
     public class ArtistViewModel(IServiceProvider serviceProvider)
                : PlaylistListViewModel(serviceProvider),
                  IArtistViewModel

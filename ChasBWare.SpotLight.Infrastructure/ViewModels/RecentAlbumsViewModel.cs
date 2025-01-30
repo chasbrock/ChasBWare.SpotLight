@@ -11,13 +11,17 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
     public class RecentAlbumsViewModel : BaseRecentViewModel<IPlaylistViewModel>, IRecentAlbumsViewModel
     {
         public RecentAlbumsViewModel(IServiceProvider serviceProvider,
+                                     IPlayerControlViewModel playerControlViewModel,
                                      ISearchAlbumsViewModel searchViewModel,
                                      IMessageService<ActiveAlbumChangedMessage> activeAlbumChangedMessageService)
 
             : base(serviceProvider, searchViewModel, SorterHelper.GetPlaylistSorters())
         {
             activeAlbumChangedMessageService.Register(OnSetActiveAlbum);
+            PlayerControlViewModel = playerControlViewModel;
         }
+
+        public IPlayerControlViewModel PlayerControlViewModel { get; }
 
         protected override void LoadRecentItems()
         {
