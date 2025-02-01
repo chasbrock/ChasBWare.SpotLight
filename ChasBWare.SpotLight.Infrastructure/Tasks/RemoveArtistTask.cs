@@ -5,7 +5,7 @@ using ChasBWare.SpotLight.Definitions.ViewModels;
 namespace ChasBWare.SpotLight.Infrastructure.Tasks
 {
     public class RemoveArtistTask(IArtistRepository _artistRepository,
-                                      IUserRepository _userRepository) 
+                                  IUserRepository _userRepository) 
                : IRemoveArtistTask
     {
         public void Execute(IRecentArtistsViewModel viewModel, string artistId)

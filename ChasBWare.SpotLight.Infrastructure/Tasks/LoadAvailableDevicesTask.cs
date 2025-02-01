@@ -36,7 +36,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                 //signal that we have found an active device
                 if (activeDevice != null)
                 {
-                    _activeDeviceMessageService.SendMessage(new ActiveDeviceChangedMessage(activeDevice));
+                    _activeDeviceMessageService.SendMessage(new ActiveDeviceChangedMessage(activeDevice.Model));
                 }
             });
         }

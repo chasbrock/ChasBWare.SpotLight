@@ -4,7 +4,8 @@ using ChasBWare.SpotLight.Definitions.ViewModels;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks
 {
-    public class SearchForArtistTask(IDispatcher _dispatcher, ISpotifyArtistRepository _artistRepository)
+    public class SearchForArtistTask(IDispatcher _dispatcher, 
+                                     ISpotifyArtistRepository _artistRepository)
          : ISearchForArtistTask
     {
         public void Execute(ISearchArtistsViewModel viewModel)
@@ -19,7 +20,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                 return;
             }
 
-            var items = await _artistRepository.FindArtists(viewModel.SearchText);
+            var items = await _artistRepository.SearchForArtists(viewModel.SearchText);
             _dispatcher.Dispatch(() =>
             {
                 viewModel.Items.Clear();

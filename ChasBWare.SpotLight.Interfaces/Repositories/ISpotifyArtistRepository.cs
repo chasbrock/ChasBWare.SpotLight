@@ -5,7 +5,9 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
 {
     public interface ISpotifyArtistRepository
     {
-        Task<List<IArtistViewModel>> FindArtists(string searchText);
+        Task<Artist?> FindArtist(string artistId);
+       
+        Task<List<IArtistViewModel>> SearchForArtists(string searchText);
 
         /// <summary>
         /// load allablbums that are linked to album

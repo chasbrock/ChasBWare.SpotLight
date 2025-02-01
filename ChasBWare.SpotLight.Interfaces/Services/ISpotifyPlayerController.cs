@@ -4,7 +4,6 @@ namespace ChasBWare.SpotLight.Definitions.Services
 {
     public interface ISpotifyPlayerController
     {
-    
         /// <summary>
         /// retreave the currently playing track from spotify
         /// </summary>
@@ -21,7 +20,7 @@ namespace ChasBWare.SpotLight.Definitions.Services
         /// pause currently playing track
         /// </summary>
         /// <returns></returns>
-        Task<bool> PausePlayback();
+        Task<PlayingTrack?> PausePlayback();
 
         /// <summary>
         /// start playing album / playlist at specific track
@@ -29,7 +28,7 @@ namespace ChasBWare.SpotLight.Definitions.Services
         /// <param name="playlistUri"></param>
         /// <param name="trackOffset"></param>
         /// <returns></returns>
-        Task<bool> StartPlayback(string playlistUri, int trackOffset);
+        Task<PlayingTrack?> StartPlayback(string playlistUri, int trackOffset);
 
         /// <summary>
         /// resume track that was paused at given offset in ms
@@ -37,7 +36,7 @@ namespace ChasBWare.SpotLight.Definitions.Services
         /// <param name="trackUri"></param>
         /// <param name="position"></param>
         /// <returns>the track id that is actually playing</returns>
-        Task<bool> ResumePlayback(string trackUri, int position);
+        Task<PlayingTrack?> ResumePlayback(string trackUri, int position);
 
         /// <summary>
         /// set volume for current device

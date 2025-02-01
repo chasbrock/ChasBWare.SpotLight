@@ -5,10 +5,10 @@ using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks
 {
-    public class LoadRecentPlaylistTask(IPlaylistRepository _playlistRepository,
-                                     IUserRepository _userRepository,
-                                     IServiceProvider _serviceProvider,
-                                     IDispatcher _dispatcher)
+    public class LoadRecentPlaylistTask(IServiceProvider _serviceProvider,
+                                        IDispatcher _dispatcher,
+                                        IPlaylistRepository _playlistRepository,
+                                        IUserRepository _userRepository)
                : ILoadRecentPlaylistTask
     {
         public  void Execute(IRecentViewModel<IPlaylistViewModel> viewModel, PlaylistType playlistType)
@@ -27,14 +27,12 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
 
                     foreach (var item in items)
                     {
-                        var playlistViewModel = _serviceProvider.GetService<IPlaylistViewModel>();
-                        if (playlistViewModel != null)
-                        {
-                            playlistViewModel.Model = item;
-                            playlistViewModel.LastAccessed = item.LastAccessed;
-                            viewModel.Items.Add(playlistViewModel);
-                        }
+                        var playlistViewModel = _serviceProvider.GetRequiredService<IPlaylistViewModel>();
+                        playlistViewModel.Model = item;
+                        playlistViewModel.LastAccessed = item.LastAccessed;
+                        viewModel.Items.Add(playlistViewModel);
                     }
+
                     viewModel.LoadStatus = LoadState.Loaded;
                 });
             }

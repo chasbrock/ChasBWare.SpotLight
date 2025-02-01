@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
+using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Tasks;
 using ChasBWare.SpotLight.Definitions.Utility;
@@ -31,7 +32,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             Refresh();
         }
 
-        public string Path { get; } = "//Devices";
+        public string Path { get; } = PageType.Devices;
 
         public ICommand RefreshCommand { get; }
 
@@ -63,7 +64,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                     }
 
                     var selectedDevice = _selectedDevice ?? new DeviceViewModel();
-                    _activeDeviceMessageService.SendMessage(new ActiveDeviceChangedMessage(selectedDevice));
+                    _activeDeviceMessageService.SendMessage(new ActiveDeviceChangedMessage(selectedDevice.Model));
                 }
             }
         }

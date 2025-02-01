@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 
 namespace ChasBWare.SpotLight.Definitions.ViewModels
 {
@@ -8,13 +9,17 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
         ICommand PlayCommand { get; }
         ICommand PauseCommand { get; }
         ICommand ForwardCommand { get; }
-        IDeviceViewModel CurrentDevice { get; set; }
+        ICurrentDeviceViewModel CurrentDevice { get;  }
 
         double ProgressPercent { get; set; }
-        string ProgressText { get; set; }
+        TimeSpan Duration { get; set; }
+        TimeSpan PlayedTime { get; set; }
         bool IsPlaying { get; set; }
         bool IsPaused { get; }
         string CurrentTrack { get; set; }
-        string CurrentArtist { get; set; }
+        string Artists { get; set; }
+        ITrackPlayerService TrackPlayerService { get; }
+        ICommand OpenArtistCommand { get; }
+        ICommand OpenAlbumCommand { get; }
     }
 }

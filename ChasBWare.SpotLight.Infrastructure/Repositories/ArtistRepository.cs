@@ -31,6 +31,20 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
             return -1;
         }
 
+
+        public async Task<Artist?> FindArtist(string artistId)
+        {
+            var connection = await _dbContext.GetConnection();
+            if (connection != null)
+            {
+                return await connection.Table<Artist>()
+                                       .FirstOrDefaultAsync(a => a.Id == artistId);
+             
+            }
+            _logger.LogError("Could not access db connection");
+            return null;
+        }
+
         public async Task<bool> Remove(string? userId, string artistId)
         {
             if (userId == null)
@@ -157,5 +171,6 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
             _logger.LogError("Could not access db connection");
 
         }
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ChasBWare.SpotLight.Spotify.Interfaces;
 using Microsoft.Extensions.Logging;
 using SpotifyAPI.Web;
+using static SpotifyAPI.Web.PlayerResumePlaybackRequest;
 
 namespace ChasBWare.SpotLight.Spotify.Classes
 {
@@ -16,6 +17,36 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             {
                 var request = new PlayerTransferPlaybackRequest([deviceId]);
                 return await client.Player.TransferPlayback(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Failed to connect to access user");
+                throw;
+            }
+        }
+
+        public async Task<bool> SetCurrentDeviceVolume(int volumePercent)
+        {
+            var client = await _spotifyConnectionManager.GetClient();
+            try
+            {
+                var request = new PlayerVolumeRequest(volumePercent);
+                return await client.Player.SetVolume(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Failed to connect to access user");
+                throw;
+            }
+        }
+
+
+        public async Task<CurrentlyPlayingContext> GetCurrentContext()
+        {
+            var client = await _spotifyConnectionManager.GetClient();
+            try
+            {
+                return await client.Player.GetCurrentPlayback();
             }
             catch (Exception ex)
             {
@@ -156,6 +187,21 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
         }
 
+        public async Task<FullArtist> FindArtist(string artistId)
+        {
+            var client = await _spotifyConnectionManager.GetClient();
+            try
+            {
+                return await client.Artists.Get(artistId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to connect to access user");
+                throw;
+            }
+        }
+
+
         public async Task<Paging<SimpleAlbum>> GetArtistAlbums(string artistId, int offset)
         {
             var client = await _spotifyConnectionManager.GetClient();
@@ -185,7 +231,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
         }
 
-        public async Task<List<FullArtist>> FindArtist(string artistName)
+        public async Task<List<FullArtist>> SearchForArtists(string artistName)
         {
             var client = await _spotifyConnectionManager.GetClient();
             try
@@ -247,6 +293,6 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
         }
 
-       
+   
     }
 }

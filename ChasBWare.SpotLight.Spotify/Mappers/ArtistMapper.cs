@@ -6,11 +6,12 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
 {
     public static class ArtistMapper
     {
-        public static void CopyToArtist(this FullArtist source, Artist target)
+        public static Artist CopyToArtist(this FullArtist source)
         {
-            target.Id = source.Id ?? string.Empty;
-            target.Name = source.Name ?? string.Empty;
-            target.Image = (source?.Images).GetMediumImage();
+            return new Artist {
+                Id = source.Id ?? string.Empty,
+                Name = source.Name ?? string.Empty,
+                Image = (source?.Images).GetMediumImage() };
         }
     }
 }

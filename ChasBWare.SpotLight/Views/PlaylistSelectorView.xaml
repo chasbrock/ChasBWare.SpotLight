@@ -45,7 +45,15 @@
                                                                            NumberOfTapsRequired="1"/>
                                                 </Label.GestureRecognizers>
                                             </Label>
-                                            <Label Text="{Binding Owner}" HorizontalOptions="Fill" FontAttributes="Italic"/>
+                                            <Label Text="{Binding Owner}" HorizontalOptions="Fill" FontAttributes="Italic">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding x:DataType='vm:LibraryViewModel', 
+                                                                                            Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}},
+                                                                                            Path=ItemSelectedCommand}"
+                                                                           CommandParameter="{Binding}" 
+                                                                           NumberOfTapsRequired="1"/>
+                                                </Label.GestureRecognizers>
+                                            </Label>
                                         </VerticalStackLayout>
                                     </Border>
                                 </DataTemplate>

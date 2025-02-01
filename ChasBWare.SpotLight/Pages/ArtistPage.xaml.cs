@@ -9,4 +9,5 @@ public partial class ArtistPage : ContentPage
 		InitializeComponent();
 		BindingContext = viewModel;
 	}
+
 }

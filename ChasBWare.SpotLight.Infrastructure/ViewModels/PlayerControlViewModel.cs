@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Windows.Input;
+using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Tasks;
 using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
@@ -17,62 +19,59 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly INavigator _navigator;
-        private readonly ITrackPlayerService _trackPlayerService;
-        
+
+        private string? _currentTrackId;
         private bool _isPlaying = false;
         private string _currentTrack = "";
-        private string _currentArtist = "";
+        private string _image = "";
+        private string _albumId = "";
+        private List<IdItem> _artisList = [];
+        private string _artists = "";
         private double _progressPercent = 0;
-        private string _progressText = "";
-        private IDeviceViewModel _currentDevice = new DeviceViewModel();
-              
+        private TimeSpan _playedTime = TimeSpan.Zero;
+        private TimeSpan _duration = TimeSpan.Zero;
+
         public PlayerControlViewModel(IServiceProvider serviceProvider,
                                       INavigator navigator,
                                       ITrackPlayerService trackPlayerService,
+                                      ICurrentDeviceViewModel currentDevice,
                                       IMessageService<PlayTracklistMessage> playTracklistMessageService,
                                       IMessageService<ActiveDeviceChangedMessage> activeDeviceChangedMessageService,
                                       IMessageService<ConnectionStatusChangedMessage> connectionStatusService)
         {
             _serviceProvider = serviceProvider;   
             _navigator = navigator;
-            _trackPlayerService = trackPlayerService;
-            _trackPlayerService.OnTrackProgress += ShowProgress;
+            CurrentDevice = currentDevice;
             
+            TrackPlayerService = trackPlayerService;
+            TrackPlayerService.OnTrackProgress += ShowProgress;
+
             BackCommand = new Command(SkipBack);
             PlayCommand = new Command(Play);
             PauseCommand = new Command(Pause);
             ForwardCommand = new Command(SkipForward);
-            ResyncCommand = new Command(Resync);
+            ResyncCommand = new Command(SyncToDevice);
             OpenDevicesPopupCommand = new Command(NavigateToDevices);
- 
+            OpenArtistCommand = new Command<string>(id => NavigateToArtist(id));
+            OpenAlbumCommand = new Command<string>(id => NavigateToAlbum(id));
+
             activeDeviceChangedMessageService.Register(SetCurrentDevice);
             connectionStatusService.Register(ConnectionStatusChange);
             playTracklistMessageService.Register(PlayTracklist);
         }
 
-     
-        public ICommand BackCommand { get; private set; }
-        public ICommand PlayCommand { get; private set; }
-        public ICommand PauseCommand { get; private set; }
-        public ICommand ForwardCommand { get; private set; }
-        public ICommand OpenDevicesPopupCommand { get; private set; }
-        public ICommand ResyncCommand { get; private set; }
+        public ICommand BackCommand { get;  }
+        public ICommand PlayCommand { get; }
+        public ICommand PauseCommand { get;  }
+        public ICommand ForwardCommand { get;  }
+        
+        public ICommand OpenDevicesPopupCommand { get; }
+        public ICommand OpenArtistCommand { get; }
+        public ICommand OpenAlbumCommand { get; }
+        public ICommand ResyncCommand { get; }
 
-        public IDeviceViewModel CurrentDevice 
-        {
-            get => _currentDevice;
-            set
-            {
-                if (SetField(ref _currentDevice, value))
-                {
-                    if (CurrentDevice != null && CurrentDevice.IsActive)
-                    {
-                        _trackPlayerService.SyncToDevice();
-                    }
-                    NotifyAll();
-                }
-            }
-        } 
+        public ICurrentDeviceViewModel CurrentDevice { get; }
+        public ITrackPlayerService TrackPlayerService { get; }
 
         public string CurrentTrack
         {
@@ -80,12 +79,18 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             set => SetField(ref _currentTrack, value);
         }
 
-        public string CurrentArtist
+        public string Artists
         {
-            get => _currentArtist;
-            set => SetField(ref _currentArtist, value);
+            get => _artists;
+            set => SetField(ref _artists, value);
         }
- 
+        
+        public List<IdItem> ArtistList 
+        {
+            get => _artisList;
+            set => SetField(ref _artisList, value);
+        }
+
         public bool IsPlaying
         {
             get => _isPlaying;
@@ -109,15 +114,32 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             set => SetField(ref _progressPercent, value);
         }
 
-        public string ProgressText
+        public TimeSpan PlayedTime
         {
-            get => _progressText;
-            set => SetField(ref _progressText, value);
+            get => _playedTime;
+            set => SetField(ref _playedTime, value);
+        }
+
+        public TimeSpan Duration
+        {
+            get => _duration;
+            set => SetField(ref _duration, value);
+        }
+
+        public string Image
+        {
+            get => _image;
+            set => SetField(ref _image, value);
+        }
+        public string AlbumId 
+        {
+            get => _albumId;
+            set => SetField(ref _albumId, value);
         }
 
         private void PlayTracklist(PlayTracklistMessage message)
         {
-            _trackPlayerService.StartPlaylist(message.Payload.Playlist,
+            TrackPlayerService.StartPlaylist(message.Payload.Playlist,
                                               message.Payload.Offset); 
         }
 
@@ -125,63 +147,85 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         {
             if (message.Payload.ConnectionStatus == ConnectionStatus.Connected)
             {
-                var task = _serviceProvider.GetService<IGetActiveDeviceTask>();
-                task?.Execute(this);
+                SyncToDevice();
             }
         }
 
-
         private void SetCurrentDevice(ActiveDeviceChangedMessage message)
         {
-            CurrentDevice = message.Payload;
+            CurrentDevice.Device = message.Payload;
         }
 
         private void SkipForward()
         {
-            _trackPlayerService.SkipForward();
+            TrackPlayerService.SkipForward();
         }
 
         private void Pause()
         {
-            _trackPlayerService.Pause();
+            TrackPlayerService.Pause();
             IsPlaying = false;
         }
 
         private void Play()
         {
-           _trackPlayerService.Resume();
+           TrackPlayerService.Resume();
         }
 
         private void SkipBack()
         {
-           _trackPlayerService.SkipBackward();
+           TrackPlayerService.SkipBackward();
         }
 
-        private void Resync(object obj)
+        private void SyncToDevice()
         {
-            _trackPlayerService.SyncToDevice();
+            var task = _serviceProvider.GetService<ISyncToDeviceTask>();
+            task?.Execute(this);
         }
 
         private void NavigateToDevices()
         {
-            if (String.IsNullOrEmpty(_currentDevice.Model.Id))
+            if (String.IsNullOrEmpty(CurrentDevice.Device.Id))
             {
-                var task = _serviceProvider.GetService<IGetActiveDeviceTask>();
-                task?.Execute(this);
+                SyncToDevice();
             }
             else
             {
-                _navigator.NavigateTo("//Devices");
+                _navigator.NavigateTo(PageType.Devices);
             }
         }
 
-        private void ShowProgress(object? sender, TrackProgressMessageArgs e)
+        private void NavigateToArtist(string id)
         {
-            CurrentTrack = e.TrackName;
-            CurrentArtist = e.Artist;
-            ProgressPercent = (double)e.ProgressPercent/100;
-            ProgressText = e.ProgressText;
-            IsPlaying = e.Status == TrackStatus.Playing;
+            var messageService = _serviceProvider.GetRequiredService<IMessageService<FindItemMessage>>();
+            messageService.SendMessage(new FindItemMessage(PageType.Artists, id));
+            
+            _navigator.NavigateTo(PageType.Artists);
+        }
+
+        private void NavigateToAlbum(string id)
+        {
+            var messageService = _serviceProvider.GetRequiredService<IMessageService<FindItemMessage>>();
+            messageService.SendMessage(new FindItemMessage(PageType.Albums, id));
+
+            _navigator.NavigateTo(PageType.Albums);
+        }
+
+        private void ShowProgress(object? sender, PlayingTrack playingTrack)
+        {
+            if (_currentTrackId != playingTrack.Id) 
+            {
+                _currentTrackId = playingTrack.Id;
+                CurrentTrack = playingTrack.Name;
+                Artists = string.Join(',', playingTrack.Artists.Select(a => a.Name));
+                ArtistList = playingTrack.Artists;
+                Duration = playingTrack.Duration;
+                Image = playingTrack.Image ?? "";
+            }
+
+            ProgressPercent = playingTrack.Progress.TotalMilliseconds / playingTrack.Duration.TotalMilliseconds ;
+            PlayedTime = playingTrack.Progress;
+            IsPlaying = playingTrack.IsPlaying;
         }
 
     }

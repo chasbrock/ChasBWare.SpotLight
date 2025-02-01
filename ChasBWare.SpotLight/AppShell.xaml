@@ -6,14 +6,15 @@
     xmlns:local="clr-namespace:ChasBWare.SpotLight"
     xmlns:p="clr-namespace:ChasBWare.SpotLight.Pages"
     xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
+    xmlns:e="clr-namespace:ChasBWare.SpotLight.Definitions.Enums;assembly=ChasBWare.SpotLight.Definitions"
     Shell.FlyoutBehavior="Flyout"
     Title="ChasBWare.SpotLight">
 
     <TabBar FlyoutDisplayOptions="AsMultipleItems" Shell.NavBarIsVisible="False">
-        <ShellContent ContentTemplate="{DataTemplate  p:LibraryPage}" Title="Library" Route="Library"/>
-        <ShellContent ContentTemplate="{DataTemplate p:ArtistPage}" Title="Artists" Route="Artists"/>
-        <ShellContent ContentTemplate="{DataTemplate p:AlbumPage}" Title="Albums" Route="Albums"/>
-        <ShellContent ContentTemplate="{DataTemplate p:DevicesPage}" Title="Devices" Route="Devices"/>
+        <ShellContent ContentTemplate="{DataTemplate  p:LibraryPage}" Title="Library" Route="{x:Static e:PageType.Library}"/>
+        <ShellContent ContentTemplate="{DataTemplate p:ArtistPage}" Title="Artists" Route="{x:Static e:PageType.Artists}"/>
+        <ShellContent ContentTemplate="{DataTemplate p:AlbumPage}" Title="Albums" Route="{x:Static e:PageType.Albums}"/>
+        <ShellContent ContentTemplate="{DataTemplate p:DevicesPage}" Title="Devices" Route="{x:Static e:PageType.Devices}"/>
     </TabBar>
 
 </Shell>

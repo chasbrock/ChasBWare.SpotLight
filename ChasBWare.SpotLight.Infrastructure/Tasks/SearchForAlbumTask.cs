@@ -22,17 +22,15 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
             }
 
             var items = await _playlistRepository.FindAlbums(viewModel.SearchText);
+          
             _dispatcher.Dispatch(() =>
             {
                 viewModel.Items.Clear();
                 foreach (var item in items)
                 {
-                    var playlistViewModel = _serviceProvider.GetService<IPlaylistViewModel>();
-                    if (playlistViewModel != null)
-                    {
-                        playlistViewModel.Model = item;
-                        viewModel.Items.Add(playlistViewModel);
-                    }
+                    var playlistViewModel = _serviceProvider.GetRequiredService<IPlaylistViewModel>();
+                    playlistViewModel.Model = item;
+                    viewModel.Items.Add(playlistViewModel);
                 }
 
                 viewModel.IsPopupOpen = viewModel.Items.Count > 0;

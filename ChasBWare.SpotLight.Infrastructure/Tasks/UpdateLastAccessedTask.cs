@@ -9,7 +9,10 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
     {
         public async void Execute(string itemId, DateTime lastAccessed, bool isSaved)
         {
-            await _recentItemRepository.UpdateLastAccessed(_userRepository.CurrentUserId, itemId, lastAccessed, isSaved);
+            await _recentItemRepository.UpdateLastAccessed(_userRepository.CurrentUserId,
+                                                           itemId, 
+                                                           lastAccessed, 
+                                                           isSaved);
         }
     }
 

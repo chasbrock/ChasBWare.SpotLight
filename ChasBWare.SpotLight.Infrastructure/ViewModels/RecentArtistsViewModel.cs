@@ -1,5 +1,6 @@
 ﻿using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Messaging;
+using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
@@ -9,20 +10,25 @@ using ChasBWare.SpotLight.Infrastructure.Utility;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
-    public class RecentArtistsViewModel : BaseRecentViewModel<IArtistViewModel>, IRecentArtistsViewModel
+    public class RecentArtistsViewModel 
+               : BaseRecentViewModel<IArtistViewModel>, 
+                 IRecentArtistsViewModel
     {
       
         public RecentArtistsViewModel(IServiceProvider serviceProvider,
-                                      IPlayerControlViewModel playerControlViewModel,
                                       ISearchArtistsViewModel searchViewModel,
+                                      IPlayerControlViewModel playerControlViewModel,
+                                      IMessageService<FindItemMessage> findItemMessageService,
                                       IMessageService<ActiveArtistChangedMessage> activeArtistChangedMessageService)
                     : base(serviceProvider, searchViewModel, SorterHelper.GetArtistSorters())
         {
-            PlayerControlViewModel = playerControlViewModel;
+            findItemMessageService.Register(OnFindItem);
             activeArtistChangedMessageService.Register(OnSetActiveArtist);
+            PlayerControlViewModel = playerControlViewModel;
             LoadSettings();
         }
 
+    
         public IPlayerControlViewModel PlayerControlViewModel { get; }
 
         public bool ShowResults 
@@ -83,11 +89,27 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             }
         }
 
+        private void OnFindItem(FindItemMessage message)
+        {
+            if (message.Payload.ItemType == PageType.Albums)
+            {
+                var albumViewModel = Items.FirstOrDefault(a => a.Id == message.Payload.Id);
+                if (albumViewModel != null)
+                {
+                    albumViewModel.LastAccessed = DateTime.Now;
+                    SelectedItem = albumViewModel;
+                    return;
+                }
+
+//                var task = _serviceProvider.GetService<IFindAlbumTask>();
+//                task?.Execute(this, message.Payload.Id); 
+             }
+        }      
+
         private void OnSetActiveArtist(ActiveArtistChangedMessage message)
         {
             SelectedItem = AddItemToList(message.Payload, DateTime.Now);
             UpdateSorting();
         }
-
     }
 }

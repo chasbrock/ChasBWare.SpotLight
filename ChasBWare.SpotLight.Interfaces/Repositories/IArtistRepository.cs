@@ -5,6 +5,13 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
     public interface IArtistRepository
     {
         /// <summary>
+        /// find artist in database
+        /// </summary>
+        /// <param name="artistId"></param>
+        /// <returns></returns>
+        Task<Artist?> FindArtist(string artistId);
+
+        /// <summary>
         /// add new artist
         /// </summary>
         /// <param name="artist"></param>

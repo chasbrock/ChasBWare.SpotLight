@@ -1,9 +1,11 @@
 ﻿using ChasBWare.SpotLight.Definitions.ViewModels;
 
+
 namespace ChasBWare.SpotLight.Definitions.Tasks
 {
-    public interface IGetActiveDeviceTask
+    public interface ISyncToDeviceTask
     {
-        void Execute(IPlayerControlViewModel playerControlViewModel);
+        void Execute(IPlayerControlViewModel viewModel);
     }
+
 }

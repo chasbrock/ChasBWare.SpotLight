@@ -1,15 +1,15 @@
 ﻿using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks;
 using ChasBWare.SpotLight.Definitions.ViewModels;
-using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks
 {
+
     public class ArtistAlbumsLoaderTask(IServiceProvider _serviceProvider,
                                         IDispatcher _dispatcher,
-                                        ISpotifyArtistRepository _spotifyArtistRepository,
-                                        IArtistRepository _artistRepository,
+                                        ISpotifyArtistRepository _spotifyArtistRepo,
+                                        IArtistRepository _artistRepo,
                                         IUserRepository _userRepository)
                : IArtistAlbumsLoaderTask
     {
@@ -19,14 +19,13 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
         }
 
         private async void RunTask(IArtistViewModel viewModel)
-        
         {
             // try to get from database
-            var albums = await _artistRepository.LoadArtistAlbums(viewModel.Id);
+            var albums = await _artistRepo.LoadArtistAlbums(viewModel.Id);
             if (albums.Count == 0)
             {
-                albums = await _spotifyArtistRepository.LoadArtistAlbums(viewModel.Id);
-                await _artistRepository.AddRecentArtistAndAlbums(_userRepository.CurrentUserId, viewModel.Model, albums);
+                albums = await _spotifyArtistRepo.LoadArtistAlbums(viewModel.Id);
+                await _artistRepo.AddRecentArtistAndAlbums(_userRepository.CurrentUserId, viewModel.Model, albums);
             }
 
             _dispatcher.Dispatch(() =>
@@ -34,13 +33,10 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                 viewModel.Items.Clear();
                 foreach (var album in albums)
                 {
-                    var albumViewModel = _serviceProvider.GetService<IPlaylistViewModel>();
-                    if (albumViewModel != null)
-                    {
-                        albumViewModel.Model = album;
-                        albumViewModel.IsTracksExpanded = false;
-                        viewModel.Items.Add(albumViewModel);
-                    }
+                    var albumViewModel = _serviceProvider.GetRequiredService<IPlaylistViewModel>();
+                    albumViewModel.Model = album;
+                    albumViewModel.IsTracksExpanded = false;
+                    viewModel.Items.Add(albumViewModel);
                 }
 
                 viewModel.LoadStatus = LoadState.Loaded;

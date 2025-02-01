@@ -3,30 +3,6 @@ using SpotifyAPI.Web;
 
 namespace ChasBWare.SpotLight.Mappings.Mappers
 {
-    public static class PlayingTrackMapper
-    {
-        public static PlayingTrack? CopyToPlayingTrack(this CurrentlyPlaying source)
-        {
-            if (source == null)
-            {
-                return null;
-            }
-
-            var track = source.Item.CopyToTrack();
-            if (track.Id == null)
-            {
-                return null;
-            }
-            
-            return new PlayingTrack
-            {
-                TrackId= track.Id,
-                Track = track,
-                ProgressMs = source.ProgressMs ?? 0
-            };
-        }
-    }
-    
 
     public static class TrackModelMapper
     {

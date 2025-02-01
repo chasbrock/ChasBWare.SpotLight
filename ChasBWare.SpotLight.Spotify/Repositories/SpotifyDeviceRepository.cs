@@ -1,31 +1,29 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Services;
 using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Mappings.Mappers;
 using ChasBWare.SpotLight.Spotify.Interfaces;
 
 namespace ChasBWare.SpotLight.Spotify.Repositories
 {
+  
     public class SpotifyDeviceRepository(IServiceProvider _serviceProvider,
                                          ISpotifyActionManager _actionManager)
                : ISpotifyDeviceRepository
     {
-        public async Task<IDeviceViewModel?> GetActiveDevice()
+        public async Task<CurrentContext?> GetCurrentContext()
         {
-            var devices = await _actionManager.GetAvailableDevices();
-            if (devices != null)
+            var context = await _actionManager.GetCurrentContext();
+            if (context != null) 
             {
-                var model= devices.FirstOrDefault(d => d.IsActive)?.CopyToDevice();
-                if (model != null)
+                return new CurrentContext
                 {
-                    var viewModel = _serviceProvider.GetService<IDeviceViewModel>();
-                    if (viewModel != null)
-                    {
-                        viewModel.Model = model;
-                        return viewModel;
-                    }
-                }
+                    Device = context.Device.CopyToDevice(),
+                    Track = context.CopyToPlayingTrack()
+                };
             }
             return null;
         }
@@ -49,6 +47,11 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
             }
 
             return viewModels;
+        }
+
+        public async void SetDeviceVolume(int volumePercent)
+        {
+            await _actionManager.SetCurrentDeviceVolume(volumePercent);
         }
     }
 }

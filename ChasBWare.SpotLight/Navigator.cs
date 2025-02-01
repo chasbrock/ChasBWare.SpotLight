@@ -1,4 +1,5 @@
-﻿using ChasBWare.SpotLight.Definitions.Utility;
+﻿using ChasBWare.SpotLight.Definitions.Enums;
+using ChasBWare.SpotLight.Definitions.Utility;
 
 namespace ChasBWare.SpotLight
 {
@@ -12,7 +13,6 @@ namespace ChasBWare.SpotLight
             _shell = appShell;
             appShell.Navigator = this;
         }
-
 
         public void NavigateTo(string uri)
         {

@@ -1,4 +1,6 @@
-﻿using ChasBWare.SpotLight.Definitions.Messaging;
+﻿using System;
+using System.Collections.Generic;
+using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Services;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
@@ -14,10 +16,9 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
     {
         const int TimerIntervalMs = 1000;
        
-        private DateTime _playBackStarted = DateTime.Now;
-        private DateTime _playbackPaused = DateTime.Now;
+        private DateTime _playbackStarted = DateTime.Now;
         private PlayingTrack? _nowPlaying = null;
-        private IServiceProvider _servicProvider;
+        private IServiceProvider _serviceProvider;
         private readonly IMessageService<CurrentTrackChangedMessage> _currentTrackMessageService;
         private readonly IDispatcherTimer _timer;
   
@@ -25,88 +26,64 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
                                   IDispatcher dispatcher,
                                   IMessageService<CurrentTrackChangedMessage> currentTrackChangedMessage)
         {
-            _servicProvider = serviceProvider;
+            _serviceProvider = serviceProvider;
             _currentTrackMessageService = currentTrackChangedMessage;
             _timer = dispatcher.CreateTimer();
             _timer.Interval = TimeSpan.FromMilliseconds(TimerIntervalMs);
             _timer.Tick += OnTimerTick;
         }
 
-        public event EventHandler<TrackProgressMessageArgs>? OnTrackProgress;
+        public event EventHandler<PlayingTrack>? OnTrackProgress;
 
         public async void StartPlaylist(IPlaylistViewModel playlist, int trackNumber)
         {
-         	var playerController = _servicProvider.GetService<ISpotifyPlayerController>();
+         	var playerController = _serviceProvider.GetService<ISpotifyPlayerController>();
             if (playerController != null)
             {
-                await playerController.StartPlayback(playlist.Uri, trackNumber);
-                _playBackStarted = DateTime.Now;
-
-                var track = playlist.TracksViewModel.Items[trackNumber].Track;
-                if (track.Id == null) 
-                {
-                    return;
-                }
-
-                var nowPlaying = new PlayingTrack { TrackId = track.Id, Track = track, ProgressMs = 0 };
-                ChangePlayingTrack(nowPlaying);
+                UpdateNowPlaying(await playerController.StartPlayback(playlist.Uri, trackNumber));
             }
         }
 
         public async void Pause()
         {
             _timer.Stop();
-            _playbackPaused = DateTime.Now;
-            if (_nowPlaying != null)
-            {
-                _nowPlaying.Track.Status = TrackStatus.Paused;
-            }
-
-            var playerController = _servicProvider.GetService<ISpotifyPlayerController>();
+            PostPlayingTrackChange(TrackStatus.Paused);
+            
+            var playerController = _serviceProvider.GetService<ISpotifyPlayerController>();
             if (playerController != null)
             {
-                await playerController.PausePlayback();
+                UpdateNowPlaying(await playerController.PausePlayback());
             }
         }
 
         public async void Resume()
         {
-            if (_nowPlaying == null) 
+            // check to seee it anyone else has changed track / resumed playback
+            var currentlyPlaying = await GetCurrentlyPlaying();
+            if (currentlyPlaying != null && currentlyPlaying.Id == _nowPlaying?.Id) 
             {
-                await UpdateNowPlaying();
-            }
-
-            if (_nowPlaying != null)
-            {
-                var progress = (int)(_playbackPaused - _playBackStarted).TotalMilliseconds;
-                _playBackStarted = DateTime.Now.Subtract(TimeSpan.FromMilliseconds(progress));
-                _timer.Start();
-
-                var playerController = _servicProvider.GetService<ISpotifyPlayerController>();
-                _nowPlaying.Track.Status = TrackStatus.Playing;
+                var playerController = _serviceProvider.GetService<ISpotifyPlayerController>();
                 if (playerController != null)
                 {
-                    await playerController.ResumePlayback(_nowPlaying.Track.Uri, progress);
+                    currentlyPlaying = await playerController.ResumePlayback(_nowPlaying.Uri, (int)_nowPlaying.Progress.TotalMilliseconds);
                 }
             }
+
+            UpdateNowPlaying(currentlyPlaying);
         }
 
         public async void SkipForward()
         {
-            var playerController = _servicProvider.GetService<ISpotifyPlayerController>();
+            var playerController = _serviceProvider.GetService<ISpotifyPlayerController>();
             if (playerController != null)
             {
-                var nowPlaying = await playerController.SkipNext();
-                if (nowPlaying != null)
-                {
-                    UpdateNowPlaying(nowPlaying);
-                }
+                UpdateNowPlaying(await playerController.SkipNext());
             }
         }
 
         public async void SkipBackward()
         {
-            var playerController = _servicProvider.GetService<ISpotifyPlayerController>();
+            var playerController = _serviceProvider.GetService<ISpotifyPlayerController>();
             if (playerController != null)
             {
                 var nowPlaying = await playerController.SkipPrevious();
@@ -116,26 +93,52 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
                 }
             }
         }
-
-        public async void SyncToDevice()
+        
+        public void UpdateNowPlaying(PlayingTrack? nowPlaying)
         {
-            await UpdateNowPlaying();
+            if (nowPlaying == null)
+            {
+                _timer.Stop();
+                PostPlayingTrackChange(TrackStatus.NotPlaying);
+                return;
+            }
+
+            // alert any playlists viewing the current track
+            if (_nowPlaying != nowPlaying)
+            {
+                PostPlayingTrackChange(TrackStatus.NotPlaying);
+            }
+
+            _nowPlaying = nowPlaying;
+            _playbackStarted = DateTime.Now - nowPlaying.Progress;
+            if (nowPlaying.IsPlaying)
+            {
+                PostPlayingTrackChange(TrackStatus.Playing);
+                _timer.Start();
+            }
+            else
+            {
+                PostPlayingTrackChange(TrackStatus.Paused);
+                _timer.Stop();
+            }
+
+            UpdateTrackProgress(nowPlaying);
         }
 
         private async void OnTimerTick(object? sender, EventArgs e)
         {
             if (_nowPlaying != null)
             {
-                var progress = (int)(DateTime.Now - _playBackStarted).TotalMilliseconds;
+                var progress = DateTime.Now - _playbackStarted;
 
                 //have we finished playing track?
-                if (progress > _nowPlaying.Track.Duration)
+                if (progress > _nowPlaying.Duration)
                 {
-                    await UpdateNowPlaying();
+                    UpdateNowPlaying(await GetCurrentlyPlaying());
                 }
                 else
                 {
-                    UpdateTrackProgress(_nowPlaying, progress);
+                    UpdateTrackProgress(_nowPlaying);
                 }
             }
             else
@@ -143,64 +146,29 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
                 _timer.Stop();
             }
         }
-
-        private void UpdateNowPlaying(PlayingTrack nowPlaying)
+            
+        private async Task<PlayingTrack?> GetCurrentlyPlaying()
         {
-            _playBackStarted = DateTime.Now.AddMilliseconds(-nowPlaying.ProgressMs);
-            if (nowPlaying.Track.Status == TrackStatus.Playing)
-            {
-                _timer.Start();
-            }
-            else
-            {
-                _timer.Stop();
-            }
-
-            ChangePlayingTrack(nowPlaying);
-            UpdateTrackProgress(nowPlaying, nowPlaying.ProgressMs);
-        }
-   		
-   		private async Task UpdateNowPlaying()
-        {
-            var playerController = _servicProvider.GetService<ISpotifyPlayerController>();
+            var playerController = _serviceProvider.GetService<ISpotifyPlayerController>();
             if (playerController != null)
             {
-                var nowPlaying = await playerController.GetCurrentPlayingTrack();
-                if (nowPlaying != null)
-                {
-                    UpdateNowPlaying(nowPlaying);
-                }
+                return await playerController.GetCurrentPlayingTrack();
+
             }
+            return null;
         }
 
-        // this is called on ui thread because we are using DispatchTimer
-        private void UpdateTrackProgress(PlayingTrack nowPlaying, int progress)
+        private void UpdateTrackProgress(PlayingTrack nowPlaying)
         {
-            int progressPercent = 100 * progress / nowPlaying.Track.Duration;
-            var progressText = $"{progress.MSecsToMinsSecs()} / {nowPlaying.Track.Duration.MSecsToMinsSecs()}";
-            OnTrackProgress?.Invoke(this, new TrackProgressMessageArgs(nowPlaying.Track.Name, nowPlaying.Track.Artists, 
-                                                                       progressPercent, progressText, nowPlaying.Track.Status));
+            nowPlaying.Progress = DateTime.Now - _playbackStarted;
+            OnTrackProgress?.Invoke(this, nowPlaying);
         }
-
-        private void ChangePlayingTrack(PlayingTrack nowPlaying)
+               
+        private void PostPlayingTrackChange(TrackStatus status)
         {
-            // clean up last track
             if (_nowPlaying != null)
             {
-                _currentTrackMessageService.SendMessage(new CurrentTrackChangedMessage(_nowPlaying.TrackId, _nowPlaying.Track.Album, TrackStatus.NotPlaying));
-            }
-
-            _nowPlaying = nowPlaying;
-            if (_nowPlaying != null)
-            {
-                
-                _nowPlaying.Track.Status = TrackStatus.Playing;
-                _currentTrackMessageService.SendMessage(new CurrentTrackChangedMessage(_nowPlaying.TrackId, _nowPlaying.Track.Album, TrackStatus.Playing));
-                _timer.Start();
-            }
-            else
-            {
-                _timer.Stop();
+                _currentTrackMessageService.SendMessage(new CurrentTrackChangedMessage(_nowPlaying.Id, _nowPlaying.Album, status));
             }
         }
     }

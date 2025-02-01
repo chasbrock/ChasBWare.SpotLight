@@ -10,8 +10,6 @@ using ChasBWare.SpotLight.Infrastructure.Utility;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
-
-
     public class PlaylistViewModel : Notifyable, IPlaylistViewModel
     {
         private readonly IServiceProvider _provider;

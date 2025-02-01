@@ -11,7 +11,7 @@ namespace ChasBWare.SpotLight
             var builder = MauiApp.CreateBuilder();
             builder.UseMauiApp<App>()
                    .UseMauiCommunityToolkit()
-                   .RegisterAllMine()
+                   .RegisterMyServices()
                    .ConfigureFonts(fonts =>
                    {
                        fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -24,5 +24,23 @@ namespace ChasBWare.SpotLight
 
             return builder.Build();
         }
+
+        public static MauiAppBuilder RegisterMyServices(this MauiAppBuilder builder)
+        {
+            builder.Services.RegisterDbContext()
+                            .RegisterLogging()
+                            .RegisterMessageHandlers()
+                            .RegisterRepositories()
+                            .RegisterServices()
+                            .RegisterNavigator()
+                            .RegisterSpotify()
+                            .RegisterTasks()
+                            .RegisterViewModels()
+                            .RegisterViews();
+
+            return builder;
+        }
+
+
     }
 }

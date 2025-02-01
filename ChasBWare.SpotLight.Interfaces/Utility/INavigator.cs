@@ -1,4 +1,6 @@
-﻿namespace ChasBWare.SpotLight.Definitions.Utility
+﻿using ChasBWare.SpotLight.Definitions.Enums;
+
+namespace ChasBWare.SpotLight.Definitions.Utility
 {
     public interface INavigationClient 
     { 

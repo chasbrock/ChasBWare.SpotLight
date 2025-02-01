@@ -38,18 +38,15 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                 viewModel.TracksViewModel.Items.Clear();
                 if (tracks != null)
                 {
-
                     foreach (var track in tracks)
                     {
-                        var trackViewModel = _serviceProvider.GetService<ITrackViewModel>();
-                        if (trackViewModel != null)
-                        {
-                            trackViewModel.Playlist = viewModel;
-                            trackViewModel.Track = track;
-                            trackViewModel.IsHated = _hatedService.IsHated(track.Id);
-                            viewModel.TracksViewModel.Items.Add(trackViewModel);
-                        }
+                        var trackViewModel = _serviceProvider.GetRequiredService<ITrackViewModel>();
+                        trackViewModel.Playlist = viewModel;
+                        trackViewModel.Track = track;
+                        trackViewModel.IsHated = _hatedService.IsHated(track.Id);
+                        viewModel.TracksViewModel.Items.Add(trackViewModel);
                     }
+                    
                     viewModel.TracksViewModel.LoadStatus = LoadState.Loaded;
                 }
             });

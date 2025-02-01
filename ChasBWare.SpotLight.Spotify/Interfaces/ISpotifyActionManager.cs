@@ -61,7 +61,7 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// async find all albums for artist
         /// </summary>
         /// <returns></returns>
-        Task<List<FullArtist>> FindArtist(string artistName);
+        Task<List<FullArtist>> SearchForArtists(string artistName);
 
         /// <summary>
         /// async find all albums with this name
@@ -87,22 +87,25 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// </summary>
         /// <returns></returns>
         Task<List<FullTrack>> GetArtistTopTracks(string artistId, string userCountry);
+        Task<CurrentlyPlayingContext> GetCurrentContext();
+        Task<bool> SetCurrentDeviceVolume(int volumePercent);
+        Task<FullArtist> FindArtist(string artistId);
 
 
-     /*   
-        /// <summary>
-        /// remove album from saved lists
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<bool> RemoveSavedAlbum(string id);
+        /*   
+           /// <summary>
+           /// remove album from saved lists
+           /// </summary>
+           /// <param name="id"></param>
+           /// <returns></returns>
+           Task<bool> RemoveSavedAlbum(string id);
 
-        /// <summary>
-        /// remove playlis from saved lists
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<bool> RemoveSavedPlaylist(string id);
-     */
+           /// <summary>
+           /// remove playlis from saved lists
+           /// </summary>
+           /// <param name="id"></param>
+           /// <returns></returns>
+           Task<bool> RemoveSavedPlaylist(string id);
+        */
     }
 }

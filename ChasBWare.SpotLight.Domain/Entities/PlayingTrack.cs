@@ -1,9 +1,19 @@
-﻿namespace ChasBWare.SpotLight.Domain.Entities
+﻿using ChasBWare.SpotLight.Domain.Enums;
+
+namespace ChasBWare.SpotLight.Domain.Entities
 {
-    public class PlayingTrack
+
+    public class PlayingTrack 
     {
-        public required string TrackId { get; set; }
-        public required Track Track { get; set; }
-        public int ProgressMs { get; set; }
+        public required string Id { get; set; }
+        public required string Name { get; set; }
+        public required List<IdItem> Artists { get; set; }
+        public required string Album { get; set; }
+        public required string AlbumId { get; set; }
+        public string? Image { get; set; }
+        public required string Uri { get; set; }
+        public TimeSpan Progress { get; set; }
+        public TimeSpan Duration { get; set; }
+        public bool IsPlaying { get; set; }
     }
 }

@@ -7,11 +7,11 @@ using ChasBWare.SpotLight.Domain.Enums;
 namespace ChasBWare.SpotLight.Infrastructure.Tasks
 {
  
-    public class LibraryLoaderTask(IUserRepository _userRepository,
+    public class LibraryLoaderTask(IServiceProvider _serviceProvider,
+                                   IDispatcher _dispatcher,
+                                   IUserRepository _userRepository,
                                    IPlaylistRepository _playlistRepository,
-                                   ISpotifyPlaylistRepository _spotifyPlaylistRepository,
-                                   IServiceProvider _serviceProvider,
-                                   IDispatcher _dispatcher)
+                                   ISpotifyPlaylistRepository _spotifyPlaylistRepository                                   )
                : ILibraryLoaderTask
     {
         public void Execute(ILibraryViewModel viewModel)
@@ -55,17 +55,14 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                      viewModel.Items.Clear();
                  }
 
-                foreach (var item in items)
-                {
-                     var playlistViewModel = _serviceProvider.GetService<IPlaylistViewModel>();
-                     if (playlistViewModel != null)
-                     {
-                         playlistViewModel.Model = item;
-                         playlistViewModel.LastAccessed = item.LastAccessed;
-                         playlistViewModel.IsTracksExpanded = false;
-                         viewModel.Items.Add(playlistViewModel);
-                     } 
-                }
+                 foreach (var item in items)
+                 {
+                     var playlistViewModel = _serviceProvider.GetRequiredService<IPlaylistViewModel>();
+                     playlistViewModel.Model = item;
+                     playlistViewModel.LastAccessed = item.LastAccessed;
+                     playlistViewModel.IsTracksExpanded = false;
+                     viewModel.Items.Add(playlistViewModel);
+                 }
 
                  if (!clearList)
                  {

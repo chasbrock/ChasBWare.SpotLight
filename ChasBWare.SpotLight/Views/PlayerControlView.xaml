@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
+             xmlns:dom="clr-namespace:ChasBWare.SpotLight.Domain.Entities;assembly=ChasBWare.SpotLight.Domain"
              x:DataType="vm:PlayerControlViewModel"
              x:Class="ChasBWare.SpotLight.Views.PlayerControlView">
 
@@ -15,97 +16,158 @@
             <Setter Property="Stroke" Value="MidnightBlue" />
         </Style>
 
+        <Style TargetType="Label" x:Key="ArtistHighlight">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="TextColor" Value="Blue" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+
         <ResourceDictionary>
             <Visibility x:Key="Visible">Visible</Visibility>
             <Visibility x:Key="Collapsed">Collapsed</Visibility>
             <tk:BoolToObjectConverter  x:Key="BoolToVis" 
-           TrueObject="{StaticResource Collapsed}" 
-           FalseObject="{StaticResource Visible}"/>
+                                    TrueObject="{StaticResource Collapsed}" 
+                                    FalseObject="{StaticResource Visible}"/>
+            
+            <tk:BoolToObjectConverter x:Key="BoolToMuted" 
+                                    TrueObject="icons8_no_audio.png" 
+                                    FalseObject="icons8_audio.png"/>
         </ResourceDictionary>
 
     </ContentView.Resources>
 
-    <Grid ColumnDefinitions="Auto,*,Auto,Auto" RowDefinitions="50">
+    <Grid ColumnDefinitions="Auto, *,Auto,Auto,Auto" RowDefinitions="75">
 
-        <!-- play control Buttons -->
         <Border Grid.Column="0" Margin="1" Style="{StaticResource RoundedBorder}" >
-            <HorizontalStackLayout >
-                <ImageButton Command="{Binding Path=BackCommand}" Background="Lavender"
-                       IsEnabled="{Binding Path=CurrentDevice.IsActive}"
-                       Margin="1,2"
-                       Source ="icons8_rewind_button_round.png" />
+            <Image Source="{Binding Path=Image}"
+                   VerticalOptions="Fill" HorizontalOptions="Fill" >
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OpenArtistCommand}"
+                                          CommandParameter="{Binding AlbumId}" 
+                                          NumberOfTapsRequired="2"/>
+                </Image.GestureRecognizers>
 
-                <ImageButton Command="{Binding Path=PlayCommand}" Background="Lavender"
-                       IsEnabled="{Binding Path=CurrentDevice.IsActive}"
-                       IsVisible="{Binding Path=IsPaused, Converter={StaticResource BoolToVis}}"
-                       Margin="1,2"
-                       Source="icons8_play_button.png"/>
-
-                <ImageButton Command="{Binding Path=PauseCommand}" Background="Lavender"
-                       IsEnabled="{Binding Path=CurrentDevice.IsActive}"
-                       IsVisible="{Binding Path=IsPlaying, Converter={StaticResource BoolToVis}}" 
-                       Margin="1,2"
-                       Source="icons8_pause_button.png"/>
-
-                <ImageButton Command="{Binding Path=ForwardCommand}" Background="Lavender"
-                       IsEnabled="{Binding Path=CurrentDevice.IsActive}"
-                       Margin="1,2"
-                       Source="icons8_fast_forward_round.png"/>
-            </HorizontalStackLayout>
+            </Image>
         </Border>
-
         <!-- current track -->
         <Border Grid.Column="1" Margin="1" Style="{StaticResource RoundedBorder}" >
-            <Grid ColumnDefinitions="*,Auto">
-               <VerticalStackLayout Grid.Column="0">
-                    <Label Text="{Binding Path=CurrentTrack}" 
-                           VerticalTextAlignment="Center" HorizontalTextAlignment="Center" 
-                           FontAttributes="Bold" FontSize="14" Margin ="4" >
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ResyncCommand}" NumberOfTapsRequired="2"/>
-                        </Label.GestureRecognizers> 
-                    </Label>
+            <Grid RowDefinitions="Auto,*" ColumnDefinitions="Auto, *">
+                <Label Text="{Binding Path=CurrentTrack}" 
+                        VerticalTextAlignment="Center" HorizontalTextAlignment="Start" 
+                        FontAttributes="Bold" FontSize="16"
+                        Grid.Row="0" Grid.Column="1" Margin ="4,10" />
 
-                    <Label Text="{Binding Path=CurrentArtist}" 
-                           VerticalTextAlignment="Center" HorizontalTextAlignment="Center" 
-                           FontAttributes="Italic" FontSize="10" Margin ="4,0" />
-                </VerticalStackLayout>
-                <VerticalStackLayout Grid.Column="1">
-                    <ProgressBar Progress="{Binding Path=ProgressPercent}"
-                                 Margin="8,12, 8,2"/>
-
-                    <Label Text="{Binding Path=ProgressText}" 
-             VerticalTextAlignment="Center" HorizontalTextAlignment="Center" 
-             FontSize="12" Margin ="4,0" />
-                </VerticalStackLayout>
+                <CollectionView ItemsSource="{Binding ArtistList}"
+                                ItemsLayout="HorizontalList"
+                                SelectionMode="Single"
+                                Grid.Row="1" Grid.Column="1" Margin="4,0">
+                    <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dom:IdItem">
+                            <Label Text="{Binding Name}" Margin="0,0,2,0" Style="{StaticResource Key=ArtistHighlight}">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                        Command="{Binding x:DataType='vm:PlayerControlViewModel', 
+                                                          Source={RelativeSource AncestorType={x:Type vm:PlayerControlViewModel}},
+                                                          Path=OpenArtistCommand}"
+                                        CommandParameter="{Binding Id}" 
+                                        NumberOfTapsRequired="2"/>
+                                </Label.GestureRecognizers>
+                         </Label>
+                    </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
             </Grid>
         </Border>
 
-        <!-- current device -->
-        <Border Grid.Column="2" Margin="1" Style="{StaticResource RoundedBorder}">
-            <Grid ColumnDefinitions="*,80,Auto,Auto,Auto">
-                
-                <Label Text="{Binding Path=CurrentDevice.Name}" 
-                      VerticalTextAlignment="Center" HorizontalTextAlignment="Start"
-                      Margin="8,0" FontSize="14" FontAttributes="Bold" Grid.Column="0"/>
-                
-                <Slider Value="{Binding Path=CurrentDevice.VolumePercent}" 
-                        Maximum="100" Minimum="0" Grid.Column="1" Margin="4,0"
-                        VerticalOptions="Center" HorizontalOptions="Fill"
-                        IsVisible="{Binding Path=CurrentDevice.IsActive, Converter={StaticResource BoolToVis}}" />
+        <!-- play control Buttons -->
+        <Border Grid.Column="2" Margin="1" Style="{StaticResource RoundedBorder}" >
+            <Grid RowDefinitions="Auto,Auto" >
+                <Grid ColumnDefinitions="*,Auto,Auto,Auto,*" Grid.Row="0">
+                    <ImageButton Command="{Binding Path=BackCommand}" Background="Transparent"
+                          IsEnabled="{Binding Path=CurrentDevice.IsActive}"
+                          Source ="icons8_rewind_button_round.png" 
+                          ToolTipProperties.Text="Skip to previous track"
+                          Grid.Column="1" Margin="1,2"/>
+ 
+                    <ImageButton Command="{Binding Path=PlayCommand}" Background="Transparent"
+                          IsEnabled="{Binding Path=CurrentDevice.IsActive}"
+                          IsVisible="{Binding Path=IsPaused, Converter={StaticResource BoolToVis}}"
+                          Source="icons8_play_button.png"
+                          ToolTipProperties.Text="Resume playing"
+                          Grid.Column="2" Margin="1,2"/>
 
-                <ImageButton Command="{Binding Path=CurrentDevice.MuteCommand}" Background="Lavender"
+                    <ImageButton Command="{Binding Path=PauseCommand}" Background="Transparent"
+                          IsEnabled="{Binding Path=CurrentDevice.IsActive}"
+                          IsVisible="{Binding Path=IsPlaying, Converter={StaticResource BoolToVis}}" 
+                          Source="icons8_pause_button.png"
+                          ToolTipProperties.Text="Pause playing"
+                          Grid.Column="2" Margin="1,2"/>
+
+                    <ImageButton Command="{Binding Path=ForwardCommand}" Background="Transparent"
+                          IsEnabled="{Binding Path=CurrentDevice.IsActive}"
+                          Source="icons8_fast_forward_round.png"
+                          ToolTipProperties.Text="Skip to next track"
+                          Grid.Column="3" Margin="1,2"/>
+                </Grid>
+
+                <Grid ColumnDefinitions="Auto,130,Auto" Grid.Row="1">
+                    <Label Text="{Binding PlayedTime, StringFormat='{0:mm}:{0:ss}'}" 
+                           VerticalTextAlignment="Center" HorizontalTextAlignment="Center" 
+                           Grid.Column="0" Margin="4,0"/>
+
+                    <ProgressBar Progress="{Binding Path=ProgressPercent}" 
+                                 VerticalOptions="Center" HorizontalOptions="Fill"
+                                 Grid.Column="1" Margin="4,0"/>
+
+                    <Label Text="{Binding Duration, StringFormat='{0:mm}:{0:ss}'}" 
+                           VerticalTextAlignment="Center" HorizontalTextAlignment="Center" 
+                           Grid.Column="2" Margin="4,0"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+
+        <!-- current device -->
+        <Border Grid.Column="3" Margin="1" Style="{StaticResource RoundedBorder}">
+            <Grid ColumnDefinitions="*,Auto,Auto,Auto" RowDefinitions="*,Auto">
+
+                <Label Text="{Binding Path=CurrentDevice.Name}" 
+                       VerticalTextAlignment="Center" HorizontalTextAlignment="Start"
+                       FontSize="14" FontAttributes="Bold" 
+                       Grid.Column="0" Grid.Row="0" Margin="8,0" >
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ResyncCommand}" NumberOfTapsRequired="2"/>
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <Slider Value="{Binding Path=CurrentDevice.VolumePercent}" 
+                        DragCompletedCommand="{Binding Path=CurrentDevice.VolumeUpdatedCommand}"
+                        Maximum="100" Minimum="0" 
+                        VerticalOptions="End" HorizontalOptions="Fill"
+                        IsVisible="{Binding Path=CurrentDevice.IsActive, Converter={StaticResource BoolToVis}}"
+                        ToolTipProperties.Text="Set volume"
+                        Grid.Column="0" Grid.Row="1" Margin="16,0"/>
+
+                <ImageButton Command="{Binding Path=CurrentDevice.MuteCommand}" Background="Transparent"
                              IsVisible="{Binding Path=CurrentDevice.IsActive, Converter={StaticResource BoolToVis}}" 
-                             Grid.Column="3" Margin="1,2" Padding="8"
-                             Source="{Binding Path=CurrentDevice.IsMutedCommandImage}"/>
+                             Grid.Column="1" Grid.Row="0" Padding="8"
+                             ToolTipProperties.Text="Mute Sound"
+                             Source="{Binding Path=CurrentDevice.IsMuted, Converter={StaticResource BoolToMuted}}"/>
                 
-                <ImageButton Command="{Binding Path=OpenDevicesPopupCommand}" Background="Lavender"
-                             Grid.Column="4" Margin="1,2" Padding="8"
+                <ImageButton Command="{Binding Path=OpenDevicesPopupCommand}" Background="Transparent"
+                             Grid.Column="2" Grid.Row="0" Padding="8"
+                             ToolTipProperties.Text="Select playback device"
                              Source="icons8_drop_down_menu.png"/>
             </Grid>
         </Border>
-
-
     </Grid>
-
 </ContentView>
