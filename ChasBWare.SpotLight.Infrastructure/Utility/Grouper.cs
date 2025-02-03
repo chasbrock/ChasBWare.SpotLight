@@ -17,13 +17,13 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
                             Func<T, object> _getGroupKey,
                             SortDirection _groupSortDirection,
                             IPropertyComparer<T> _subListSorter,
-                            Func<IGroupedListViewModel<T>, object, List<T>, IGroupHolder<T>> _createHolder)
+                            Func<object, List<T>, IGroupHolder<T>> _createHolder)
                 : IGrouper<T>
                  where T : class
     {
         public string Name { get; } = name;
 
-        public List<IGroupHolder<T>> BuildGroups(IGroupedListViewModel<T> owner, List<T> values)
+        public List<IGroupHolder<T>> BuildGroups( List<T> values)
         {
             // build hashmap with groups
             var keys = new Dictionary<object, List<T>>();
@@ -40,19 +40,19 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
                 }
             }
 
-            return SortGroups(owner, keys);
+            return SortGroups(keys);
         }
 
-        private List<IGroupHolder<T>> SortGroups(IGroupedListViewModel<T> owner, Dictionary<object, List<T>> groups)
+        private List<IGroupHolder<T>> SortGroups( Dictionary<object, List<T>> groups)
         {
             List<IGroupHolder<T>> grouped;
             if (_groupSortDirection == SortDirection.Ascending)
             {
-               grouped = groups.Select(nvp => _createHolder(owner, nvp.Key, nvp.Value)).OrderBy(gh=>gh.Key).ToList(); 
+               grouped = groups.Select(nvp => _createHolder(nvp.Key, nvp.Value)).OrderBy(gh=>gh.Key).ToList(); 
             }
             else
             {
-                grouped = groups.Select(nvp => _createHolder(owner, nvp.Key, nvp.Value)).OrderByDescending(gh => gh.Key).ToList();
+                grouped = groups.Select(nvp => _createHolder(nvp.Key, nvp.Value)).OrderByDescending(gh => gh.Key).ToList();
             }
 
             foreach (var group in grouped)

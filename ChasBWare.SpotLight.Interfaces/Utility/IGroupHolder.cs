@@ -7,7 +7,5 @@ namespace ChasBWare.SpotLight.Definitions.Utility
         bool IsExpanded { get; set; }
         List<T> Items { get; }
         object Key { get; }
-        IGroupedListViewModel<T> Owner { get; }
-        T? SelectedItem { get; set; }
     }
 }

@@ -91,18 +91,18 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         private void OnFindItem(FindItemMessage message)
         {
-            if (message.Payload.ItemType == PageType.Albums)
+            if (message.Payload.ItemType == PageType.Artists)
             {
-                var albumViewModel = Items.FirstOrDefault(a => a.Id == message.Payload.Id);
-                if (albumViewModel != null)
+                var viewModel = Items.FirstOrDefault(a => a.Id == message.Payload.Id);
+                if (viewModel != null)
                 {
-                    albumViewModel.LastAccessed = DateTime.Now;
-                    SelectedItem = albumViewModel;
+                    viewModel.LastAccessed = DateTime.Now;
+                    SelectedItem = viewModel;
                     return;
                 }
 
-//                var task = _serviceProvider.GetService<IFindAlbumTask>();
-//                task?.Execute(this, message.Payload.Id); 
+                var task = _serviceProvider.GetService<IFindArtistTask>();
+                task?.Execute(this, message.Payload.Id); 
              }
         }      
 

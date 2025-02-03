@@ -12,7 +12,6 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                        : Notifyable, ITrackViewModel
     {
         private bool _isHated = false;
-
         public Track Track { get; set; } = new Track { Id = "" };
 
         public ICommand SetHatedTrackCommand { get; set; } = new Command<ITrackViewModel>(o => o.IsHated = !o.IsHated);

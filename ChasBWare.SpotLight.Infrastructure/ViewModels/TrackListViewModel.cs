@@ -1,6 +1,9 @@
 ﻿using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Core;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -8,14 +11,21 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
     public class TrackListViewModel : Notifyable, ITrackListViewModel
     {
+        private readonly IPopupService _popupService;
+
         private ITrackViewModel? _selectedItem = null;
         private LoadState _loadStatus = LoadState.NotLoaded;
         private string _name = string.Empty;
         private bool _showHatedTracks = false;
+       
+        public TrackListViewModel(IPopupService popupService) 
+        {
+            _popupService = popupService;
 
-        public ICommand ShowHatedTracksCommand { get; set; } = new Command<TrackListViewModel>(o => o.ShowHatedTracks = !o.ShowHatedTracks);
+            OpenTrackPopupCommand = new Command<ITrackViewModel>(t=>OpenTrackPopupMenu(t));
+        }
 
-       // [WriteableDataList]
+        public ICommand OpenTrackPopupCommand { get; }
         public ObservableCollection<ITrackViewModel> Items { get; } = [];
                 
         public ITrackViewModel? SelectedItem
@@ -27,7 +37,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         public bool ShowHatedTracks
         {
             get => _showHatedTracks;
-            set { SetField(ref _showHatedTracks, value); } //TODO add filtering
+            set { SetField(ref _showHatedTracks, value); } 
         }
 
         public LoadState LoadStatus
@@ -36,11 +46,17 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             set => SetField(ref _loadStatus, value);
         }
 
-        //[WriteableFileName]
         public string PlaylistName
         {
             get => _name;
             set => SetField(ref _name, value);
         }
+
+        private void OpenTrackPopupMenu(ITrackViewModel track)
+        {
+            _popupService.ShowPopup<TrackMenuViewModel>(onPresenting: vm => vm.SetTrack(track));
+        }
+
+
     }
 }

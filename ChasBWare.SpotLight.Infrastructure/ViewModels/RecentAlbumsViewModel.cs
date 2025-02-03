@@ -1,4 +1,5 @@
-﻿using ChasBWare.SpotLight.Definitions.Messaging;
+﻿using ChasBWare.SpotLight.Definitions.Enums;
+using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Tasks;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
@@ -18,8 +19,8 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
             : base(serviceProvider, searchViewModel, SorterHelper.GetPlaylistSorters())
         {
-            findItemMessageService.Register(OnFindItem);
-            activeAlbumChangedMessageService.Register(OnSetActiveAlbum);
+                 findItemMessageService.Register(OnFindItem);
+       activeAlbumChangedMessageService.Register(OnSetActiveAlbum);
             PlayerControlViewModel = playerControlViewModel;
         }
 
@@ -38,7 +39,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         protected override void InitialiseSelectedItem(IPlaylistViewModel item)
         {
-            item.IsTracksExpanded = true;
+            item.IsExpanded = true;
         }
 
         private IPlaylistViewModel? AddItemToList(RecentPlaylist playlist, DateTime lastAccessed)
@@ -62,6 +63,26 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
             return viewModel;
         }
+
+
+        private void OnFindItem(FindItemMessage message)
+        {
+            if (message.Payload.ItemType == PageType.Albums)
+            {
+                var viewModel = Items.FirstOrDefault(a => a.Id == message.Payload.Id);
+                if (viewModel != null)
+                {
+                    viewModel.LastAccessed = DateTime.Now;
+                    SelectedItem = viewModel;
+                    return;
+                }
+
+               // var task = _serviceProvider.GetService<IFindAlbumTask>();
+               // task?.Execute(this, message.Payload.Id); 
+            }
+        }
+
+
 
         private void OnSetActiveAlbum(ActiveAlbumChangedMessage message)
         {

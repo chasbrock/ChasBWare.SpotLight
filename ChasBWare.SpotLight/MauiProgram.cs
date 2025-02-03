@@ -33,6 +33,7 @@ namespace ChasBWare.SpotLight
                             .RegisterRepositories()
                             .RegisterServices()
                             .RegisterNavigator()
+                            .RegisterPopups()
                             .RegisterSpotify()
                             .RegisterTasks()
                             .RegisterViewModels()

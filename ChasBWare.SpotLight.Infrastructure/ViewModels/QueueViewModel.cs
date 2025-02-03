@@ -1,9 +1,13 @@
 ﻿using ChasBWare.SpotLight.Definitions.Tasks;
 using ChasBWare.SpotLight.Definitions.ViewModels;
+using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
-    public class QueueViewModel(IServiceProvider _serviceProvider) : TrackListViewModel, IQueueViewModel
+    public class QueueViewModel(IPopupService popupService,
+                                IServiceProvider _serviceProvider)
+               : TrackListViewModel(popupService),
+                 IQueueViewModel
     {
         public void LoadQueue()
         {

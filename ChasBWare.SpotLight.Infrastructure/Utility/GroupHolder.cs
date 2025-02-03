@@ -1,18 +1,28 @@
-﻿using ChasBWare.SpotLight.Definitions.Utility;
+﻿using System.Windows.Input;
+using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 
 namespace ChasBWare.SpotLight.Infrastructure.Utility
 {
-    public class GroupHolder<TItem>(IGroupedListViewModel<TItem> owner, object key, List<TItem> items) : IGroupHolder<TItem> where TItem : class
+    public class GroupHolder<TItem> : Notifyable, IGroupHolder<TItem> where TItem : class
     {
-        public IGroupedListViewModel<TItem> Owner { get; } = owner;
-        public object Key { get; } = key;
-        public List<TItem> Items { get; } = items;
-        public bool IsExpanded { get; set; }
-        public TItem? SelectedItem
+        private bool _isExpanded;
+
+        public GroupHolder(object key, List<TItem> items)
         {
-            get => Owner.SelectedItem;
-            set => Owner.SelectedItem = value;
+            Items = items;
+            Key = key;
+            SetExpandedCommand =  new Command(() => IsExpanded = !IsExpanded); 
+        }
+
+        public object Key { get; } 
+        public List<TItem> Items { get; }
+        public ICommand SetExpandedCommand { get; }
+
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set => SetField(ref _isExpanded, value);
         }
     }
 }

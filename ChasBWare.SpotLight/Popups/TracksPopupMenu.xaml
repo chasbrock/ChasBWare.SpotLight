@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tk:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+          xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+          xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.Popups;assembly=ChasBWare.SpotLight.Infrastructure"
+          xmlns:pop="clr-namespace:ChasBWare.SpotLight.Popups"
+          x:Class="ChasBWare.SpotLight.Popups.TracksPopupMenu"     
+          x:DataType="vm:TrackMenuViewModel"
+          CanBeDismissedByTappingOutsideOfPopup="True">
+    
+   <Grid RowDefinitions="300" ColumnDefinitions="200">
+        <pop:PopupMenu BindingContext="{Binding}" VerticalOptions="Fill" HorizontalOptions="Fill"/>
+    </Grid>
+</tk:Popup>

@@ -13,6 +13,8 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                        : BaseGroupedListViewModel<IPlaylistViewModel>,
                          ILibraryViewModel
     {
+        private bool _showOwner;
+
         public LibraryViewModel(IServiceProvider serviceProvider,
                                 IPlayerControlViewModel playerControlViewModel,
                                 IMessageService<CurrentTrackChangedMessage> currentTrackChangedMessage)
@@ -36,14 +38,25 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             }
         }
 
-  
+        public bool ShowOwner
+        {
+            get => _showOwner;
+            set => SetField(ref _showOwner, value);
+        }
+
         protected override void InitialiseSelectedItem(IPlaylistViewModel item) 
         {
-            item.IsTracksExpanded = true;
+            item.IsExpanded = true;
             item.LastAccessed = DateTime.Now;
             var task = _serviceProvider.GetService<IUpdateLastAccessedTask>();
 
             task?.Execute(item.Id, item.LastAccessed, true);
+        }
+
+        protected override void UpdateGroupings()
+        {
+            base.UpdateGroupings();
+            ShowOwner = SelectedGrouper.Name != nameof(IPlaylistViewModel.Owner);
         }
 
         private void Initialise()

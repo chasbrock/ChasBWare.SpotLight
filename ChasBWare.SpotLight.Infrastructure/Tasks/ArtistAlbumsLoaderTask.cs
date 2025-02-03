@@ -35,7 +35,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                 {
                     var albumViewModel = _serviceProvider.GetRequiredService<IPlaylistViewModel>();
                     albumViewModel.Model = album;
-                    albumViewModel.IsTracksExpanded = false;
+                    albumViewModel.IsExpanded = false;
                     viewModel.Items.Add(albumViewModel);
                 }
 

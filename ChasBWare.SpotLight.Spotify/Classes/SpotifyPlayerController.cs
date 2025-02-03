@@ -15,6 +15,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
 
         private async static Task<PlayingTrack?> GetCurrentlyPlaying(SpotifyClient client) 
         {
+            Thread.Sleep(300);
             var currentlPlaying = await client.Player.GetCurrentlyPlaying(new PlayerCurrentlyPlayingRequest());
             return currentlPlaying?.CopyToPlayingTrack();
         }

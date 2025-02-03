@@ -3,8 +3,8 @@
     public interface IHatedService 
     {
         bool Initialised { get; }
-
-        bool IsHated(string? itemId);
+        void SetIsHated(string itemId, bool isHated);
+        bool GetIsHated(string? itemId);
         void Refresh();
     }
 }

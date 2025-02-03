@@ -6,6 +6,6 @@ namespace ChasBWare.SpotLight.Definitions.Utility
     {
         string Name { get; }
 
-        List<IGroupHolder<T>> BuildGroups(IGroupedListViewModel<T> owner, List<T> values);
+        List<IGroupHolder<T>> BuildGroups(List<T> values);
     }
 }

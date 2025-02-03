@@ -11,7 +11,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
 
         public bool Initialised { get; private set; } = false;
 
-        public bool IsHated(string? itemId)
+        public bool GetIsHated(string? itemId)
         {
             if (itemId == null) {
                 return false;
@@ -27,6 +27,28 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
             {
                 _hatedItems = await hatedRepo.GetItems(_userRepository.CurrentUserId);
             }
+        }
+
+        public void SetIsHated(string itemId, bool isHated)
+        {
+            if (isHated)
+            {
+                _hatedItems.Add(itemId);
+            }
+            else
+            {
+                _hatedItems.Remove(itemId);
+            }
+
+            Task.Run(() =>
+            {
+                var hatedRepo = _serviceProvider.GetService<IHatedItemsRepository>();
+                if (hatedRepo != null)
+                {
+                    hatedRepo.SetHated(_userRepository.CurrentUserId, itemId, isHated);
+                }
+            });
+
         }
     }
 }

@@ -43,7 +43,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                         var trackViewModel = _serviceProvider.GetRequiredService<ITrackViewModel>();
                         trackViewModel.Playlist = viewModel;
                         trackViewModel.Track = track;
-                        trackViewModel.IsHated = _hatedService.IsHated(track.Id);
+                        trackViewModel.IsHated = _hatedService.GetIsHated(track.Id);
                         viewModel.TracksViewModel.Items.Add(trackViewModel);
                     }
                     

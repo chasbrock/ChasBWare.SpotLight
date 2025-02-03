@@ -19,13 +19,6 @@
 
     <ContentPage.Resources>
 
-        <Style x:Key="RoundedBorder" TargetType="Border">
-            <Setter Property="StrokeThickness" Value="1" />
-            <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-            <Setter Property="Background" Value="Lavender" />
-            <Setter Property="Stroke" Value="MidnightBlue" />
-        </Style>
-
         <ResourceDictionary>
             <SolidColorBrush x:Key="ActiveBackground">DarkBlue</SolidColorBrush>
             <SolidColorBrush x:Key="InactiveBackground">Lavender</SolidColorBrush>
@@ -33,12 +26,13 @@
                TrueObject="{StaticResource ActiveBackground}" 
                FalseObject="{StaticResource InactiveBackground}"/>
           
-          <Color x:Key="ActiveForeground">White</Color>
+            <Color x:Key="ActiveForeground">White</Color>
             <Color x:Key="InactiveForeground">Black</Color>
             <tk:BoolToObjectConverter x:Key="IsActiveForeground" 
                TrueObject="{StaticResource ActiveForeground}" 
                FalseObject="{StaticResource InactiveForeground}"/>
         </ResourceDictionary>
+
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*" ColumnDefinitions="Auto,*">

@@ -7,24 +7,14 @@
              xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="vm:PlaylistListViewModel"
              x:Class="ChasBWare.SpotLight.Views.PlaylistListView">
-
-    <ContentView.Resources>
-
-        <Style x:Key="RoundedBorder" TargetType="Border">
-            <Setter Property="StrokeThickness" Value="1" />
-            <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-            <Setter Property="Background" Value="Lavender" />
-            <Setter Property="Stroke" Value="MidnightBlue" />
-        </Style>
-    </ContentView.Resources>
-
+                
     <Grid RowDefinitions="Auto,*">
 
         <Picker ItemsSource="{Binding SorterNames}"
-                          Background="Navy"  TextColor="White"
-                          FontSize="14" FontAttributes="Bold"  
-                          SelectedItem="{Binding SelectedSorterName}" 
-                          Grid.Row="0"/>
+                             Background="Navy"  TextColor="White"
+                             FontSize="14" FontAttributes="Bold"  
+                             SelectedItem="{Binding SelectedSorterName}" 
+                             Grid.Row="0"/>
 
         <CollectionView ItemsSource="{Binding SortedItems}"
                         VerticalScrollBarVisibility="Always"
@@ -33,9 +23,9 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:PlaylistViewModel">
-                    <Border Style="{StaticResource RoundedBorder}">
-                    <v:PlaylistView BindingContext="{Binding}" VerticalOptions="Fill"/>
-                    </Border>
+                    <Grid> 
+                        <v:PlaylistView BindingContext="{Binding}" VerticalOptions="Fill" Margin="0,0,8,0"/>
+                    </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

@@ -125,6 +125,12 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
             UpdateTrackProgress(nowPlaying);
         }
 
+        public void AddTrackToQueue(string trackId)
+        {
+            // TODO
+        }
+
+
         private async void OnTimerTick(object? sender, EventArgs e)
         {
             if (_nowPlaying != null)
@@ -171,5 +177,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
                 _currentTrackMessageService.SendMessage(new CurrentTrackChangedMessage(_nowPlaying.Id, _nowPlaying.Album, status));
             }
         }
+
+       
     }
 }

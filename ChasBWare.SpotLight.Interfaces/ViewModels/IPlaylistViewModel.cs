@@ -15,7 +15,7 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
         public PlaylistType PlaylistType { get; }
         public string Uri { get; }
         public string? Image { get;  }
-        public bool IsTracksExpanded { get; set; }
+        public bool IsExpanded { get; set; }
         public DateTime ReleaseDate { get;  }
         public DateTime LastAccessed { get; set; }
 

@@ -26,19 +26,19 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
                                                    i=> i.LastAccessed.GroupDate(),
                                                    SortDirection.Ascending,
                                                    new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)),
-                                                    (o,k,v) => new PlaylistGroup(o,k,v)),
+                                                    (k,v) => new PlaylistGroup(k,v)),
 
                     new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.PlaylistType),
                                                    i=> i.PlaylistType,
                                                    SortDirection.Ascending,
                                                    new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)),
-                                                   (o,k,v) => new PlaylistGroup(o,k,v)),
+                                                   (k,v) => new PlaylistGroup(k,v)),
 
                     new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.Owner),
                                                    i=> i.Owner,
                                                    SortDirection.Ascending,
                                                    new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)),
-                                                   (o,k,v) => new PlaylistGroup(o,k,v))];
+                                                   (k,v) => new PlaylistGroup(k,v))];
         }
 
     }

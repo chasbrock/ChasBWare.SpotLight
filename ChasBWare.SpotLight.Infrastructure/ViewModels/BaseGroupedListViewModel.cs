@@ -78,7 +78,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         protected virtual async void UpdateGroupings()
         {
-            GroupedItems = _selectedGrouper.BuildGroups(this, Items);
+            GroupedItems = _selectedGrouper.BuildGroups(Items);
             var settingsRepo = _serviceProvider.GetService<IAppSettingsRepository>();
             if (settingsRepo != null)
             {

@@ -2,5 +2,7 @@
 {
     public interface ILibraryViewModel : IPlaylistSelectorViewModel
     {
+        bool ShowOwner { get; }
+    
     }
 }

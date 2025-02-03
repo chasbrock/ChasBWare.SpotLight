@@ -13,5 +13,6 @@ namespace ChasBWare.SpotLight.Infrastructure.Interfaces.Services
         void SkipBackward();
         void StartPlaylist(IPlaylistViewModel playlist, int trackNumber);
         void UpdateNowPlaying(PlayingTrack nowPlaying);
+        void AddTrackToQueue(string trackId);
     }
 }

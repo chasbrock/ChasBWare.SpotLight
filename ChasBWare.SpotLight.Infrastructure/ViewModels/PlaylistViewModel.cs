@@ -14,7 +14,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
     {
         private readonly IServiceProvider _provider;
         private readonly IMessageService<PlayTracklistMessage> _messageService;
-        private bool _isTracksExpanded = false;
+        private bool _isExpanded = false;
         private RecentPlaylist _model = new() { Id = "" };
        
         public PlaylistViewModel(ITrackListViewModel tracksViewModel,
@@ -24,6 +24,8 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             TracksViewModel = tracksViewModel;
             _provider = provider;
             _messageService = messageService;
+            SetExpandedCommand = new Command(() => IsExpanded = !IsExpanded);
+            PlayTracklistCommand = new Command(PlayTrackList);
         }
 
         public RecentPlaylist Model 
@@ -34,11 +36,11 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                 _model = value;
                 TracksViewModel.PlaylistName = value.Name ?? "";
             }
-        } 
-        
-        public ICommand PlayTracklistCommand { get; } = new Command<PlaylistViewModel>(vm => vm.PlayTrackList());
-        public ICommand AddToQueueCommand { get; } = new Command<PlaylistViewModel>(vm => vm.PlayTrackList());
+        }
 
+        public ICommand SetExpandedCommand { get; }
+        public ICommand PlayTracklistCommand { get; } 
+      
         public ITrackListViewModel TracksViewModel
         {
             get;
@@ -61,13 +63,13 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             get => Model.Image;
         }
 
-        public bool IsTracksExpanded
+        public bool IsExpanded
         {
-            get => _isTracksExpanded;
+            get => _isExpanded;
             set
             {
-                if (SetField(ref _isTracksExpanded, value) &&
-                    _isTracksExpanded &&
+                if (SetField(ref _isExpanded, value) &&
+                    _isExpanded &&
                     TracksViewModel.LoadStatus == LoadState.NotLoaded)
                 {
                     LoadTracks();
@@ -77,7 +79,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         private void PlayTrackList()
         {
-            IsTracksExpanded = true;
+            IsExpanded = true;
             _messageService.SendMessage(new PlayTracklistMessage(this, 0));
         }
 

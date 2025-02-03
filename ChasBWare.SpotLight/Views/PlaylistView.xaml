@@ -6,14 +6,54 @@
              xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="vm:PlaylistViewModel"
              x:Class="ChasBWare.SpotLight.Views.PlaylistView">
-    <Grid VerticalOptions="Fill" >
-        <tk:Expander IsExpanded="{Binding IsTracksExpanded, Mode=TwoWay}" Direction="Down" > 
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <tk:BoolToObjectConverter x:Key="BoolExpanded" 
+                              TrueObject="icons8_dropup.png" 
+                              FalseObject="icons8_dropdown.png"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid RowDefinitions="Auto,*" VerticalOptions="Fill" >
         
-        <tk:Expander.Header>
-            <v:PlaylistHeaderView BindingContext="{Binding}" HorizontalOptions="Fill"/>
-        </tk:Expander.Header>
-                <v:TrackListView BindingContext="{Binding TracksViewModel}" Margin="0,0,0,8"/>
-        </tk:Expander>
+        <Grid ColumnDefinitions="80,Auto,*" RowDefinitions="Auto,Auto">
+
+            <Image Source="{Binding Image}" 
+                   VerticalOptions="Center" HorizontalOptions="Center" 
+                   Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="4" />
+
+            <Label Text="{Binding Path=Name}" 
+                   FontSize="20" FontAttributes="Bold" VerticalOptions="Center"
+                   Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0" Margin="10,0" />
+
+            <Label Text="{Binding Path=Owner}" 
+                   FontSize="14" FontAttributes="Bold" VerticalOptions="Center" 
+                   Grid.Column="1" Grid.Row="1" Margin="10,0" />
+
+            <Label Text="{Binding Path=ReleaseDate, StringFormat='{0:MMMM yyyy}'}" 
+                   FontSize="14" FontAttributes="None"
+                   VerticalOptions="Center" 
+                   Grid.Column="2" Grid.Row="1" Margin="10,0" />
+
+            <ImageButton Command="{Binding Path=PlayTracklistCommand}"
+                         Source="icons8_play_button.png" Margin="4,0" 
+                         Background="Transparent"
+                         HorizontalOptions="End" VerticalOptions="Center" 
+                         Grid.Column="2" Grid.Row="0"/>
+
+            <ImageButton Source="{Binding Path=IsExpanded, Converter={StaticResource BoolExpanded}}"
+                         Command="{Binding SetExpandedCommand}"
+                         Background="Transparent"
+                         HorizontalOptions="End" VerticalOptions="Center"
+                         Grid.Column="2" Grid.Row="1"/>
+        </Grid>
+
+
+        <Grid IsVisible="{Binding IsExpanded, Converter={StaticResource BoolToVis}}" 
+              Grid.Row="2" Margin="0,0,0,8">
+            <v:TrackListView BindingContext="{Binding TracksViewModel}"/>
+        </Grid>
+
     </Grid>
 </ContentView>
 

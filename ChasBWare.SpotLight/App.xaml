@@ -1,15 +1,36 @@
 ﻿<?xml version = "1.0" encoding = "UTF-8" ?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:local="clr-namespace:ChasBWare.SpotLight"
              x:Class="ChasBWare.SpotLight.App">
     <Application.Resources>
 
-     <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
-                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+    <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+            <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+        </ResourceDictionary.MergedDictionaries>
+
+        <Style x:Key="RoundedBorder" TargetType="Border">
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            <Setter Property="Background" Value="Lavender" />
+            <Setter Property="Stroke" Value="MidnightBlue" />
+        </Style>
+
+        <Visibility x:Key="Visible">Visible</Visibility>
+        <Visibility x:Key="Collapsed">Collapsed</Visibility>
+         <tk:BoolToObjectConverter x:Key="BoolToVis" 
+                                   TrueObject="{StaticResource Collapsed}" 
+                                   FalseObject="{StaticResource Visible}"/>
+
+        <Color x:Key="EnabledTextColour">Black</Color>
+            <Color x:Key="DisabledTextColour">DarkGray</Color>
+        <tk:BoolToObjectConverter x:Key="EnabledText" 
+                                TrueObject="{StaticResource EnabledTextColour}" 
+                                FalseObject="{StaticResource DisabledTextColour}"/>
+
         </ResourceDictionary>
 
 

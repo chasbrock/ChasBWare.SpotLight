@@ -21,17 +21,20 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vu:PlaylistGroup">
-                    <tk:Expander IsExpanded="{Binding IsExpanded}" Direction="Down">
-                        <tk:Expander.Header>
-                            <Label Text="{Binding Key}" HorizontalOptions="Fill"
+                    <Grid RowDefinitions="Auto,*">
+                        <Label Text="{Binding Key}" HorizontalOptions="Fill"
                                    Background="DarkBlue"  TextColor="White"
-                                   FontSize="14" FontAttributes="Bold" Margin="0,1"/>
-                        </tk:Expander.Header>
+                                   FontSize="14" FontAttributes="Bold" Margin="0,1">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SetExpandedCommand}" NumberOfTapsRequired="1"/>
+                            </Label.GestureRecognizers>
+                        </Label>
 
                         <CollectionView ItemsSource="{Binding Items}"
                                         VerticalScrollBarVisibility="Always"
                                         SelectionMode="Single"
-                                        Margin="8,2">
+                                        IsVisible="{Binding IsExpanded, Converter={StaticResource BoolToVis}}"
+                                        Grid.Row="1" Margin="8,2">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="vm:PlaylistViewModel">
                                     <Border Margin="8,4">
@@ -45,7 +48,12 @@
                                                                            NumberOfTapsRequired="1"/>
                                                 </Label.GestureRecognizers>
                                             </Label>
-                                            <Label Text="{Binding Owner}" HorizontalOptions="Fill" FontAttributes="Italic">
+                                            <Label Text="{Binding Owner}" 
+                                                   IsVisible="{Binding x:DataType='vm:LibraryViewModel', 
+                                                                       Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}},
+                                                                       Converter={StaticResource BoolToVis}, 
+                                                                       Path=ShowOwner}"
+                                                   HorizontalOptions="Fill" FontAttributes="Italic">
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Command="{Binding x:DataType='vm:LibraryViewModel', 
                                                                                             Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}},
@@ -59,7 +67,7 @@
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
-                    </tk:Expander>
+                    </Grid>
 
                 </DataTemplate>
             </CollectionView.ItemTemplate>

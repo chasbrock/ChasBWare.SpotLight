@@ -7,11 +7,14 @@ using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.DbContext;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
+using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Repositories;
 using ChasBWare.SpotLight.Infrastructure.Services;
 using ChasBWare.SpotLight.Infrastructure.Tasks;
 using ChasBWare.SpotLight.Infrastructure.ViewModels;
 using ChasBWare.SpotLight.Pages;
+using ChasBWare.SpotLight.Popups;
+using ChasBWare.SpotLight.Popups.ViewModels;
 using ChasBWare.SpotLight.Spotify.Classes;
 using ChasBWare.SpotLight.Spotify.Interfaces;
 using ChasBWare.SpotLight.Spotify.Repositories;
@@ -25,22 +28,6 @@ namespace ChasBWare.SpotLight.DependencyInjection
     /// </summary>
     internal static partial class DIServiceInitialiser
     {
-        public static MauiAppBuilder RegisterAllMine(this MauiAppBuilder builder) 
-        {
-            builder.Services.RegisterDbContext()
-                            .RegisterLogging()
-                            .RegisterMessageHandlers()
-                            .RegisterRepositories()
-                            .RegisterServices()
-                            .RegisterNavigator()
-                            .RegisterSpotify()
-                            .RegisterTasks()
-                            .RegisterViewModels()
-                            .RegisterViews();
-
-            return builder;
-        }
-          
         public static IServiceCollection RegisterDbContext(this IServiceCollection services)
         {
             return services.AddTransient<IDbContext, SpotLightDbContext>()
@@ -72,6 +59,12 @@ namespace ChasBWare.SpotLight.DependencyInjection
         public static IServiceCollection RegisterNavigator(this IServiceCollection services)
         {
             return services.AddSingleton<INavigator,Navigator>();
+        }
+
+        public static IServiceCollection RegisterPopups(this IServiceCollection services)
+        {
+            return services.AddTransientPopup<TracksPopupMenu, TrackMenuViewModel>()
+            ;
         }
 
         public static IServiceCollection RegisterRepositories(this IServiceCollection services)

@@ -9,12 +9,6 @@
 
     <ContentView.Resources>
 
-        <Style x:Key="RoundedBorder" TargetType="Border">
-            <Setter Property="StrokeThickness" Value="1" />
-            <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-            <Setter Property="Background" Value="Lavender" />
-            <Setter Property="Stroke" Value="MidnightBlue" />
-        </Style>
 
         <Style TargetType="Label" x:Key="ArtistHighlight">
             <Setter Property="VisualStateManager.VisualStateGroups">
@@ -32,12 +26,6 @@
         </Style>
 
         <ResourceDictionary>
-            <Visibility x:Key="Visible">Visible</Visibility>
-            <Visibility x:Key="Collapsed">Collapsed</Visibility>
-            <tk:BoolToObjectConverter  x:Key="BoolToVis" 
-                                    TrueObject="{StaticResource Collapsed}" 
-                                    FalseObject="{StaticResource Visible}"/>
-            
             <tk:BoolToObjectConverter x:Key="BoolToMuted" 
                                     TrueObject="icons8_no_audio.png" 
                                     FalseObject="icons8_audio.png"/>
@@ -45,7 +33,7 @@
 
     </ContentView.Resources>
 
-    <Grid ColumnDefinitions="Auto, *,Auto,Auto,Auto" RowDefinitions="75">
+    <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" RowDefinitions="75">
 
         <Border Grid.Column="0" Margin="1" Style="{StaticResource RoundedBorder}" >
             <Image Source="{Binding Path=Image}"
@@ -71,7 +59,7 @@
                                 SelectionMode="Single"
                                 Grid.Row="1" Grid.Column="1" Margin="4,0">
                     <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="dom:IdItem">
+                        <DataTemplate x:DataType="dom:IdItem">
                             <Label Text="{Binding Name}" Margin="0,0,2,0" Style="{StaticResource Key=ArtistHighlight}">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer 
@@ -81,8 +69,8 @@
                                         CommandParameter="{Binding Id}" 
                                         NumberOfTapsRequired="2"/>
                                 </Label.GestureRecognizers>
-                         </Label>
-                    </DataTemplate>
+                             </Label>
+                        </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </Grid>
@@ -143,6 +131,7 @@
                 <Label Text="{Binding Path=CurrentDevice.Name}" 
                        VerticalTextAlignment="Center" HorizontalTextAlignment="Start"
                        FontSize="14" FontAttributes="Bold" 
+                       IsVisible="{Binding Path=CurrentDevice.IsActive, Converter={StaticResource BoolToVis}}"
                        Grid.Column="0" Grid.Row="0" Margin="8,0" >
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ResyncCommand}" NumberOfTapsRequired="2"/>
@@ -166,7 +155,7 @@
                 <ImageButton Command="{Binding Path=OpenDevicesPopupCommand}" Background="Transparent"
                              Grid.Column="2" Grid.Row="0" Padding="8"
                              ToolTipProperties.Text="Select playback device"
-                             Source="icons8_drop_down_menu.png"/>
+                             Source="icons8_spotify.png"/>
             </Grid>
         </Border>
     </Grid>

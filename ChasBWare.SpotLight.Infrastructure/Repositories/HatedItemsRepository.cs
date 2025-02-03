@@ -40,8 +40,9 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
                                                                            hi.ItemId == itemId);
                     if (found == null)
                     {
-                        await connection.InsertAsync(new HatedItem { ItemId = itemId, UserId = userId });
+                        return await connection.InsertAsync(new HatedItem { ItemId = itemId, UserId = userId });
                     }
+                    return 0;
                 }
                 else
                 {

@@ -60,7 +60,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                      var playlistViewModel = _serviceProvider.GetRequiredService<IPlaylistViewModel>();
                      playlistViewModel.Model = item;
                      playlistViewModel.LastAccessed = item.LastAccessed;
-                     playlistViewModel.IsTracksExpanded = false;
+                     playlistViewModel.IsExpanded = false;
                      viewModel.Items.Add(playlistViewModel);
                  }
 
