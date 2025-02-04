@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tk:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+          xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+          xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.Popups;assembly=ChasBWare.SpotLight.Infrastructure"
+          xmlns:pop="clr-namespace:ChasBWare.SpotLight.Popups"
+          x:Class="ChasBWare.SpotLight.Popups.LibraryPopupMenu"
+          x:DataType="vm:LibraryPopupViewModel"
+          CanBeDismissedByTappingOutsideOfPopup="True">
+    <Grid ColumnDefinitions="200">
+        <Grid.Shadow>
+            <Shadow Brush="Black"
+                    Offset="10,10"
+                    Radius="10"
+                    Opacity="0.8" />
+        </Grid.Shadow>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{Binding Height}"/>
+        </Grid.RowDefinitions>
+        <pop:PopupMenu BindingContext="{Binding}" VerticalOptions="Fill" HorizontalOptions="Fill"/>
+    </Grid>
+</tk:Popup>

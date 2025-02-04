@@ -1,10 +1,9 @@
 ﻿using ChasBWare.SpotLight.Definitions.ViewModels;
 
+namespace ChasBWare.SpotLight.Definitions.Tasks;
 
-namespace ChasBWare.SpotLight.Definitions.Tasks
+public interface IArtistAlbumsLoaderTask
 {
-    public interface IArtistAlbumsLoaderTask
-    {
-        void Execute(IArtistViewModel viewModel);
-    }
+    void Execute(IArtistViewModel viewModel);
 }
+

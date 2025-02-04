@@ -64,6 +64,10 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             }
         }
 
+        public virtual void RefreshView() 
+        { 
+        }
+
         protected abstract void LoadSettings();
 
         protected virtual void LoadStatusChanged(LoadState loadStatus) 

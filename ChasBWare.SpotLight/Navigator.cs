@@ -1,4 +1,5 @@
-﻿using ChasBWare.SpotLight.Definitions.Enums;
+﻿using System;
+using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Utility;
 
 namespace ChasBWare.SpotLight
@@ -6,7 +7,7 @@ namespace ChasBWare.SpotLight
     public class Navigator() : INavigator
     {
         private AppShell? _shell;
-        private readonly Dictionary<string, INavigationClient> _clients = [];
+        private readonly Dictionary<PageType, INavigationClient> _clients = [];
 
         internal void SetShell(AppShell appShell) 
         {
@@ -14,27 +15,25 @@ namespace ChasBWare.SpotLight
             appShell.Navigator = this;
         }
 
-        public void NavigateTo(string uri)
+      
+        public void NavigateTo(PageType pageType)
         {
             if (_shell != null)
             {
-                _shell.GoToAsync(uri);
-                if (_clients.TryGetValue(uri, out var client) )
+                _shell.GoToAsync($"//{pageType}");
+                if (_clients.TryGetValue(pageType, out var client))
                 {
                     client.OnNavigationRecieved(LastPage);
                 }
             }
         }
 
+
         public void NavigateTo(Uri uri)
         {
             if (_shell != null)
             {
                 _shell.GoToAsync(uri);
-                if (_clients.TryGetValue(uri.ToString(), out var client))
-                {
-                    client.OnNavigationRecieved(LastPage);
-                }
             }
         }
 
@@ -50,12 +49,12 @@ namespace ChasBWare.SpotLight
 
         public void RegisterOnNavigate(INavigationClient client)
         {
-            _clients[client.Path] = client;
+            _clients[client.PageType] = client;
         }
 
         public void UnregisterOnNavigate(INavigationClient client)
         {
-            _clients.Remove(client.Path);
+            _clients.Remove(client.PageType);
         }
 
         internal Uri? LastPage { get; set; }

@@ -34,12 +34,11 @@
                                         SelectionMode="Single">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="vm:MenuItem">
-                                    <Grid>
+                                    <Grid RowDefinitions="24" IsVisible="{Binding Visible}">
                                         <Label Text="{Binding Caption}"
                                                ToolTipProperties.Text="{Binding ToolTip}" 
                                                TextColor="{Binding Path=Enabled, Converter={StaticResource Key=EnabledText}}"
-                                               IsVisible="{Binding Visible}"
-                                                Margin="8">
+                                                 Margin="8,0">
                                             <Label.GestureRecognizers>
                                                 <TapGestureRecognizer Command="{Binding Click}"
                                                                       NumberOfTapsRequired="1"/>
@@ -50,7 +49,8 @@
                             </CollectionView.ItemTemplate>
                         </CollectionView>
                         <Rectangle HorizontalOptions="Fill" 
-                                    Background="DarkSlateBlue"
+                                   Background="DarkSlateBlue"
+                                   IsVisible="{Binding ShowSeparator}"
                               Grid.Row="1"/>
                     </Grid>
 

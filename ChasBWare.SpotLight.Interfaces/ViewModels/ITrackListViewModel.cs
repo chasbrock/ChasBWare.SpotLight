@@ -15,6 +15,6 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
         public LoadState LoadStatus { get; set; }
 
         //[WriteableFileName]
-        string PlaylistName { get; set; }
+        IPlaylistViewModel? Playlist { get; set; }
     }
 }

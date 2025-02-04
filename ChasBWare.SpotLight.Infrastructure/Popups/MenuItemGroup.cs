@@ -3,21 +3,15 @@ using System.Collections.ObjectModel;
 
 namespace ChasBWare.SpotLight.Infrastructure.Popups
 {
-    public class MenuItemGroup : Notifyable
+    public class MenuItemGroup(object key, IPopupMenuViewModel owner) : Notifyable, IMenuItemGroup
     {
         private bool _visible = true;
-        
-        public MenuItemGroup(string name, PopupMenuViewModel owner)
-        {
-            Name = name;
-            Owner = owner;
-        }
+              
+  
+        public object Key { get; } = key;
+        public IPopupMenuViewModel Owner { get; } = owner;
+        public ObservableCollection<IMenuItem> MenuItems { get; } = [];
 
-        public ObservableCollection<MenuItem> MenuItems { get; } = [];
-        
-        public string Name { get;}
-        public PopupMenuViewModel Owner { get; }
-    
         public bool ShowSeparator
         {
             get => Owner.ShowSeparator(this);
@@ -27,6 +21,11 @@ namespace ChasBWare.SpotLight.Infrastructure.Popups
         {
             get => _visible;
             set => SetField(ref _visible, value);
+        }
+
+        public override string ToString()
+        {
+            return $"{Key}";
         }
     }
 }

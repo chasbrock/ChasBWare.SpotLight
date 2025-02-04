@@ -1,4 +1,6 @@
-﻿namespace ChasBWare.SpotLight.Infrastructure.Utility
+﻿using System.Text;
+
+namespace ChasBWare.SpotLight.Infrastructure.Utility
 {
     public static class Misc
     {
@@ -35,6 +37,41 @@
                     || value is float
                     || value is double
                     || value is decimal;
+        }
+
+        public static string CamelCaseToWords(this string source)
+        {
+            if (string.IsNullOrWhiteSpace(source))
+            {
+                return string.Empty;
+            }
+            source = source.Trim();
+            var builder = new StringBuilder(source.Length * 2);
+
+            var c = source[0];
+            builder.Append(char.ToUpper(c));
+
+            // more than 1 inCaps in a row means an acronym
+            var inCaps = char.IsUpper(c);
+            for (var i = 1; i < source.Length; i++)
+            {
+                c = source[i];
+                if (char.IsUpper(c))
+                {
+                    if (!inCaps)
+                    {
+                        //looks like a new word so add space
+                        builder.Append(' ');
+                        inCaps = true;
+                    }
+                }
+                else
+                {
+                    inCaps = false;
+                }
+                builder.Append(c);
+            }
+            return builder.ToString();
         }
     }
 }

@@ -32,7 +32,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             Refresh();
         }
 
-        public string Path { get; } = PageType.Devices;
+        public PageType PageType { get; } = PageType.Devices;
 
         public ICommand RefreshCommand { get; }
 

@@ -5,10 +5,18 @@
           xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.Popups;assembly=ChasBWare.SpotLight.Infrastructure"
           xmlns:pop="clr-namespace:ChasBWare.SpotLight.Popups"
           x:Class="ChasBWare.SpotLight.Popups.TracksPopupMenu"     
-          x:DataType="vm:TrackMenuViewModel"
+          x:DataType="vm:TrackPopupViewModel"
           CanBeDismissedByTappingOutsideOfPopup="True">
-    
-   <Grid RowDefinitions="300" ColumnDefinitions="200">
+    <Grid  ColumnDefinitions="200">
+        <Grid.Shadow>
+            <Shadow Brush="Black"
+                    Offset="10,10"
+                    Radius="10"
+                    Opacity="0.8" />
+        </Grid.Shadow>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{Binding Height}"/>
+        </Grid.RowDefinitions>
         <pop:PopupMenu BindingContext="{Binding}" VerticalOptions="Fill" HorizontalOptions="Fill"/>
     </Grid>
 </tk:Popup>

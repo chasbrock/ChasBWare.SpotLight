@@ -67,7 +67,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         private void OnFindItem(FindItemMessage message)
         {
-            if (message.Payload.ItemType == PageType.Albums)
+            if (message.Payload.PageType == PageType.Albums)
             {
                 var viewModel = Items.FirstOrDefault(a => a.Id == message.Payload.Id);
                 if (viewModel != null)
@@ -87,7 +87,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         private void OnSetActiveAlbum(ActiveAlbumChangedMessage message)
         {
             SelectedItem = AddItemToList(message.Payload, DateTime.Now);
-            UpdateSorting();
+            RefreshView();
         }
     }
 }

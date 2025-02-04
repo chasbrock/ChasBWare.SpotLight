@@ -4,25 +4,25 @@ using System.Windows.Input;
 
 namespace ChasBWare.SpotLight.Infrastructure.Popups
 {
-    public class MenuItem : Notifyable
+    public class MenuItem : Notifyable, IMenuItem
     {
-        private readonly ICommand _command;
+        private readonly Action<object?> _action;
         private string _caption;
         private bool _enabled = true;
         private bool _visible = true;
         private string? _toolTip;
 
-        public MenuItem(string name, ICommand command, string? caption = null, string? toolTip = null, object? tag = null) 
+        public MenuItem(object key, Action<object?> action, string caption, string? toolTip = null, object? tag = null) 
         {
-            Name = name;
-            _caption = caption ?? Name;
-            _command = command;
+            Key = key;
+            _caption = caption;
+            _action = action;
             _toolTip = toolTip;
             Tag = tag;
-            Click = new Command(p => _command?.Execute(Tag));
+            Click = new Command(p => _action?.Invoke(Tag));
         }
 
-        public string Name { get; }
+        public object Key { get; }
         public ICommand Click { get; }
         public object? Tag { get; set; }
       
@@ -48,6 +48,11 @@ namespace ChasBWare.SpotLight.Infrastructure.Popups
         {
             get => _visible;
             set => SetField(ref _visible, value);
+        }
+
+        public override string ToString()
+        {
+            return Caption;
         }
     }
 }

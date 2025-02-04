@@ -2,6 +2,7 @@
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:con="clr-namespace:ChasBWare.SpotLight.Converters"
              xmlns:local="clr-namespace:ChasBWare.SpotLight"
              x:Class="ChasBWare.SpotLight.App">
     <Application.Resources>
@@ -21,15 +22,17 @@
 
         <Visibility x:Key="Visible">Visible</Visibility>
         <Visibility x:Key="Collapsed">Collapsed</Visibility>
-         <tk:BoolToObjectConverter x:Key="BoolToVis" 
+        <tk:BoolToObjectConverter x:Key="BoolToVis" 
                                    TrueObject="{StaticResource Collapsed}" 
                                    FalseObject="{StaticResource Visible}"/>
 
         <Color x:Key="EnabledTextColour">Black</Color>
-            <Color x:Key="DisabledTextColour">DarkGray</Color>
+        <Color x:Key="DisabledTextColour">DarkGray</Color>
         <tk:BoolToObjectConverter x:Key="EnabledText" 
                                 TrueObject="{StaticResource EnabledTextColour}" 
                                 FalseObject="{StaticResource DisabledTextColour}"/>
+
+         <con:NullToBoolConverter x:Key="NullToBool"/>
 
         </ResourceDictionary>
 

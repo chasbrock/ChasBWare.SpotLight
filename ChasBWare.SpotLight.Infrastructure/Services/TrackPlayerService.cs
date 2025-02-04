@@ -15,19 +15,24 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
     public class TrackPlayerService : ITrackPlayerService
     {
         const int TimerIntervalMs = 1000;
-       
+
+        private readonly IMessageService<CurrentTrackChangedMessage> _currentTrackMessageService;
+        private readonly IDispatcherTimer _timer;
+        private readonly IHatedService _hatedService;
+
         private DateTime _playbackStarted = DateTime.Now;
         private PlayingTrack? _nowPlaying = null;
         private IServiceProvider _serviceProvider;
-        private readonly IMessageService<CurrentTrackChangedMessage> _currentTrackMessageService;
-        private readonly IDispatcherTimer _timer;
-  
+   
         public TrackPlayerService(IServiceProvider serviceProvider,
                                   IDispatcher dispatcher,
+                                  IHatedService hatedService,
                                   IMessageService<CurrentTrackChangedMessage> currentTrackChangedMessage)
         {
             _serviceProvider = serviceProvider;
             _currentTrackMessageService = currentTrackChangedMessage;
+            _hatedService = hatedService;
+
             _timer = dispatcher.CreateTimer();
             _timer.Interval = TimeSpan.FromMilliseconds(TimerIntervalMs);
             _timer.Tick += OnTimerTick;
@@ -100,6 +105,13 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
             {
                 _timer.Stop();
                 PostPlayingTrackChange(TrackStatus.NotPlaying);
+                return;
+            }
+
+            // do we hate this track?
+            if (_hatedService.GetIsHated(nowPlaying.Id))
+            {
+                SkipForward();
                 return;
             }
 
@@ -178,6 +190,9 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
             }
         }
 
-       
+        public void AddPlaylistToQueue(string playListId)
+        {
+            // todo
+          }
     }
 }

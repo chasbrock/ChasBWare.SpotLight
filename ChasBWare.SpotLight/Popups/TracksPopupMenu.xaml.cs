@@ -5,7 +5,7 @@ namespace ChasBWare.SpotLight.Popups;
 
 public partial class TracksPopupMenu : Popup
 {
-	public TracksPopupMenu(TrackMenuViewModel viewModel)
+	public TracksPopupMenu(TrackPopupViewModel viewModel)
 	{
 		InitializeComponent();
 		BindingContext = viewModel;

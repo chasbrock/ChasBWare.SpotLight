@@ -20,9 +20,12 @@
     <Grid RowDefinitions="*,Auto">
         <Grid ColumnDefinitions="300,*" Grid.Row="0">
             <v:PlaylistSelectorView BindingContext="{Binding}" Grid.Column="0" VerticalOptions="Fill"/>
-            <v:PlaylistView BindingContext="{Binding SelectedItem}" Grid.Column="1" VerticalOptions="Fill"/>
+            <Grid IsVisible="{Binding SelectedItem, Converter={StaticResource NullToBool}}"
+                  Grid.Column="1">
+                <v:PlaylistView BindingContext="{Binding SelectedItem}" />
+            </Grid>
         </Grid>
-        <v:PlayerControlView BindingContext="{Binding PlayerControlViewModel}" Grid.Row="1"/>
+        <v:PlayerControlView BindingContext="{Binding PlayerControlViewModel}" Grid.Row="1" />
     </Grid>
     
 </ContentPage>

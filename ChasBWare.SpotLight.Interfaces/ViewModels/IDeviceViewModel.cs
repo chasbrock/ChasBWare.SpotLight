@@ -1,11 +1,11 @@
-﻿using ChasBWare.SpotLight.Domain.Models;
+﻿using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Domain.Models;
 
 namespace ChasBWare.SpotLight.Definitions.ViewModels
 {
     public interface IDeviceViewModel 
     {
-        string DeviceImage { get; }
-        string DeviceType { get;  }
+        DeviceTypes DeviceType { get;  }
         bool IsActive { get; set; }
         string Name { get;  }
         DeviceModel Model { get; set; }

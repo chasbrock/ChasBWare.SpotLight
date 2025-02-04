@@ -10,6 +10,9 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
         IGrouper<T> SelectedGrouper { get; set; }
         string SelectedGrouperName { get; set; }
         List<string> GrouperNames { get; }
+
+        void CollapseAll();
+        void ExpandAll();
     }
 
 

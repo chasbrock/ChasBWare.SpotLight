@@ -7,5 +7,7 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
         List<T> Items { get; }
         T? SelectedItem { get; set; }
         LoadState LoadStatus { get; set; }
+
+        void RefreshView();
     }
 }

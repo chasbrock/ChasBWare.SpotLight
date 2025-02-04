@@ -61,6 +61,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                      playlistViewModel.Model = item;
                      playlistViewModel.LastAccessed = item.LastAccessed;
                      playlistViewModel.IsExpanded = false;
+                     playlistViewModel.IsSaved = true;
                      viewModel.Items.Add(playlistViewModel);
                  }
 

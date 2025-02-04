@@ -30,12 +30,13 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         private double _progressPercent = 0;
         private TimeSpan _playedTime = TimeSpan.Zero;
         private TimeSpan _duration = TimeSpan.Zero;
+        private bool _firstCallToNavigate = true;
 
         public PlayerControlViewModel(IServiceProvider serviceProvider,
                                       INavigator navigator,
                                       ITrackPlayerService trackPlayerService,
                                       ICurrentDeviceViewModel currentDevice,
-                                      IMessageService<PlayTracklistMessage> playTracklistMessageService,
+                                      IMessageService<PlayPlaylistMessage> playTracklistMessageService,
                                       IMessageService<ActiveDeviceChangedMessage> activeDeviceChangedMessageService,
                                       IMessageService<ConnectionStatusChangedMessage> connectionStatusService)
         {
@@ -137,7 +138,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             set => SetField(ref _albumId, value);
         }
 
-        private void PlayTracklist(PlayTracklistMessage message)
+        private void PlayTracklist(PlayPlaylistMessage message)
         {
             TrackPlayerService.StartPlaylist(message.Payload.Playlist,
                                               message.Payload.Offset); 
@@ -185,9 +186,10 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         private void NavigateToDevices()
         {
-            if (String.IsNullOrEmpty(CurrentDevice.Device.Id))
+            if (_firstCallToNavigate)
             {
                 SyncToDevice();
+                _firstCallToNavigate = false;
             }
             else
             {
@@ -197,6 +199,11 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         private void NavigateToArtist(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return;
+            }
+            
             var messageService = _serviceProvider.GetRequiredService<IMessageService<FindItemMessage>>();
             messageService.SendMessage(new FindItemMessage(PageType.Artists, id));
             
@@ -205,6 +212,11 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         private void NavigateToAlbum(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return;
+            }
+
             var messageService = _serviceProvider.GetRequiredService<IMessageService<FindItemMessage>>();
             messageService.SendMessage(new FindItemMessage(PageType.Albums, id));
 

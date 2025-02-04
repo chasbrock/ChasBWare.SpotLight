@@ -12,7 +12,5 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
         IPropertyComparer<T> SelectedSorter { get; set; }
         List<string> SorterNames { get; }
         string SelectedSorterName { get; set; }
-
-        void UpdateSorting();
     }
 }

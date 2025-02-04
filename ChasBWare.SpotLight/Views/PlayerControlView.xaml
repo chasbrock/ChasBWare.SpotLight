@@ -39,7 +39,7 @@
             <Image Source="{Binding Path=Image}"
                    VerticalOptions="Fill" HorizontalOptions="Fill" >
                 <Image.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding OpenArtistCommand}"
+                    <TapGestureRecognizer Command="{Binding OpenAlbumCommand}"
                                           CommandParameter="{Binding AlbumId}" 
                                           NumberOfTapsRequired="2"/>
                 </Image.GestureRecognizers>
@@ -88,14 +88,14 @@
  
                     <ImageButton Command="{Binding Path=PlayCommand}" Background="Transparent"
                           IsEnabled="{Binding Path=CurrentDevice.IsActive}"
-                          IsVisible="{Binding Path=IsPaused, Converter={StaticResource BoolToVis}}"
+                          IsVisible="{Binding Path=IsPaused}"
                           Source="icons8_play_button.png"
                           ToolTipProperties.Text="Resume playing"
                           Grid.Column="2" Margin="1,2"/>
 
                     <ImageButton Command="{Binding Path=PauseCommand}" Background="Transparent"
                           IsEnabled="{Binding Path=CurrentDevice.IsActive}"
-                          IsVisible="{Binding Path=IsPlaying, Converter={StaticResource BoolToVis}}" 
+                          IsVisible="{Binding Path=IsPlaying}" 
                           Source="icons8_pause_button.png"
                           ToolTipProperties.Text="Pause playing"
                           Grid.Column="2" Margin="1,2"/>
@@ -131,7 +131,7 @@
                 <Label Text="{Binding Path=CurrentDevice.Name}" 
                        VerticalTextAlignment="Center" HorizontalTextAlignment="Start"
                        FontSize="14" FontAttributes="Bold" 
-                       IsVisible="{Binding Path=CurrentDevice.IsActive, Converter={StaticResource BoolToVis}}"
+                       IsVisible="{Binding Path=CurrentDevice.IsActive}"
                        Grid.Column="0" Grid.Row="0" Margin="8,0" >
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ResyncCommand}" NumberOfTapsRequired="2"/>
@@ -142,12 +142,12 @@
                         DragCompletedCommand="{Binding Path=CurrentDevice.VolumeUpdatedCommand}"
                         Maximum="100" Minimum="0" 
                         VerticalOptions="End" HorizontalOptions="Fill"
-                        IsVisible="{Binding Path=CurrentDevice.IsActive, Converter={StaticResource BoolToVis}}"
+                        IsVisible="{Binding Path=CurrentDevice.IsActive}"
                         ToolTipProperties.Text="Set volume"
                         Grid.Column="0" Grid.Row="1" Margin="16,0"/>
 
                 <ImageButton Command="{Binding Path=CurrentDevice.MuteCommand}" Background="Transparent"
-                             IsVisible="{Binding Path=CurrentDevice.IsActive, Converter={StaticResource BoolToVis}}" 
+                             IsVisible="{Binding Path=CurrentDevice.IsActive}" 
                              Grid.Column="1" Grid.Row="0" Padding="8"
                              ToolTipProperties.Text="Mute Sound"
                              Source="{Binding Path=CurrentDevice.IsMuted, Converter={StaticResource BoolToMuted}}"/>

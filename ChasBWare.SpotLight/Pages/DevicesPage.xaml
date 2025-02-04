@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
+             xmlns:con="clr-namespace:ChasBWare.SpotLight.Converters"
              x:DataType="vm:DeviceListViewModel"
              x:Class="ChasBWare.SpotLight.Pages.DevicesPage"
              Title="DevicesPage"
@@ -31,6 +32,14 @@
             <tk:BoolToObjectConverter x:Key="IsActiveForeground" 
                TrueObject="{StaticResource ActiveForeground}" 
                FalseObject="{StaticResource InactiveForeground}"/>
+
+            <con:DeviceTypesToStringConverter x:Key="DeviceImage"
+                Computer= "icons8_computer.png"
+                AVR= "icons8_av_receiver.png"
+                Tablet="icons8_tablet.png"
+                Smartphone="icons8_phone.png"
+                Sonos= "icons8_sonos.png"
+                Unknown= "icons8_sound_other.png" />
         </ResourceDictionary>
 
     </ContentPage.Resources>
@@ -46,7 +55,7 @@
                 <DataTemplate x:DataType="vm:DeviceViewModel" >
                     <Border Margin="4" Style="{StaticResource RoundedBorder}" Padding="4">
                         <Grid ColumnDefinitions="Auto,*" Margin="2">
-                            <Image Source="{Binding DeviceImage}" Grid.Column="0"/>
+                            <Image Source="{Binding DeviceType, Converter={StaticResource Key=DeviceImage}}" Grid.Column="0"/>
                             <Label Text="{Binding Name}" Grid.Column="1" Margin="8,0"
                                FontSize="Default" FontAttributes="Bold"
                                VerticalTextAlignment="Center"

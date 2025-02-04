@@ -34,7 +34,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                     }
                     
                     viewModel.LoadStatus = LoadState.Loaded;
-                    viewModel.UpdateSorting();
+                    viewModel.RefreshView();
                 });
             }
         }

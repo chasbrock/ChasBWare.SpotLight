@@ -1,4 +1,5 @@
-﻿using ChasBWare.SpotLight.Domain.Models;
+﻿using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Domain.Models;
 using SpotifyAPI.Web;
 
 
@@ -12,7 +13,7 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
             {
                 Id = source.Id,
                 Name = source.Name,
-                DeviceType = source.Type,
+                DeviceType = source.Type.ToDeviceType(),
                 IsActive = source.IsActive,
                 IsMuted = source.VolumePercent == null,
                 SupportsVolume = source.SupportsVolume,

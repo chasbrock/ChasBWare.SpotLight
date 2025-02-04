@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
-    public partial class TrackViewModel(IMessageService<PlayTracklistMessage> _messageService)
+    public partial class TrackViewModel(IMessageService<PlayPlaylistMessage> _messageService)
                        : Notifyable, ITrackViewModel
     {
         private bool _isHated = false;
@@ -75,7 +75,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             if (Playlist != null)
             {
                 var offset = Playlist.TracksViewModel.Items.ToList().FindIndex(tm => tm.Id == Id);
-                _messageService.SendMessage(new PlayTracklistMessage(Playlist, offset));
+                _messageService.SendMessage(new PlayPlaylistMessage(Playlist, offset));
             }
         }
 

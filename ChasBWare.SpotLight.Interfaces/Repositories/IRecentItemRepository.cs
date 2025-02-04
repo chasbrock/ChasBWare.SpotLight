@@ -1,4 +1,6 @@
-﻿namespace ChasBWare.SpotLight.Definitions.Repositories
+﻿using ChasBWare.SpotLight.Domain.Enums;
+
+namespace ChasBWare.SpotLight.Definitions.Repositories
 {
     public interface IRecentItemRepository 
     { 

@@ -1,11 +1,12 @@
 ﻿using System.Windows.Input;
+using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Domain.Models;
 
 namespace ChasBWare.SpotLight.Definitions.ViewModels
 {
     public interface ICurrentDeviceViewModel
     {
-        string DeviceType { get; }
+        DeviceTypes DeviceType { get; }
         bool IsActive { get; set; }
         ICommand MuteCommand { get; }
         string Name { get; }

@@ -6,38 +6,46 @@ using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
+using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
     public class PlaylistViewModel : Notifyable, IPlaylistViewModel
     {
         private readonly IServiceProvider _provider;
-        private readonly IMessageService<PlayTracklistMessage> _messageService;
+        private readonly IMessageService<PlayPlaylistMessage> _messageService;
+  
         private bool _isExpanded = false;
         private RecentPlaylist _model = new() { Id = "" };
        
         public PlaylistViewModel(ITrackListViewModel tracksViewModel,
                                  IServiceProvider provider,
-                                 IMessageService<PlayTracklistMessage> messageService)
+                                 IPopupService popupService,
+                                 IMessageService<PlayPlaylistMessage> messageService)
         {
             TracksViewModel = tracksViewModel;
             _provider = provider;
             _messageService = messageService;
+          
             SetExpandedCommand = new Command(() => IsExpanded = !IsExpanded);
             PlayTracklistCommand = new Command(PlayTrackList);
+            OpenTrackPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<TrackPopupViewModel>(onPresenting: vm => vm.SetTrack(this, TracksViewModel.SelectedItem)));
         }
 
         public RecentPlaylist Model 
-       { 
+        { 
             get => _model;
             set
             {
                 _model = value;
-                TracksViewModel.PlaylistName = value.Name ?? "";
+                TracksViewModel.Playlist = this;
             }
         }
 
+        public ICommand OpenTrackPopupCommand { get; }
         public ICommand SetExpandedCommand { get; }
         public ICommand PlayTracklistCommand { get; } 
       
@@ -80,7 +88,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         private void PlayTrackList()
         {
             IsExpanded = true;
-            _messageService.SendMessage(new PlayTracklistMessage(this, 0));
+            _messageService.SendMessage(new PlayPlaylistMessage(this, 0));
         }
 
         private void LoadTracks()
@@ -92,7 +100,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                 task?.Execute(this);
             }
         }
-
+          
         public string Name
         {
             get => Model.Name??"";
@@ -124,6 +132,8 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             set => SetField(Model, value); 
 
         }
+
+        public bool IsSaved { get; set; }
 
         public override string ToString()
         {

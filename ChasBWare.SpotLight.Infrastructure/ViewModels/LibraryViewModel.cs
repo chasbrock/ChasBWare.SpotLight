@@ -5,7 +5,9 @@ using ChasBWare.SpotLight.Definitions.Tasks;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
+using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
@@ -16,18 +18,23 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         private bool _showOwner;
 
         public LibraryViewModel(IServiceProvider serviceProvider,
+                                IPopupService popupService,       
                                 IPlayerControlViewModel playerControlViewModel,
                                 IMessageService<CurrentTrackChangedMessage> currentTrackChangedMessage)
              : base(serviceProvider, GrouperHelper.GetPlaylistGroupers())
         {
             currentTrackChangedMessage.Register(OnTrackChangedMessage);
             PlayerControlViewModel = playerControlViewModel;
+
+            OpenPlaylistSelectorPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<LibraryPopupViewModel>());
+
             Initialise();
-            LoadSettings();
         }
 
         public IPlayerControlViewModel PlayerControlViewModel { get; }
-       
+        public ICommand OpenPlaylistSelectorPopupCommand { get; }
+        
+        
         public void ExecuteLibrayCommand(IPlaylistViewModel? selectedItem)
         {
             if (selectedItem != null)
@@ -37,7 +44,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                 Items.Remove(selectedItem);
             }
         }
-
+            
         public bool ShowOwner
         {
             get => _showOwner;
@@ -53,9 +60,9 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             task?.Execute(item.Id, item.LastAccessed, true);
         }
 
-        protected override void UpdateGroupings()
+        public override void RefreshView()
         {
-            base.UpdateGroupings();
+            base.RefreshView();
             ShowOwner = SelectedGrouper.Name != nameof(IPlaylistViewModel.Owner);
         }
 

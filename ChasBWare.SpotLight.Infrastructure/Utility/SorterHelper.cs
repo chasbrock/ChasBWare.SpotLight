@@ -9,7 +9,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
     {
         internal static IPropertyComparer<IArtistViewModel>[] GetArtistSorters()
         {
-            return [new PropertyComparer<IArtistViewModel>(nameof(IArtistViewModel.LastAccessed),SortDirection.Descending),
+            return [new PropertyComparer<IArtistViewModel>(nameof(IArtistViewModel.LastAccessed),SortDirection.Ascending),
                     new PropertyComparer<IArtistViewModel>(nameof(IArtistViewModel.Name))];
         }
 

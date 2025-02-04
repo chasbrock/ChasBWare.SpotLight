@@ -51,7 +51,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddSingleton<IMessageService<ActivePlaylistChangedMessage>, MessageService<ActivePlaylistChangedMessage>>()
                            .AddSingleton<IMessageService<CurrentTrackChangedMessage>, MessageService<CurrentTrackChangedMessage>>()
                            .AddSingleton<IMessageService<FindItemMessage>, MessageService<FindItemMessage>>()
-                           .AddSingleton<IMessageService<PlayTracklistMessage>, MessageService<PlayTracklistMessage>>()
+                           .AddSingleton<IMessageService<PlayPlaylistMessage>, MessageService<PlayPlaylistMessage>>()
                            .AddSingleton<IMessageService<ConnectionStatusChangedMessage>, MessageService<ConnectionStatusChangedMessage>>()
                            ;
         }
@@ -63,7 +63,8 @@ namespace ChasBWare.SpotLight.DependencyInjection
 
         public static IServiceCollection RegisterPopups(this IServiceCollection services)
         {
-            return services.AddTransientPopup<TracksPopupMenu, TrackMenuViewModel>()
+            return services.AddTransientPopup<TracksPopupMenu, TrackPopupViewModel>()
+                           .AddTransientPopup<LibraryPopupMenu,LibraryPopupViewModel>()
             ;
         }
 
@@ -87,6 +88,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
         {
             return services.AddSingleton<IHatedService, HatedService>()
                            .AddSingleton<IDeviceService, DeviceService>()
+                           .AddSingleton<IPopupItemService, PopupItemService>()
                            .AddSingleton<ITrackPlayerService, TrackPlayerService>();
         }
 
@@ -108,8 +110,10 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddTransient<ILoadRecentArtistTask, LoadRecentArtistTask>()
                            .AddTransient<ILoadRecentPlaylistTask, LoadRecentPlaylistTask>()
                            .AddTransient<IRemoveArtistTask, RemoveArtistTask>()
+                           .AddTransient<ISetPlaylistSavedStatus, SetPlaylistSavedStatus>()
                            .AddTransient<ISearchForAlbumTask, SearchForAlbumTask>()
                            .AddTransient<ISearchForArtistTask, SearchForArtistTask>()
+                           .AddTransient<ISetHatedTrackTask,SetHatedTrackTask>()
                            .AddTransient<ISyncToDeviceTask, SyncToDeviceTask>()
                            .AddTransient<ITrackListLoaderTask, TrackListLoaderTask>()
                            .AddTransient<IUpdateLastAccessedTask, UpdateLastAccessedTask>()

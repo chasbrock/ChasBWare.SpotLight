@@ -43,7 +43,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                 if (SetField(ref _selectedSorter, value) &&
                     _selectedSorter != null)
                 {
-                    UpdateSorting();
+                    RefreshView();
                 }
             }
         }
@@ -54,7 +54,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             set => SetField(ref _sortedItems, value);
         }
 
-        public async void UpdateSorting()
+        public async override void RefreshView()
         {
             if (_selectedSorter == null)
             {
@@ -90,7 +90,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         protected override void LoadStatusChanged(LoadState loadStatus)
         {
-            UpdateSorting();
+            RefreshView();
         }
 
         protected override void SelectedItemChanged(T? selectedItem)

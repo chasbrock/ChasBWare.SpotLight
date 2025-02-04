@@ -3,71 +3,104 @@ using CommunityToolkit.Maui.Core;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace ChasBWare.SpotLight.Infrastructure.Popups
+namespace ChasBWare.SpotLight.Infrastructure.Popups;
+
+public class PopupMenuViewModel(IPopupService _popupService) 
+           : Notifyable,
+             IPopupMenuViewModel
+
 {
-    public class PopupMenuViewModel(IPopupService _popupService) : Notifyable 
+    private int _height = 100;
+
+    public const string DefaultGroup = "";
+
+    public ObservableCollection<IMenuItemGroup> MenuGroups { get; } = [];
+
+    public async void Close() 
     {
-        public const string DefaultGroup = "";
+        await _popupService.ClosePopupAsync();
+    }
 
-        public ObservableCollection<MenuItemGroup> MenuGroups { get; } = [];
+    public int Height
+    {
+        get => _height;
+        set => SetField(ref _height, value);
+    }
 
-        public async void Close() 
+    public int GetHeight()
+    {
+        var height = 4 + (MenuGroups.Count - 1) * 2;
+        foreach (var group in MenuGroups)
         {
-            await _popupService.ClosePopupAsync();
-        }    
+            height += group.MenuItems.Count(mi => mi.Visible) * 24;
+        }
+        return height;
+    }
 
-        public MenuItem AddItem(string name, ICommand command, string? caption = null, string? toolTip = null, object? tag = null)
+    public IMenuItem? FindMenuItem(object key)
+    {
+        foreach (var group in MenuGroups)
         {
-            return AddItem(DefaultGroup, name, command, caption, toolTip, tag);
+            var found = group.MenuItems.FirstOrDefault(m => m.Key == key);
+            if (found != null)
+            {
+                return found;
+            }
+        }
+        return null;
+    }
+
+    public IMenuItem AddItem(object key, string caption, Action<object?> action, string? toolTip = null, object? tag = null)
+    {
+        return AddItem(DefaultGroup, key, caption, action, toolTip, tag);
+    }
+
+    public IMenuItem AddItem(object groupKey, object key, string caption, Action<object?> action, string? toolTip=null, object? tag=null) 
+    {
+        var group = MenuGroups.FirstOrDefault(g => g.Key == groupKey);
+        if (group == null)
+        {
+            group = new MenuItemGroup(groupKey, this);
+            MenuGroups.Add(group);
         }
 
-        public MenuItem AddItem(string groupName, string name, ICommand command, string? caption = null, string? toolTip=null, object? tag=null) 
+        var newItem = new MenuItem(key, action, caption, toolTip, tag);
+       
+        group.MenuItems.Add(newItem);
+        return newItem;
+    }
+
+    public bool ShowSeparator(IMenuItemGroup menuItemGroup)
+    {
+        // if this is last group then never show separator
+        if (MenuGroups.Count > 0 && MenuGroups[MenuGroups.Count - 1] == menuItemGroup) 
         {
-            var group = MenuGroups.FirstOrDefault(g => g.Name == groupName);
-            if (group == null)
-            {
-                group = new MenuItemGroup(groupName, this);
-                MenuGroups.Add(group);
-            }
-
-            var newItem = new MenuItem(name, command, caption, toolTip, tag);
-           
-            group.MenuItems.Add(newItem);
-            return newItem;
-        }
-
-        internal bool ShowSeparator(MenuItemGroup menuItemGroup)
-        {
-            // if this is last group then never show separator
-            if (MenuGroups.Count > 0 && MenuGroups[MenuGroups.Count - 1] == menuItemGroup) 
-            {
-                return false;
-            }
-
-            // never show if all our items are hidden
-            if (!menuItemGroup.MenuItems.Any(m => m.Visible)) 
-            {
-                return false;
-            }
-
-            // find any groups that are below us that have active items
-            bool found = false;
-            foreach (var group in MenuGroups)
-            {
-                // we do not care about groups above us
-                if (!found && group != menuItemGroup)
-                {
-                    found = group == menuItemGroup;
-                    continue;
-                }
-
-                // we have a group below, has it any visible items?
-                if (group.MenuItems.Any(m => m.Visible))
-                {
-                    return true;
-                }
-            }
             return false;
         }
+
+        // never show if all our items are hidden
+        if (!menuItemGroup.MenuItems.Any(m => m.Visible)) 
+        {
+            return false;
+        }
+
+        // find any groups that are below us that have active items
+        bool found = false;
+        foreach (var group in MenuGroups)
+        {
+            // we do not care about groups above us
+            if (!found )
+            {
+                found = group == menuItemGroup;
+                continue;
+            }
+
+            // we have a group below, has it any visible items?
+            if (group.MenuItems.Any(m => m.Visible))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

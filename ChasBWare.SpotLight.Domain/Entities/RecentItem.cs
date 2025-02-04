@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using ChasBWare.SpotLight.Domain.Enums;
+using SQLite;
 
 namespace ChasBWare.SpotLight.Domain.Entities
 {
@@ -18,7 +19,7 @@ namespace ChasBWare.SpotLight.Domain.Entities
         [Indexed(Name = "RecentItem_Key", Order = 1, Unique = true), NotNull]
         public string? ItemId { get; set; }
 
-        public bool IsSaved { get; set; } = false;
+        public bool IsSaved { get; set; } 
         public DateTime LastAccessed { get; set; }
     }
 }

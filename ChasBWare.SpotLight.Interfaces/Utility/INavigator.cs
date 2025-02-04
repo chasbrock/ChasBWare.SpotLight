@@ -4,7 +4,7 @@ namespace ChasBWare.SpotLight.Definitions.Utility
 {
     public interface INavigationClient 
     { 
-        string Path { get; }
+        PageType PageType { get; }
         void OnNavigationRecieved(Uri? callerUri);
     }
 
@@ -13,7 +13,7 @@ namespace ChasBWare.SpotLight.Definitions.Utility
     /// </summary>
     public interface INavigator 
     {
-        void NavigateTo(string uri);
+        void NavigateTo(PageType pageType);
         void NavigateTo(Uri uri);
         void PopLastNavigation();
         void RegisterOnNavigate(INavigationClient client);

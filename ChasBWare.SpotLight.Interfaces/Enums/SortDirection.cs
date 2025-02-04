@@ -1,11 +1,8 @@
-﻿namespace ChasBWare.SpotLight.Definitions.Enums
+﻿namespace ChasBWare.SpotLight.Definitions.Enums;
+
+public enum SortDirection
 {
-    public enum SortDirection
-    {
-        Ascending,
-        Descending
-    }
-
-
+    Ascending,
+    Descending
 }
 

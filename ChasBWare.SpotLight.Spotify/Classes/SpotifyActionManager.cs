@@ -40,7 +40,6 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
         }
 
-
         public async Task<CurrentlyPlayingContext> GetCurrentContext()
         {
             var client = await _spotifyConnectionManager.GetClient();
@@ -86,6 +85,8 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
         }
         
+
+
         public async Task<IEnumerable<FullPlaylist>> GetCurrentUsersPlaylists()
         {
             var client = await _spotifyConnectionManager.GetClient();
@@ -292,7 +293,5 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                 return [];
             }
         }
-
-   
     }
 }
