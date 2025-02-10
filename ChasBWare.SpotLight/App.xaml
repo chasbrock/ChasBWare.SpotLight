@@ -7,37 +7,138 @@
              x:Class="ChasBWare.SpotLight.App">
     <Application.Resources>
 
-    <ResourceDictionary>
-        <ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
-            <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
-        </ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-        <Style x:Key="RoundedBorder" TargetType="Border">
-            <Setter Property="StrokeThickness" Value="1" />
-            <Setter Property="StrokeShape" Value="RoundRectangle 8" />
-            <Setter Property="Background" Value="Lavender" />
-            <Setter Property="Stroke" Value="MidnightBlue" />
-        </Style>
+            <Style x:Key="AppBackground" TargetType="ContentPage">
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <LinearGradientBrush.GradientStops>
+                                <GradientStop Offset="0.1" Color="LightSkyBlue" />
+                                <GradientStop Offset="1" Color="Lavender" />
+                            </LinearGradientBrush.GradientStops>
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
-        <Visibility x:Key="Visible">Visible</Visibility>
-        <Visibility x:Key="Collapsed">Collapsed</Visibility>
-        <tk:BoolToObjectConverter x:Key="BoolToVis" 
+            <Style x:Key="GroupPicker" TargetType="Picker">
+                <Setter Property="Background" Value="Navy" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="RoundedBorder" TargetType="Border">
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="Background" Value="Lavender" />
+                <Setter Property="Stroke" Value="MidnightBlue" />
+            </Style>
+
+            <Style x:Key="PopupBorder" TargetType="Border">
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+                <Setter Property="Background" Value="Lavender" />
+                <Setter Property="Stroke" Value="MidnightBlue" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="Black"
+                                Offset="10,10"
+                                Radius="10"
+                                Opacity="0.8" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="ImageButton" x:Key="OpenMore">
+                <Setter Property="Source" Value="icons8_morea.png" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="HorizontalOptions" Value="End"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="Margin" Value="4,0"/>
+            </Style>
+
+            <Style TargetType="Label" x:Key="ListCaption">
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style TargetType="Label" x:Key="TrackCaption">
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold"/>
+            </Style>
+
+            <Style TargetType="Label" x:Key="TrackOwner">
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Italic"/>
+            </Style>
+
+            <Style TargetType="Label" x:Key="ListDescription">
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Italic"/>
+            </Style>
+
+            <Style TargetType="Label" x:Key="ListDetail">
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+
+            <Style TargetType="Label" x:Key="GroupHeader">
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="Margin" Value="1,0"/>
+                <Setter Property="Background" Value="DeepSkyBlue"/>
+            </Style>
+
+            <Style TargetType="Image" x:Key="ShowMoreMenu">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal"/>
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="Source" Value="icons8_more.png" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
+
+            <Visibility x:Key="Visible">Visible</Visibility>
+            <Visibility x:Key="Collapsed">Collapsed</Visibility>
+            <tk:BoolToObjectConverter x:Key="BoolToVis" 
                                    TrueObject="{StaticResource Collapsed}" 
                                    FalseObject="{StaticResource Visible}"/>
 
-        <Color x:Key="EnabledTextColour">Black</Color>
-        <Color x:Key="DisabledTextColour">DarkGray</Color>
-        <tk:BoolToObjectConverter x:Key="EnabledText" 
+            <Color x:Key="EnabledTextColour">Black</Color>
+            <Color x:Key="DisabledTextColour">DarkGray</Color>
+            <tk:BoolToObjectConverter x:Key="EnabledText" 
                                 TrueObject="{StaticResource EnabledTextColour}" 
                                 FalseObject="{StaticResource DisabledTextColour}"/>
 
-         <con:NullToBoolConverter x:Key="NullToBool"/>
+            <con:NullToBoolConverter x:Key="NullToBool"/>
 
         </ResourceDictionary>
 
 
     </Application.Resources>
-
-
 </Application>
+

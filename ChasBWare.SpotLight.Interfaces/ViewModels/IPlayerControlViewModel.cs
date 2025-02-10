@@ -16,6 +16,7 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
         TimeSpan PlayedTime { get; set; }
         bool IsPlaying { get; set; }
         bool IsPaused { get; }
+        bool IsSyncing { get; set; }
         string CurrentTrack { get; set; }
         string Artists { get; set; }
         ITrackPlayerService TrackPlayerService { get; }

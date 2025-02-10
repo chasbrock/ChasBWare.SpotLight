@@ -10,7 +10,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
     {
         private const int defaultPort = 8888;
 
-        private string _accessToken = string.Empty;
+        private string? _accessToken;
 
         /// <summary>
         /// default details for connecting to spotify
@@ -20,12 +20,12 @@ namespace ChasBWare.SpotLight.Spotify.Classes
         /// <summary>
         /// unique app id from spotify
         /// </summary>
-        public string ClientId { get; set; } = "f8eb5326c4b3445a9dcd079ee11812a0";
+        public string? ClientId { get; set; } 
 
         /// <summary>
         /// unique id created for me by spotify
         /// </summary>
-        public string ClientSecret { get; set; } = "bae2baff23fa4204b50efb260df14fc2";
+        public string? ClientSecret { get; set; } 
 
         public int RedirectPort { get; set; } = defaultPort;
 
@@ -34,13 +34,20 @@ namespace ChasBWare.SpotLight.Spotify.Classes
         /// <summary>
         /// token created by OAuth
         /// </summary>
-        public string AccessToken
+        public string? AccessToken
         {
             get => _accessToken;
             set
             {
                 _accessToken = value;
-                GetDefaultConfig = SpotifyClientConfig.CreateDefault(_accessToken);
+                if (_accessToken != null)
+                {
+                    GetDefaultConfig = SpotifyClientConfig.CreateDefault(_accessToken);
+                }
+                else
+                {
+                    GetDefaultConfig = SpotifyClientConfig.CreateDefault();
+                }
             }
         }
 

@@ -15,16 +15,11 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
             var fullArtists = await _actionManager.SearchForArtists(searchText);
 
             List<IArtistViewModel> artists = []; 
-            foreach (var fullArtist in fullArtists.Where(t => t != null))
+            foreach (var artist in fullArtists.Where(t => t != null).Select(fa => fa.CopyToArtist()))
             {
-                var artistViewModel = _serviceProvider.GetService<IArtistViewModel>();
-                if (artistViewModel != null)
-                {
-                    artistViewModel.Id = fullArtist.Id;
-                    artistViewModel.Name = fullArtist.Name;
-                    artistViewModel.Image = fullArtist.Images.GetSmallImage();
-                    artists.Add(artistViewModel);
-                }
+                var artistViewModel = _serviceProvider.GetRequiredService<IArtistViewModel>();
+                artistViewModel.Model = artist;
+                artists.Add(artistViewModel);
             }
 
             return artists;

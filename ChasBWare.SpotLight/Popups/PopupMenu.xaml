@@ -5,7 +5,9 @@
           xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.Popups;assembly=ChasBWare.SpotLight.Infrastructure"
           x:DataType="vm:PopupMenuViewModel"
           x:Class="ChasBWare.SpotLight.Popups.PopupMenu"
-          Background="LightSkyBlue">
+          Background="LightSkyBlue"
+          HeightRequest="{Binding Height}">
+
     <ContentView.Resources>
         <Style TargetType="Label" x:Key="MenuItemHightList">
             <Setter Property="VisualStateManager.VisualStateGroups">
@@ -23,7 +25,7 @@
         </Style>
     </ContentView.Resources>
 
-    <Grid>
+    <Grid RowDefinitions="{Binding Height}" ColumnDefinitions="200">
         <CollectionView ItemsSource="{Binding Path=MenuGroups}" 
                         SelectionMode="Single">
             <CollectionView.ItemTemplate>
@@ -34,7 +36,7 @@
                                         SelectionMode="Single">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="vm:MenuItem">
-                                    <Grid RowDefinitions="24" IsVisible="{Binding Visible}">
+                                    <Grid RowDefinitions="30" IsVisible="{Binding Visible}">
                                         <Label Text="{Binding Caption}"
                                                ToolTipProperties.Text="{Binding ToolTip}" 
                                                TextColor="{Binding Path=Enabled, Converter={StaticResource Key=EnabledText}}"

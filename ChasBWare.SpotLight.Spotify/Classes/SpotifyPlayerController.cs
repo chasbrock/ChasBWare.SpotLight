@@ -203,5 +203,20 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
             return null;
         }
+
+        public async Task<bool> SetDeviceAsActive(string deviceId)
+        {
+            var client = await _spotifyConnectionManager.GetClient();
+            try
+            {
+                var request = new PlayerTransferPlaybackRequest([deviceId]);
+                return await client.Player.TransferPlayback(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Failed to connect to access user");
+                throw;
+            }
+        }
     }
 }

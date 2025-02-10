@@ -22,17 +22,20 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         private Uri? _lastCaller;
         public DeviceListViewModel(IServiceProvider serviceProvider,
                                    INavigator navigator,
+                                   IPlayerControlViewModel playerControlViewModel,
                                    IMessageService<ActiveDeviceChangedMessage> activeDeviceMessageService)
         {
             _serviceProvider = serviceProvider;
             _activeDeviceMessageService = activeDeviceMessageService;
             _navigator = navigator;
             _navigator.RegisterOnNavigate(this);
+            PlayerControlViewModel = playerControlViewModel;
             RefreshCommand = new Command(() => Refresh());
             Refresh();
         }
 
         public PageType PageType { get; } = PageType.Devices;
+        public IPlayerControlViewModel PlayerControlViewModel { get; }
 
         public ICommand RefreshCommand { get; }
 
@@ -61,6 +64,12 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                     {
                         _navigator.NavigateTo(_lastCaller);
                         _lastCaller = null;
+                    }
+
+                    if (_selectedDevice != null && ! _selectedDevice.IsActive)
+                    {
+                        var task = _serviceProvider.GetRequiredService<IChangeActiveDeviceTask>();
+                        task.Execute(_selectedDevice);
                     }
 
                     var selectedDevice = _selectedDevice ?? new DeviceViewModel();

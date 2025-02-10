@@ -26,13 +26,13 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             currentTrackChangedMessage.Register(OnTrackChangedMessage);
             PlayerControlViewModel = playerControlViewModel;
 
-            OpenPlaylistSelectorPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<LibraryPopupViewModel>());
+            OpenPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<LibraryPopupViewModel>());
 
             Initialise();
         }
 
         public IPlayerControlViewModel PlayerControlViewModel { get; }
-        public ICommand OpenPlaylistSelectorPopupCommand { get; }
+        public ICommand OpenPopupCommand { get; }
         
         
         public void ExecuteLibrayCommand(IPlaylistViewModel? selectedItem)

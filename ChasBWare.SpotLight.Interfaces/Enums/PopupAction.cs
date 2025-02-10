@@ -2,18 +2,14 @@
 
 public enum PopupAction
 { 
-    Profile,
+    Save,
     Play,
     AddToQueue,
     Hate,
     CollapseAll,
-    ExpandAll
-}
-
-public enum PopupGroup
-{
-    Playlist,
-    Track
+    ExpandAll,
+    Clear,
+    Delete
 }
 
 

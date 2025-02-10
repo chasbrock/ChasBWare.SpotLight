@@ -5,9 +5,10 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
 {
     public interface ISpotifyDeviceRepository
     {
-        Task<CurrentContext?> GetCurrentContext();
+        CurrentContext? GetCurrentContext();
         Task<List<IDeviceViewModel>> GetAvailableDevices();
         void SetDeviceVolume(int volumePercent);
-    }
 
+        Task<bool> SetDeviceAsActive(string deviceId);
+    }
 }

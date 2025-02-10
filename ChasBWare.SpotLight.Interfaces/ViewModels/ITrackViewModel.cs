@@ -7,18 +7,12 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
     {
         public IPlaylistViewModel? Playlist { get; set; }
         public Track Track { get; set; }
-
-        //[WriteableDataIndex(4)]
-        string Album { get; }
-        //[WriteableDataIndex(5)]
-        string Artists { get; }
-        //[WriteableDataIndex(3)]
-        string Duration { get; }
-        //[WriteableDataIndex(1)]
+      
         string Id { get; }
-        //[WriteableDataIndex(2)]
         string Name { get; }
-        //[WriteableDataIndex(0)]
+        string Album { get; }
+        string Artists { get; }
+        string Duration { get; }
         int TrackNumber { get; }
 
         bool IsHated { get; set; }

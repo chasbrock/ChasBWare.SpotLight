@@ -8,9 +8,9 @@ public interface IPlaylistViewModel
 {
     public RecentPlaylist Model { get; set; }
 
-    string Description { get; }
     string Id { get; }
     string Name { get; }
+    string Description { get; }
     string Owner { get; }
     PlaylistType PlaylistType { get; }
     string Uri { get; }

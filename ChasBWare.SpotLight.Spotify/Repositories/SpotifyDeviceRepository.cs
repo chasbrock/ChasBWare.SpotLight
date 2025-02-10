@@ -14,9 +14,9 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
                                          ISpotifyActionManager _actionManager)
                : ISpotifyDeviceRepository
     {
-        public async Task<CurrentContext?> GetCurrentContext()
+        public CurrentContext? GetCurrentContext()
         {
-            var context = await _actionManager.GetCurrentContext();
+            var context = _actionManager.GetCurrentContext();
             if (context != null) 
             {
                 return new CurrentContext
@@ -52,6 +52,11 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
         public async void SetDeviceVolume(int volumePercent)
         {
             await _actionManager.SetCurrentDeviceVolume(volumePercent);
+        }
+
+        public async Task<bool> SetDeviceAsActive(string deviceId)
+        {
+            return await _actionManager.SetDeviceAsActive(deviceId);
         }
     }
 }

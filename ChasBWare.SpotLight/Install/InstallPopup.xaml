@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tk:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+          xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+          xmlns:vm="clr-namespace:ChasBWare.SpotLight.Install"
+          x:DataType="vm:InstallViewModel"
+          x:Class="ChasBWare.SpotLight.Install.InstallPopup"
+          CanBeDismissedByTappingOutsideOfPopup="False">
+    <VerticalStackLayout>
+        <Grid RowDefinitions="300,auto" ColumnDefinitions="Auto,300" Background="LightSkyBlue">
+            <Label Text="Enter Key" 
+                   VerticalOptions="Start"
+                   Grid.Row="0" Grid.Column="0" Margin="8"/>
+            <Editor Text="{Binding Key}" Background="White"
+                   VerticalOptions="Fill"
+                   Grid.Row="0" Grid.Column="1" Margin="8"/>
+
+            <Grid ColumnDefinitions="*,Auto,Auto"   
+                  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+
+            <Button Text="Ok" Command="{Binding OkCommand}" 
+                    Grid.Column="1" Margin="8,4"/>
+            </Grid>
+        </Grid>
+
+    </VerticalStackLayout>
+</tk:Popup>

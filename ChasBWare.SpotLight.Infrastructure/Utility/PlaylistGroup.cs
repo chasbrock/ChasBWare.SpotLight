@@ -1,4 +1,5 @@
 ﻿using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Infrastructure.ViewModels;
 
 namespace ChasBWare.SpotLight.Infrastructure.Utility
 {

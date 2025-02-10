@@ -1,4 +1,5 @@
 ﻿using ChasBWare.SpotLight.Definitions.Repositories;
+using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.DbContext;
 using ChasBWare.SpotLight.Domain.Entities;
 using Microsoft.Extensions.Logging;
@@ -45,18 +46,13 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
             return null;
         }
 
-        public async Task<bool> Remove(string? userId, string artistId)
-        {
-            if (userId == null)
-            {
-                return false; 
-            }
-           
+        public async Task<bool> Remove(string userId, string artistId)
+        {  
             var connection = await _dbContext.GetConnection();
             if (connection != null)
             {
                 //remove playlists for artis that are not shared
-                var sql = RepositoryHelper.GetDeleteableArtistPlaylists;
+          /*      var sql = RepositoryHelper.GetDeleteableArtistPlaylists;
                 var deleteablePlaylists = await connection.QueryScalarsAsync<string>(sql, artistId, userId);
                 foreach (var playlistId in deleteablePlaylists)
                 {
@@ -65,7 +61,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
 
                 await RepositoryHelper.RemovePlaylists(connection, userId, deleteablePlaylists);
                 await RepositoryHelper.RemoveArtist(connection, userId, artistId);           
-                 
+                 */
                 return true;
             }
             _logger.LogError("Could not access db connection");
@@ -73,13 +69,33 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
             return false;
         }
 
-        public async Task<List<Tuple<Artist, DateTime>>> GetRecentArtists(string? userId)
+        public async Task<bool> RemoveAll(string userId)
         {
-            if (userId == null)
-            { 
-                return [];
+            var connection = await _dbContext.GetConnection();
+            if (connection != null)
+            {
+                try
+                {
+                    foreach (var sql in RepositoryHelper.DeleteAllRecentArtists)
+                    {
+                        await connection.ExecuteAsync(sql);
+                    }
+                    return true;
+                }
+                catch (Exception ex) 
+                {
+                    _logger.LogError(ex, "Remove all recent artists");
+                }
             }
+            _logger.LogError("Could not access db connection");
 
+            return false;
+        }
+
+
+
+        public async Task<List<Tuple<Artist, DateTime>>> GetRecentArtists(string userId)
+        {
             var connection = await _dbContext.GetConnection();
             if (connection != null)
             {
@@ -171,6 +187,6 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
             _logger.LogError("Could not access db connection");
 
         }
-
+    
     }
 }

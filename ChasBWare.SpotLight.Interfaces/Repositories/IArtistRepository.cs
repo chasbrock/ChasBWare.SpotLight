@@ -1,4 +1,5 @@
-﻿using ChasBWare.SpotLight.Domain.Entities;
+﻿using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Domain.Entities;
 
 namespace ChasBWare.SpotLight.Definitions.Repositories
 {
@@ -19,19 +20,27 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
         Task<int> Add(Artist artist);
 
         /// <summary>
-        /// remove existing artist for this user, this will cascade and 
+        /// remove recent artist for this user, this will cascade and 
         /// delete any albums that are not references anywhere else
         /// </summary>
         /// <param name="artist"></param>
         /// <returns>success</returns>
-        Task<bool> Remove(string? userId, string artistId);
+        Task<bool> Remove(string userId, string artistId);
+
+        /// <summary>
+        /// remove all recent artist for this user, this will cascade and 
+        /// delete any albums that are not references anywhere else
+        /// </summary>
+        /// <param name="artist"></param>
+        /// <returns>success</returns>
+        Task<bool> RemoveAll(string userId);
 
         /// <summary>
         /// find the atrist that user has shown interest in 
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>list of artist and the las time they were accessed</returns>
-        Task<List<Tuple<Artist, DateTime>>> GetRecentArtists(string? userId);
+        Task<List<Tuple<Artist, DateTime>>> GetRecentArtists(string userId);
 
         /// <summary>
         /// link an album to an artist
@@ -47,6 +56,8 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
         /// <param name="artistId"></param>
         /// <returns></returns>
         Task<List<RecentPlaylist>> LoadArtistAlbums(string artistId);
+
         Task AddRecentArtistAndAlbums(string currentUserId, Artist artist, List<RecentPlaylist> albums);
+
     }
 }

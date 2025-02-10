@@ -7,7 +7,7 @@ namespace ChasBWare.SpotLight.Domain.Entities
     {
         public required string Id { get; set; }
         public required string Name { get; set; }
-        public required List<IdItem> Artists { get; set; }
+        public required List<KeyValue> Artists { get; set; }
         public required string Album { get; set; }
         public required string AlbumId { get; set; }
         public string? Image { get; set; }

@@ -18,9 +18,9 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
             return new RecentPlaylist
             {
                 Id = source.Id,
-                Description = source.Description ?? string.Empty,
-                Name = source.Name ?? string.Empty,
-                Owner = source.Owner?.DisplayName ?? string.Empty,
+                Description = source.Description!.Trim() ?? string.Empty,
+                Name = source.Name!.Trim() ?? string.Empty,
+                Owner = source.Owner?.DisplayName!.Trim() ?? string.Empty,
                 PlaylistType = PlaylistType.Playlist,
                 Uri = source.Uri ?? string.Empty,
                 Image = source.Images.GetMediumImage()
@@ -38,8 +38,8 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
             return new RecentPlaylist
             {
                 Id = source.Album.Id,
-                Description = source.Album.Name,
-                Name = source.Album.Name,
+                Description = source.Album.Name!.Trim(),
+                Name = source.Album.Name!.Trim(),
                 Owner = owners != null ? string.Join(',', owners) : string.Empty,
                 PlaylistType = PlaylistType.Album,
                 Uri = source.Album.Uri,
@@ -55,7 +55,7 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
             {
                 Id = source.Id,
                 Description = string.Empty,
-                Name = source.Name ?? string.Empty,
+                Name = source.Name!.Trim() ?? string.Empty,
                 Owner = owners != null ? string.Join(',', owners) : string.Empty,
                 PlaylistType = PlaylistType.Album,
                 Uri = source.Uri ?? string.Empty,

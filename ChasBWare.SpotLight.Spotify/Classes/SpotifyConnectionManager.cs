@@ -30,22 +30,36 @@ namespace ChasBWare.SpotLight.Spotify.Classes
 
         public async Task<SpotifyClient> GetClient()
         {
+            // if this is the first call try loading AccessToken from secure storage    
+            if (Status == ConnectionStatus.NotConnected)
+            {
+                _session.ClientId = await SecureStorage.Default.GetAsync(nameof(ISpotyConnectionSession.ClientId));
+                _session.ClientSecret = await SecureStorage.Default.GetAsync(nameof(ISpotyConnectionSession.ClientSecret));
+                _session.AccessToken = await SecureStorage.GetAsync(nameof(ISpotyConnectionSession.AccessToken));
+                 Status = string.IsNullOrWhiteSpace(_session.AccessToken) ? ConnectionStatus.Unauthorised : ConnectionStatus.Connected;
+            }
             switch (Status)
             {
-                case ConnectionStatus.NotConnected:
+                case ConnectionStatus.Unauthorised:
                     AuthoriseConnection();
                     break;
                 case ConnectionStatus.TokenExpired:
+                    _session.AccessToken = null;
+                    await SecureStorage.SetAsync(nameof(ISpotyConnectionSession.AccessToken), "");
                     await GetAccessToken();
                     break;
             }
 
-            while (Status != ConnectionStatus.Connected)
+            var i = 10;
+            while (Status != ConnectionStatus.Connected && i-- > 0)
             {
                 Thread.Sleep(1000);
             }
-            return _session.GetClient();
-
+            if (i > 0)
+            {
+                return _session.GetClient();
+            }
+            throw new Exception("Timed out connecting to spotify");
         }
         
         protected async Task GetAccessToken()
@@ -54,9 +68,16 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             {
                 _logger.LogInformation("Getting spotify access token");
                 var config = SpotifyClientConfig.CreateDefault();
+
+                if (_session.ClientId == null || _session.ClientSecret == null)
+                {
+                    throw new SystemException("Big problem ClientId / Cleint Secret not set");
+                }
+
                 var request = new ClientCredentialsRequest(_session.ClientId, _session.ClientSecret);
                 var response = await new OAuthClient(config).RequestToken(request);
                 _session.AccessToken = response.AccessToken;
+                await SecureStorage.SetAsync(nameof(ISpotyConnectionSession.AccessToken), response.AccessToken);
                 _logger.LogInformation("Spotify access token updated");
                 Status = ConnectionStatus.Connected;
             }
@@ -81,16 +102,33 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                 server.AuthorizationCodeReceived += async (sender, response) =>
                     {
                         await server.Stop();
+
+                        if (_session.ClientId == null || _session.ClientSecret == null)
+                        {
+                            throw new SystemException("Big problem ClientId / Cleint Secret not set");
+                        }
                         AuthorizationCodeTokenRequest tokenRequest = new(_session.ClientId,
                                                                          _session.ClientSecret,
                                                                          response.Code,
                                                                          callBack);
                         AuthorizationCodeTokenResponse tokenResponse = await new OAuthClient(config).RequestToken(tokenRequest);
                         _session.AccessToken = tokenResponse.AccessToken;
-
-                        Status = ConnectionStatus.Connected;
+                        if (_session.AccessToken != null)
+                        {
+                            await SecureStorage.SetAsync(nameof(ISpotyConnectionSession.AccessToken), _session.AccessToken);
+                            Status = ConnectionStatus.Connected;
+                        }
+                        else
+                        {
+                            Status = ConnectionStatus.Unauthorised;
+                        }
                     };
                 await server.Start();
+
+                if (_session.ClientId == null) 
+                {
+                    throw new SystemException("Big problem - not client Id set");
+                }
 
                 LoginRequest loginRequest = new(server.BaseUri,
                                                 _session.ClientId,

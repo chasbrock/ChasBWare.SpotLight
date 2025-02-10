@@ -19,7 +19,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
                             IPropertyComparer<T> _subListSorter,
                             Func<object, List<T>, IGroupHolder<T>> _createHolder)
                 : IGrouper<T>
-                 where T : class
+                 where T: class
     {
         public string Name { get; } = name;
 

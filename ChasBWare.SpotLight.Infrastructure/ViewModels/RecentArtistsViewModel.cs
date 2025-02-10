@@ -1,4 +1,5 @@
-﻿using ChasBWare.SpotLight.Definitions.Enums;
+﻿using System.Windows.Input;
+using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks;
@@ -6,7 +7,10 @@ using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
+using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
@@ -14,32 +18,35 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                : BaseRecentViewModel<IArtistViewModel>, 
                  IRecentArtistsViewModel
     {
-      
-        public RecentArtistsViewModel(IServiceProvider serviceProvider,
+        private readonly IPopupService _popupService; 
+
+        public RecentArtistsViewModel(IPopupService popupService,
+                                      IServiceProvider serviceProvider,
                                       ISearchArtistsViewModel searchViewModel,
                                       IPlayerControlViewModel playerControlViewModel,
                                       IMessageService<FindItemMessage> findItemMessageService,
                                       IMessageService<ActiveArtistChangedMessage> activeArtistChangedMessageService)
                     : base(serviceProvider, searchViewModel, SorterHelper.GetArtistSorters())
         {
+            _popupService = popupService;
             findItemMessageService.Register(OnFindItem);
             activeArtistChangedMessageService.Register(OnSetActiveArtist);
             PlayerControlViewModel = playerControlViewModel;
             LoadSettings();
+            OpenPopupCommand = new Command(track => OpenPopup());
         }
 
-    
-        public IPlayerControlViewModel PlayerControlViewModel { get; }
-
-        public bool ShowResults 
+        private void OpenPopup()
         {
-            get => SelectedItem != null ;
+            _popupService.ShowPopup<RecentArtistPopupViewModel>(onPresenting: vm => vm.SetItem(this, SelectedItem));
         }
 
+        public ICommand OpenPopupCommand { get; }
+        public IPlayerControlViewModel PlayerControlViewModel { get; }
+            
         protected override void SelectedItemChanged(IArtistViewModel? selectedItem) 
         {
             base.SelectedItemChanged(selectedItem);
-            Notify(nameof(ShowResults));
         }
 
         protected override void LoadRecentItems()
@@ -53,8 +60,8 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             if (SelectedItem != null)
             {
                 Items.Remove(SelectedItem);
-                var task = _serviceProvider.GetService<IRemoveArtistTask>();
-                task?.Execute( this,  SelectedItem.Id);
+                var task = _serviceProvider.GetService<IRemoveRecentArtistTask>();
+                task?.Execute( this,  SelectedItem);
             }
         }
 

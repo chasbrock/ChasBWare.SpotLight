@@ -17,9 +17,9 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
             {
                 Id = track.Id,
                 Name = track.Name,
-                Artists = track.Artists.Select(a => new IdItem { Id = a.Id, Name = a.Name }).ToList(),
+                Artists = track.Artists.Select(a => new KeyValue { Key = a.Id, Value = a.Name }).ToList(),
                 Album = track.Album.Name,
-                AlbumId =track.Album.Id,
+                AlbumId = track.Album.Id,
                 Image = track.Album.Images.GetSmallImage(),
                 Uri = track.Uri,
                 Progress = TimeSpan.FromMilliseconds(currentlyPlaying.ProgressMs??0),
@@ -39,7 +39,7 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
             {
                 Id = track.Id,
                 Name = track.Name,
-                Artists = track.Artists.Select(a => new IdItem { Id = a.Id, Name = a.Name }).ToList(),
+                Artists = track.Artists.Select(a => new KeyValue { Key = a.Id, Value = a.Name }).ToList(),
                 Album = track.Album.Name,
                 AlbumId = track.Album.Id,
                 Image = track.Album.Images.GetSmallImage(),

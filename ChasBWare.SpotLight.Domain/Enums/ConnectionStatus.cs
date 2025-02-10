@@ -3,6 +3,7 @@
     public enum ConnectionStatus
     {
         NotConnected,
+        Unauthorised,
         Authorising,
         Authorised,
         Connected,

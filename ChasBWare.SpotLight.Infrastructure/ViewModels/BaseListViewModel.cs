@@ -2,80 +2,73 @@
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Infrastructure.Utility;
 
-namespace ChasBWare.SpotLight.Infrastructure.ViewModels
+namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
+
+public abstract class BaseListViewModel<T>(IServiceProvider serviceProvider)
+                    : Notifyable,
+                      IListViewModel<T> 
+                      where T: class
 {
-    public abstract class BaseListViewModel<T>
-                        : Notifyable,
-                          IListViewModel<T> where T : class
+    protected readonly IServiceProvider _serviceProvider = serviceProvider;
+    private T? _selectedItem;
+    private List<T> _items = [];
+    private LoadState _loadStatus = LoadState.NotLoaded;
+
+    public bool IsUpdating{ get; set;}
+ 
+    public List<T> Items
     {
-
-        protected readonly IServiceProvider _serviceProvider;
-        private T? _selectedItem;
-        private List<T> _items = [];
-        private LoadState _loadStatus = LoadState.NotLoaded;
-
-        protected BaseListViewModel(IServiceProvider serviceProvider)
+        get => _items;
+        set
         {
-            _serviceProvider = serviceProvider;
-        }
-
-        public bool IsUpdating{ get; set;}
-           
-
-        public List<T> Items
-        {
-            get => _items;
-            set
+            if (SetField(ref _items, value))
             {
-                if (SetField(ref _items, value))
+                LoadStatusChanged(LoadStatus);
+                if (value.Count > 0)
                 {
-                    LoadStatusChanged(LoadStatus);
-                    if (value.Count > 0)
-                    {
-                        SelectedItem = value[0];
-                    }
+                    SelectedItem = value[0];
                 }
             }
         }
+    }
 
-        public LoadState LoadStatus
+    public LoadState LoadStatus
+    {
+        get => _loadStatus;
+        set
         {
-            get => _loadStatus;
-            set
+            if (SetField(ref _loadStatus, value) &&
+                LoadStatus == LoadState.Loaded)
             {
-                if (SetField(ref _loadStatus, value) &&
-                    LoadStatus == LoadState.Loaded)
-                {
-                    LoadStatusChanged(LoadStatus);
-                }
+                LoadStatusChanged(LoadStatus);
             }
         }
+    }
 
-
-        public T? SelectedItem
+    public T? SelectedItem
+    {
+        get => _selectedItem;
+        set
         {
-            get => _selectedItem;
-            set
+            if (SetField(ref _selectedItem, value) && _selectedItem != null && !IsUpdating)
             {
-                if (SetField(ref _selectedItem, value) && _selectedItem != null && !IsUpdating)
-                {
-                    SelectedItemChanged(_selectedItem);
-                }
+                SelectedItemChanged(_selectedItem);
             }
         }
+    }
 
-        public virtual void RefreshView() 
-        { 
-        }
+    protected abstract void LoadSettings();
 
-        protected abstract void LoadSettings();
 
-        protected virtual void LoadStatusChanged(LoadState loadStatus) 
-        { 
-        }
+    public virtual void RefreshView() 
+    { 
+    }
 
-        protected virtual void SelectedItemChanged(T selectedItem)
-        {
-        }
+    protected virtual void LoadStatusChanged(LoadState loadStatus) 
+    { 
+    }
+
+    protected virtual void SelectedItemChanged(T selectedItem)
+    {
     }
 }

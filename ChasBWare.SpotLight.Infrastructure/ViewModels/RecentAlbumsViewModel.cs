@@ -1,17 +1,24 @@
-﻿using ChasBWare.SpotLight.Definitions.Enums;
+﻿using System.Windows.Input;
+using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Tasks;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
+using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
     public class RecentAlbumsViewModel : BaseRecentViewModel<IPlaylistViewModel>, IRecentAlbumsViewModel
     {
-        public RecentAlbumsViewModel(IServiceProvider serviceProvider,
+        private readonly IPopupService _popupService;
+        
+        public RecentAlbumsViewModel(IPopupService popupService,
+                                     IServiceProvider serviceProvider,
                                      IPlayerControlViewModel playerControlViewModel,
                                      ISearchAlbumsViewModel searchViewModel,
                                      IMessageService<FindItemMessage> findItemMessageService,
@@ -19,11 +26,20 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
             : base(serviceProvider, searchViewModel, SorterHelper.GetPlaylistSorters())
         {
-                 findItemMessageService.Register(OnFindItem);
-       activeAlbumChangedMessageService.Register(OnSetActiveAlbum);
+            _popupService = popupService;
+            findItemMessageService.Register(OnFindItem);
+            activeAlbumChangedMessageService.Register(OnSetActiveAlbum);
             PlayerControlViewModel = playerControlViewModel;
+            LoadSettings();
+            OpenPopupCommand = new Command(track => OpenPopup());
         }
 
+        private void OpenPopup()
+        {
+            _popupService.ShowPopup<RecentAlbumPopupViewModel>(onPresenting: vm => vm.SetItem(this, SelectedItem));
+        }
+
+        public ICommand OpenPopupCommand { get; }
         public IPlayerControlViewModel PlayerControlViewModel { get; }
 
         protected override void LoadRecentItems()

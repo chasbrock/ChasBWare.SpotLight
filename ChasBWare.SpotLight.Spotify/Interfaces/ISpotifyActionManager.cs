@@ -87,7 +87,7 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// </summary>
         /// <returns></returns>
         Task<List<FullTrack>> GetArtistTopTracks(string artistId, string userCountry);
-        Task<CurrentlyPlayingContext> GetCurrentContext();
+        CurrentlyPlayingContext GetCurrentContext();
         Task<bool> SetCurrentDeviceVolume(int volumePercent);
         Task<FullArtist> FindArtist(string artistId);
     

@@ -32,7 +32,7 @@ public class PopupMenuViewModel(IPopupService _popupService)
         var height = 4 + (MenuGroups.Count - 1) * 2;
         foreach (var group in MenuGroups)
         {
-            height += group.MenuItems.Count(mi => mi.Visible) * 24;
+            height += group.MenuItems.Count(mi => mi.Visible) * 30;
         }
         return height;
     }

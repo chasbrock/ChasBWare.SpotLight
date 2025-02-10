@@ -4,6 +4,7 @@ using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasBWare.SpotLight.Converters;
 
+
 internal class DeviceTypesToStringConverter : IValueConverter
 {
     public string? Computer { get; set; }

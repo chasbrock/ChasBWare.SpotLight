@@ -1,11 +1,9 @@
 ﻿using ChasBWare.SpotLight.Spotify.Interfaces;
 using Microsoft.Extensions.Logging;
 using SpotifyAPI.Web;
-using static SpotifyAPI.Web.PlayerResumePlaybackRequest;
 
 namespace ChasBWare.SpotLight.Spotify.Classes
 {
-
     public class SpotifyActionManager(ILogger _logger,
                                       ISpotifyConnectionManager _spotifyConnectionManager)
                : ISpotifyActionManager
@@ -40,18 +38,35 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
         }
 
-        public async Task<CurrentlyPlayingContext> GetCurrentContext()
+        
+        public CurrentlyPlayingContext GetCurrentContext()
         {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
+            var tryCount = 0;
+            while (tryCount++ < 2)
             {
-                return await client.Player.GetCurrentPlayback();
+                var client = _spotifyConnectionManager.GetClient().Result;
+                try
+                {
+                    return client.Player.GetCurrentPlayback().Result;
+                }
+                catch (SpotifyAPI.Web.APIUnauthorizedException spex)
+                {
+                    if (spex.Message == "The access token expired")
+                    {
+                        _spotifyConnectionManager.Status = Domain.Enums.ConnectionStatus.TokenExpired;
+                        continue;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (ex.Message.Contains("The access token expired"))
+                    {
+                        _spotifyConnectionManager.Status = Domain.Enums.ConnectionStatus.TokenExpired;
+                        continue;
+                    }
+                }
             }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex, "Failed to connect to access user");
-                throw;
-            }
+            throw new Exception("Shit");
         }
 
         public async Task<List<SpotifyAPI.Web.Device>> GetAvailableDevices()

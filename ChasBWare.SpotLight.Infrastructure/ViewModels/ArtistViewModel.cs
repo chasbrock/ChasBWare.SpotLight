@@ -22,7 +22,6 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         public string Id
         {
             get => Model.Id ?? string.Empty;
-            set => SetField(Model, value);
         }
 
         public string? Image
@@ -34,7 +33,6 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         public string Name
         {
             get => Model.Name ?? string.Empty;
-            set => SetField(Model, value);
         }
 
         public DateTime LastAccessed

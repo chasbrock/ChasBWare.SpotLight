@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
              xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
              xmlns:con="clr-namespace:ChasBWare.SpotLight.Converters"
              x:DataType="vm:DeviceListViewModel"
              x:Class="ChasBWare.SpotLight.Pages.DevicesPage"
-             Title="DevicesPage"
-             >
-
-    <ContentPage.Background>
-        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-            <LinearGradientBrush.GradientStops>
-                <GradientStop Offset="0.1" Color="LightSkyBlue" />
-                <GradientStop Offset="1" Color="Lavender" />
-            </LinearGradientBrush.GradientStops>
-        </LinearGradientBrush>
-    </ContentPage.Background>
+              Style="{StaticResource AppBackground}">
 
     <ContentPage.Resources>
-
         <ResourceDictionary>
             <SolidColorBrush x:Key="ActiveBackground">DarkBlue</SolidColorBrush>
             <SolidColorBrush x:Key="InactiveBackground">Lavender</SolidColorBrush>
@@ -41,31 +31,41 @@
                 Sonos= "icons8_sonos.png"
                 Unknown= "icons8_sound_other.png" />
         </ResourceDictionary>
-
     </ContentPage.Resources>
+    <Grid RowDefinitions="*, Auto">
+        <Grid RowDefinitions="Auto,*" ColumnDefinitions="Auto,*"
+              Grid.Row="0" >
+            <ImageButton Source="icons8_refresh.png" 
+                         HorizontalOptions="Start"
+                         Command="{Binding RefreshCommand}"
+                         Grid.Row="0"/>
 
-    <Grid RowDefinitions="Auto,*" ColumnDefinitions="Auto,*">
-        <ImageButton Source="icons8_refresh.png" HorizontalOptions="Start"
-                     Command="{Binding RefreshCommand}" Grid.Row="0"/>
-        <CollectionView ItemsSource="{Binding Devices}" Grid.Row="1"
-                        SelectionMode="Single"
-                        SelectedItem="{Binding SelectedDevice}"
-                        Margin="8">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="vm:DeviceViewModel" >
-                    <Border Margin="4" Style="{StaticResource RoundedBorder}" Padding="4">
-                        <Grid ColumnDefinitions="Auto,*" Margin="2">
-                            <Image Source="{Binding DeviceType, Converter={StaticResource Key=DeviceImage}}" Grid.Column="0"/>
-                            <Label Text="{Binding Name}" Grid.Column="1" Margin="8,0"
-                               FontSize="Default" FontAttributes="Bold"
-                               VerticalTextAlignment="Center"
-                               Background="{Binding IsActive, Converter={StaticResource IsActiveBackground}}" 
-                               TextColor="{Binding IsActive, Converter={StaticResource IsActiveForeground}}"/>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+            <CollectionView ItemsSource="{Binding Devices}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding SelectedDevice}"
+                            Grid.Row="1" Margin="8">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:DeviceViewModel" >
+                        <Border Style="{StaticResource RoundedBorder}" 
+                                Margin="4" Padding="4">
+                            <Grid ColumnDefinitions="Auto,*" Margin="2">
+                                <Image Source="{Binding DeviceType, Converter={StaticResource Key=DeviceImage}}"
+                                       Grid.Column="0"/>
+
+                                <Label Text="{Binding Name}"
+                                       FontSize="Default" FontAttributes="Bold"
+                                       VerticalTextAlignment="Center"
+                                       Background="{Binding IsActive, Converter={StaticResource IsActiveBackground}}" 
+                                       TextColor="{Binding IsActive, Converter={StaticResource IsActiveForeground}}"
+                                       Grid.Column="1" Margin="8,0" Padding="8"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+            <v:PlayerControlView BindingContext="{Binding PlayerControlViewModel}"
+                           Grid.Row="1"/>
     </Grid>
 
 </ContentPage>

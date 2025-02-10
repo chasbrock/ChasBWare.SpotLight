@@ -11,18 +11,18 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// <summary>
         /// unique app id from spotify
         /// </summary>
-        public string ClientId { get; set; }
+        public string? ClientId { get; set; }
 
         /// <summary>
         /// unique id created for me by spotify
         /// </summary>
-        public string ClientSecret { get; set; }
+        public string? ClientSecret { get; set; }
 
         public int RedirectPort { get; set; }
 
         public string RedirectUrl { get; set; }
 
-        string AccessToken { get; set; }
+        string? AccessToken { get; set; }
 
         SpotifyClient GetClient();
 

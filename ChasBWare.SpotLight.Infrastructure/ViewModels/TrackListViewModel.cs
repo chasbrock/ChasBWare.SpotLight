@@ -12,7 +12,6 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
 public class TrackListViewModel : Notifyable, ITrackListViewModel
 {
-    private readonly IPopupService _popupService;
 
     private ITrackViewModel? _selectedItem = null;
     private LoadState _loadStatus = LoadState.NotLoaded;
@@ -20,12 +19,10 @@ public class TrackListViewModel : Notifyable, ITrackListViewModel
 
     public TrackListViewModel(IPopupService popupService)
     {
-        _popupService = popupService;
-
-        OpenTrackPopupCommand = new Command<ITrackViewModel>(t => OpenTrackPopupMenu(t));
+        OpenPopupCommand = new Command<ITrackViewModel>(track => popupService.ShowPopup<TrackPopupViewModel>(onPresenting: vm => vm.SetTrack(Playlist, track)));
     }
 
-    public ICommand OpenTrackPopupCommand { get; }
+    public ICommand OpenPopupCommand { get; }
     public ObservableCollection<ITrackViewModel> Items { get; } = [];
     public IPlaylistViewModel? Playlist { get; set; }
      
@@ -46,11 +43,5 @@ public class TrackListViewModel : Notifyable, ITrackListViewModel
         get => _loadStatus;
         set => SetField(ref _loadStatus, value);
     }
-
-    private void OpenTrackPopupMenu(ITrackViewModel track)
-    {
-        _popupService.ShowPopup<TrackPopupViewModel>(onPresenting: vm => vm.SetTrack(Playlist, track));
-    }
-
 
 }

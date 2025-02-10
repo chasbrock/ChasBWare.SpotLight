@@ -8,6 +8,7 @@ using Microsoft.Maui.Controls;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks
 {
+
     public class LoadAvailableDevicesTask(IServiceProvider _serviceporovider, 
                                           IDispatcher _dispatcher,
                                           ISpotifyDeviceRepository _deviceRepository,

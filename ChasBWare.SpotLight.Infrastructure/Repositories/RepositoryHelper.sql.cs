@@ -1,13 +1,13 @@
 ﻿
 namespace ChasBWare.SpotLight.Infrastructure.Repositories
 {
-    public partial class RepositoryHelper
+    internal partial class RepositoryHelper
     {
         /// <summary>
         /// get non saved, artist
         /// param: UserId 
         /// </summary>
-        public const string GetRecentArtists =
+        internal const string GetRecentArtists =
 @"select a.Id, a.Name, a.Image, ri.LastAccessed 
     from Artist a
     join RecentItem ri on a.Id = ri.ItemId
@@ -17,7 +17,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
         /// find all tracks for playlist that vcan be deleted safely
         /// param: "PlaylistId"
         /// </summary>
-        public const string GetDeleteableTracks =
+        internal const string GetDeleteableTracks =
 @"select TrackId 
     from PlaylistTrack
    where PlaylistId = ?
@@ -32,23 +32,51 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
          having count(*) > 1)";
 
         /// <summary>
+        /// delete all info for recent artists
+        /// </summary>
+        internal static string[] DeleteAllRecentArtists =[
+@"delete from playlist  
+ where id in (
+	select pl.id 	
+  	  from ArtistPlaylist apl
+      join Playlist pl on pl.Id = apl.PlaylistId
+      left join RecentItem rPl on rPl.ItemId = pl.Id 
+     where apl.ArtistId in (
+	    select ri.ItemId
+	     from RecentItem ri
+         join Artist a on a.Id = ri.ItemId)
+    and IsSaved is null);",
+@"delete from ArtistPlaylist;",
+@"delete from Artist;",
+@"delete from track 
+  where id in 
+	(select t.Id
+       from Track t	
+		left join PlaylistTrack plt on plt.TrackId = t.id
+  where plt.id is  null);"];
+
+        /// <summary>
         /// find all playlists that can be deleted safely
-        /// param: ArtistId 
+        /// for lis
         /// param: UserId 
         /// </summary>
-        public const string GetDeleteableArtistPlaylists =
-@"select PlaylistId 
-    from ArtistPlaylist apl
-    join RecentItem ri on ri.ItemId = apl.PlaylistId
-   where ArtistId = ?
-     and UserId = ?
-	 and IsSaved = false";
+        internal const string GetDeleteableAllArtistPlaylists =
+@"select pl.Id
+  from ArtistPlaylist apl
+  join Playlist pl on pl.Id = apl.PlaylistId
+  left join RecentItem rPl on rPl.ItemId = pl.Id 
+ where apl.ArtistId in (
+	select ri.ItemId
+	  from RecentItem ri
+      join Artist a on a.Id = ri.ItemId)
+  and IsSaved is null 
+  and UserId = ?";
 
         /// <summary>
         /// get all playlist for artist 
         /// param: Artistid 
         /// </summary>
-        public const string GetArtistAlbums =
+        internal const string GetArtistAlbums =
 @"select pl.*, ri.LastAccessed
     from Playlist pl 
     join ArtistPlaylist apl on pl.Id = apl.PlaylistId
@@ -61,7 +89,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
         /// param: PlaylistType 
         /// param: IsSaved 
         /// </summary>
-        public const string GetPlaylists =
+        internal const string GetPlaylists =
    @"select pl.*, ri.LastAccessed
     from Playlist pl
     join RecentItem ri on ri.ItemId = pl.Id
@@ -73,7 +101,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
         /// find id of first artist thatowns this album
         /// param: PlaylistId
         /// </summary>
-        public const string CheckIfPlaylistBelongsToAnArtist =
+        internal const string CheckIfPlaylistBelongsToAnArtist =
 @"select a.Id 
     from ArtistPlaylist apl
     join Artist a on apl.ArtistId = a.Id
@@ -84,7 +112,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
         /// select all tracks for playlist
         /// param: PlaylistId
         /// </summary>
-        public const string GetPlaylistTracks =
+        internal const string GetPlaylistTracks =
 @"select t.*
     from Track t
     join PlaylistTrack plt on plt.TrackId = t.Id
@@ -95,7 +123,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
         /// select all hated items regarless of type
         /// param: UserId
         /// </summary>
-        public const string GetHatedItems =
+        internal const string GetHatedItems =
 @"select ItemId 
     from HatedItem
    where UserId = ?";
@@ -105,7 +133,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
         /// but are not linked to others
         /// param: userId
         /// </summary>
-        public const string GetDeleteableUserArtists =
+        internal const string GetDeleteableUserArtists =
 @"select ItemId, count(*)
   from RecentItem
   where ItemId in 

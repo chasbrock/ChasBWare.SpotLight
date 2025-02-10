@@ -19,7 +19,7 @@ public partial class TrackPopupViewModel(IPopupService popupService,
         MenuGroups.Clear();
         if (playlist != null)
         { 
-            _popupItemService.AddMenuItem(this, playlist, PopupAction.Profile);
+            _popupItemService.AddMenuItem(this, playlist, PopupAction.Save);
             _popupItemService.AddMenuItem(this, playlist, PopupAction.Play);
             _popupItemService.AddMenuItem(this, playlist, PopupAction.AddToQueue);
         }

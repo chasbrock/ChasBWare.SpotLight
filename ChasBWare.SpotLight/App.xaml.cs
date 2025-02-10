@@ -1,4 +1,6 @@
 ﻿using ChasBWare.SpotLight.Definitions.Utility;
+using ChasBWare.SpotLight.Install;
+using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight
 {
@@ -18,7 +20,25 @@ namespace ChasBWare.SpotLight
             var navigator = _serviceProvider.GetService<INavigator>() as Navigator;
             navigator?.SetShell(appShell);
 
+            Task.Run(() => CheckForInitialisation());
             return new Window(appShell);
         }
+
+        private async void CheckForInitialisation()
+        {
+            Thread.Sleep(1000);
+            var val = await SecureStorage.Default.GetAsync(InstallViewModel.Initialised);
+            if  (val != true.ToString())
+            {
+                var dispatcher = _serviceProvider.GetRequiredService<IDispatcher>();
+                dispatcher.Dispatch(() =>
+                {
+                    var popupService = _serviceProvider.GetRequiredService<IPopupService>();
+                    popupService.ShowPopupAsync<InstallViewModel>();
+                });
+            }
+        }
+
+
     }
 }

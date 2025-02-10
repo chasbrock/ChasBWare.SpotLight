@@ -6,9 +6,9 @@ using System.Collections;
 
 namespace ChasBWare.SpotLight.Infrastructure.Repositories
 {
-    public static partial class RepositoryHelper 
+    internal static partial class RepositoryHelper 
     {
-        public static async Task RemovePlaylistTracks(SQLiteAsyncConnection connection,
+        internal static async Task RemovePlaylistTracks(SQLiteAsyncConnection connection,
                                                       string playlistId)
         {
             // get list of albums that are owned by albums, but not by users
@@ -18,7 +18,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
                                               deleteableTracks.Contains(t.Id));
         }
 
-        public static async Task RemovePlaylists(SQLiteAsyncConnection connection,
+        internal static async Task RemovePlaylists(SQLiteAsyncConnection connection,
                                                 string userId, IList playlistIds)
         {
             await connection.Table<RecentItem>()
@@ -35,23 +35,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
                                                playlistIds.Contains(pl.Id));
         }
 
-
-        public static async Task RemoveArtist(SQLiteAsyncConnection connection,
-                                                string userId, string artistId)
-        {
-            await connection.Table<RecentItem>()
-                            .DeleteAsync(ri => ri.UserId == userId &&
-                                               ri.ItemId == artistId);
-
-            await connection.Table<ArtistPlaylist>()
-                            .DeleteAsync(ri => ri.ArtistId == artistId);
-
-            await connection.Table<Artist>()
-                            .DeleteAsync(ri => ri.Id == artistId);
-        }
-
-
-        public static async Task<int> UpdateLastAccessed(SQLiteAsyncConnection connection,
+        internal static async Task<int> UpdateLastAccessed(SQLiteAsyncConnection connection,
                                                          string userId,
                                                          string itemId,
                                                          DateTime lastAccessed,

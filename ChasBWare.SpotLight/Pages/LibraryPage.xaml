@@ -5,21 +5,13 @@
              xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
              x:DataType="vm:LibraryViewModel"
              x:Class="ChasBWare.SpotLight.Pages.LibraryPage"
-             Shell.NavBarIsVisible="False"
-            >
-
-    <ContentPage.Background>
-        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-            <LinearGradientBrush.GradientStops>
-                <GradientStop Offset="0.1" Color="LightSkyBlue" />
-                <GradientStop Offset="1" Color="Lavender" />
-            </LinearGradientBrush.GradientStops>
-        </LinearGradientBrush>
-    </ContentPage.Background>
-    
+             Style="{StaticResource AppBackground}">
+   
     <Grid RowDefinitions="*,Auto">
         <Grid ColumnDefinitions="300,*" Grid.Row="0">
-            <v:PlaylistSelectorView BindingContext="{Binding}" Grid.Column="0" VerticalOptions="Fill"/>
+            <v:PlaylistSelectorView BindingContext="{Binding}" 
+                                    VerticalOptions="Fill"
+                                    Grid.Column="0" />
             <Grid IsVisible="{Binding SelectedItem, Converter={StaticResource NullToBool}}"
                   Grid.Column="1">
                 <v:PlaylistView BindingContext="{Binding SelectedItem}" />

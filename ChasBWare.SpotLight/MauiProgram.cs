@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using ChasBWare.SpotLight.DependencyInjection;
 using CommunityToolkit.Maui;
+using ChasBWare.SpotLight.Spotify.Interfaces;
+using Microsoft.Maui.Controls;
+using Microsoft.Extensions.Configuration;
 
 namespace ChasBWare.SpotLight
 {
@@ -25,7 +28,8 @@ namespace ChasBWare.SpotLight
             return builder.Build();
         }
 
-        public static MauiAppBuilder RegisterMyServices(this MauiAppBuilder builder)
+
+        private static MauiAppBuilder RegisterMyServices(this MauiAppBuilder builder)
         {
             builder.Services.RegisterDbContext()
                             .RegisterLogging()

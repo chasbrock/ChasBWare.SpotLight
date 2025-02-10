@@ -3,32 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
              xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
-             xmlns:c="clr-namespace:ChasBWare.SpotLight.Converters"
+             xmlns:con="clr-namespace:ChasBWare.SpotLight.Converters"
              x:DataType="vm:TrackListViewModel"
              x:Class="ChasBWare.SpotLight.Views.TrackListView">
 
     <ContentView.Resources>
-
         <ResourceDictionary>
-            <c:TrackStatusToStringConverter x:Key="TrackStatusDisplay"
+            <con:TrackStatusToStringConverter x:Key="TrackStatusDisplay"
                 PausedValue="icons8_play_button_small.png"
                 PlayingValue="icons8_pause_button_small.png"/>
         </ResourceDictionary>
 
-        <Style TargetType="Image" x:Key="ShowMoreMenu">
-            <Setter Property="VisualStateManager.VisualStateGroups">
-                <VisualStateGroupList>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Normal"/>
-                        <VisualState x:Name="PointerOver">
-                            <VisualState.Setters>
-                                <Setter Property="Source" Value="icons8_more.png" />
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateGroupList>
-            </Setter>
-        </Style>
+       
 
     </ContentView.Resources>
 
@@ -41,17 +27,17 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:TrackViewModel">
                     <Grid ColumnDefinitions="30,30,60,250,250,Auto" RowDefinitions="20">
-                        <Grid.Resources >
+                        <Grid.Resources>
                             <Style x:Key="HatedStyle" TargetType="Label">
-                                 <Setter Property="TextColor" Value="Black"/>
-                                 <Style.Triggers>
-                                     <DataTrigger TargetType="Label" Binding="{Binding IsHated}" Value="False">
-                                         <Setter Property="TextColor" Value="Black"/>
-                                      </DataTrigger>
-                                     <DataTrigger TargetType="Label"  Binding="{Binding IsHated}" Value="True">
-                                         <Setter Property="TextColor" Value="Gray"/>
-                                      </DataTrigger>
-                                 </Style.Triggers>
+                                <Setter Property="TextColor" Value="Black"/>
+                                <Style.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding IsHated}" Value="False">
+                                        <Setter Property="TextColor" Value="Black"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Label" Binding="{Binding IsHated}" Value="True">
+                                        <Setter Property="TextColor" Value="Gray"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
                             </Style>
                         </Grid.Resources>
 
@@ -64,7 +50,7 @@
                                 <TapGestureRecognizer 
                                     Command="{Binding x:DataType='vm:TrackListViewModel', 
                                                       Source={RelativeSource AncestorType={x:Type vm:TrackListViewModel}},
-                                                      Path=OpenTrackPopupCommand}"
+                                                      Path=OpenPopupCommand}"
                                                       CommandParameter="{Binding}" 
                                                       NumberOfTapsRequired="1"/>
                             </Image.GestureRecognizers>

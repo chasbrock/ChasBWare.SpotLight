@@ -3,7 +3,7 @@
 namespace ChasBWare.SpotLight.Definitions.ViewModels
 {
     public interface IGroupedListViewModel<T> 
-                   : IListViewModel<T> where T : class
+                   : IListViewModel<T> where T: class
     {
         List<IGroupHolder<T>> GroupedItems { get; }
         IGrouper<T>[] Groupers { get; }

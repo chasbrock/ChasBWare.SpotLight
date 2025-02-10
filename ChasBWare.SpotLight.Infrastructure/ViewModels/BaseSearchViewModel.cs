@@ -8,11 +8,11 @@ using ChasBWare.SpotLight.Infrastructure.Utility;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
-    public abstract class BaseSearchViewModel<T> : Notifyable, ISearchViewModel<T> where T : class
+    public abstract class BaseSearchViewModel<T> : Notifyable, ISearchViewModel<T> where T: class
     {
         private bool _isPopupOpen = false;
         protected readonly IServiceProvider _serviceProvider;
-        private T? _selectedItem = null;
+        private T? _selectedItem = default(T);
         private string _searchText = string.Empty;
 
         protected BaseSearchViewModel(IServiceProvider provisioner)

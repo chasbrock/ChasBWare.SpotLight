@@ -25,7 +25,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         private string _currentTrack = "";
         private string _image = "";
         private string _albumId = "";
-        private List<IdItem> _artisList = [];
+        private List<KeyValue> _artisList = [];
         private string _artists = "";
         private double _progressPercent = 0;
         private TimeSpan _playedTime = TimeSpan.Zero;
@@ -74,6 +74,8 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         public ICurrentDeviceViewModel CurrentDevice { get; }
         public ITrackPlayerService TrackPlayerService { get; }
 
+        public bool IsSyncing { get; set; }
+
         public string CurrentTrack
         {
             get => _currentTrack;
@@ -86,7 +88,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             set => SetField(ref _artists, value);
         }
         
-        public List<IdItem> ArtistList 
+        public List<KeyValue> ArtistList 
         {
             get => _artisList;
             set => SetField(ref _artisList, value);
@@ -180,8 +182,12 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         private void SyncToDevice()
         {
-            var task = _serviceProvider.GetService<ISyncToDeviceTask>();
-            task?.Execute(this);
+            if (!IsSyncing)
+            {
+                IsSyncing = true;
+                var task = _serviceProvider.GetService<ISyncToDeviceTask>();
+                task?.Execute(this);
+            }
         }
 
         private void NavigateToDevices()
@@ -229,7 +235,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             {
                 _currentTrackId = playingTrack.Id;
                 CurrentTrack = playingTrack.Name;
-                Artists = string.Join(',', playingTrack.Artists.Select(a => a.Name));
+                Artists = string.Join(',', playingTrack.Artists.Select(a => a.Value));
                 ArtistList = playingTrack.Artists;
                 Duration = playingTrack.Duration;
                 Image = playingTrack.Image ?? "";

@@ -2,7 +2,7 @@
 
 namespace ChasBWare.SpotLight.Definitions.Utility
 {
-    public interface IGrouper<T> where T : class
+    public interface IGrouper<T> where T: class
     {
         string Name { get; }
 

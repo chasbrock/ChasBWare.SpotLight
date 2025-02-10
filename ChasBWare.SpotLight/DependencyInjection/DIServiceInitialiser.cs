@@ -12,6 +12,7 @@ using ChasBWare.SpotLight.Infrastructure.Repositories;
 using ChasBWare.SpotLight.Infrastructure.Services;
 using ChasBWare.SpotLight.Infrastructure.Tasks;
 using ChasBWare.SpotLight.Infrastructure.ViewModels;
+using ChasBWare.SpotLight.Install;
 using ChasBWare.SpotLight.Pages;
 using ChasBWare.SpotLight.Popups;
 using ChasBWare.SpotLight.Popups.ViewModels;
@@ -63,8 +64,11 @@ namespace ChasBWare.SpotLight.DependencyInjection
 
         public static IServiceCollection RegisterPopups(this IServiceCollection services)
         {
-            return services.AddTransientPopup<TracksPopupMenu, TrackPopupViewModel>()
-                           .AddTransientPopup<LibraryPopupMenu,LibraryPopupViewModel>()
+            return services.AddTransientPopup<InstallPopup, InstallViewModel>()
+                           .AddTransientPopup<LibraryPopupMenu, LibraryPopupViewModel>()
+                           .AddTransientPopup<RecentArtistPopupMenu, RecentArtistPopupViewModel>()
+                           .AddTransientPopup<RecentAlbumPopupMenu, RecentAlbumPopupViewModel>()
+                           .AddTransientPopup<TracksPopupMenu, TrackPopupViewModel>()
             ;
         }
 
@@ -86,7 +90,8 @@ namespace ChasBWare.SpotLight.DependencyInjection
 
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
-            return services.AddSingleton<IHatedService, HatedService>()
+            return services.AddSingleton<IAlertService, AlertService>()
+                           .AddSingleton<IHatedService, HatedService>()
                            .AddSingleton<IDeviceService, DeviceService>()
                            .AddSingleton<IPopupItemService, PopupItemService>()
                            .AddSingleton<ITrackPlayerService, TrackPlayerService>();
@@ -109,7 +114,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddTransient<ILoadAvailableDevicesTask, LoadAvailableDevicesTask>()
                            .AddTransient<ILoadRecentArtistTask, LoadRecentArtistTask>()
                            .AddTransient<ILoadRecentPlaylistTask, LoadRecentPlaylistTask>()
-                           .AddTransient<IRemoveArtistTask, RemoveArtistTask>()
+                           .AddTransient<IRemoveRecentArtistTask, RemoveArtistTask>()
                            .AddTransient<ISetPlaylistSavedStatus, SetPlaylistSavedStatus>()
                            .AddTransient<ISearchForAlbumTask, SearchForAlbumTask>()
                            .AddTransient<ISearchForArtistTask, SearchForArtistTask>()

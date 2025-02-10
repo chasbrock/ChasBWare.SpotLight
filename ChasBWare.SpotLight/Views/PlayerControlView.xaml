@@ -59,14 +59,14 @@
                                 SelectionMode="Single"
                                 Grid.Row="1" Grid.Column="1" Margin="4,0">
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="dom:IdItem">
-                            <Label Text="{Binding Name}" Margin="0,0,2,0" Style="{StaticResource Key=ArtistHighlight}">
+                        <DataTemplate x:DataType="dom:KeyValue">
+                            <Label Text="{Binding Value}" Margin="0,0,2,0" Style="{StaticResource Key=ArtistHighlight}">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer 
                                         Command="{Binding x:DataType='vm:PlayerControlViewModel', 
                                                           Source={RelativeSource AncestorType={x:Type vm:PlayerControlViewModel}},
                                                           Path=OpenArtistCommand}"
-                                        CommandParameter="{Binding Id}" 
+                                        CommandParameter="{Binding Key}" 
                                         NumberOfTapsRequired="2"/>
                                 </Label.GestureRecognizers>
                              </Label>

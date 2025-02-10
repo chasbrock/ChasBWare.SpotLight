@@ -4,7 +4,10 @@ using System.Windows.Input;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
-public abstract class BaseRecentViewModel<T> : BaseSortedListViewModel<T>, IRecentViewModel<T> where T : class
+public abstract class BaseRecentViewModel<T> 
+                    : BaseSortedListViewModel<T>, 
+                      IRecentViewModel<T> 
+                      where T: class
 {
     private bool _initialised;
 
@@ -19,7 +22,7 @@ public abstract class BaseRecentViewModel<T> : BaseSortedListViewModel<T>, IRece
     }
 
     public ICommand DeleteRecentCommand { get; } = new Command<BaseRecentViewModel<T>>(vm => vm?.DeleteItem(),
-                                                                                       vm => vm?.SelectedItem != null);
+                                                                                       vm => vm!.SelectedItem != null);
     public ISearchViewModel<T> SearchViewModel { get; }
   
     public void Initialise()
@@ -30,16 +33,7 @@ public abstract class BaseRecentViewModel<T> : BaseSortedListViewModel<T>, IRece
         }
 
         LoadRecentItems();
-        _initialised = Initialising();
-    }
-
-    /// <summary>
-    /// can be overidden 
-    /// </summary>
-    /// <returns>true if everything ok</returns>
-    protected virtual bool Initialising()
-    {
-        return true;
+        _initialised = true;
     }
 
     protected abstract void LoadRecentItems();

@@ -9,20 +9,21 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                : ISyncToDeviceTask
     {
 
-        public void Execute(IPlayerControlViewModel viewModel) {
+        public void Execute(IPlayerControlViewModel viewModel) 
+        {
             Task.Run(() => RunTask(viewModel));
-
         }
 
-        private async void RunTask(IPlayerControlViewModel viewModel)
+        private void RunTask(IPlayerControlViewModel viewModel)
         {
-            var context = await _spotifyDeviceRepository.GetCurrentContext();
+            var context = _spotifyDeviceRepository.GetCurrentContext();
             if (context != null)
             {
                 _dispatcher.Dispatch(() =>
                 {
                     viewModel.CurrentDevice.Device = context.Device;
                     viewModel.TrackPlayerService.UpdateNowPlaying(context.Track);
+                    viewModel.IsSyncing = false;
                 });
             }
         }

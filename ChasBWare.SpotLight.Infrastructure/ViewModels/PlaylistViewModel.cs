@@ -48,12 +48,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         public ICommand OpenTrackPopupCommand { get; }
         public ICommand SetExpandedCommand { get; }
         public ICommand PlayTracklistCommand { get; } 
-      
-        public ITrackListViewModel TracksViewModel
-        {
-            get;
-            private set;
-        }
+        public ITrackListViewModel TracksViewModel { get; }
 
         public string Description
         {
@@ -70,7 +65,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         {
             get => Model.Image;
         }
-
+             
         public bool IsExpanded
         {
             get => _isExpanded;
