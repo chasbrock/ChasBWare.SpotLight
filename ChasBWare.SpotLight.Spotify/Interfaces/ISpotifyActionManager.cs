@@ -1,111 +1,107 @@
 ﻿using SpotifyAPI.Web;
+using SpotifyDevice = SpotifyAPI.Web.Device;
 
 namespace ChasBWare.SpotLight.Spotify.Interfaces
 {
-
     /// <summary>
     /// class that managed calls to spotify api
     /// </summary>
     public interface ISpotifyActionManager
     {
-            /// <summary>
-        /// make this the active device
-        /// </summary>
-        /// <param name="deviceId"></param>
-        /// <returns>true if success</returns>
-        Task<bool> SetDeviceAsActive(string deviceId);
-
         /// <summary>
-        /// get list of available devices
+        /// async find all albums with this name
         /// </summary>
         /// <returns></returns>
-        Task<List<SpotifyAPI.Web.Device>> GetAvailableDevices();
+        List<SimpleAlbum> FindAlbums(string albumName);
 
         /// <summary>
-        /// get details of current user on local machine
+        /// find artist details from id
         /// </summary>
+        /// <param name="artistId"></param>
         /// <returns></returns>
-        Task<PrivateUser> GetUserDetails();
+        FullArtist FindArtist(string artistId);
 
         /// <summary>
-        /// async load playlist list for current user
+        /// async find all playlists with this name
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<FullPlaylist>> GetCurrentUsersPlaylists();
+        List<FullPlaylist> FindPlaylists(string playlistName);
 
         /// <summary>
-        /// async load playlist list for current user
+        /// gets all albums for artist
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<SavedAlbum>> GetCurrentUsersAlbums();
-
-        /// <summary>
-        /// async load tracks for playlist list
-        /// </summary>
-        /// <returns></returns>
-        Task<List<FullTrack>> GetPlaylistTracks(string playlistId);
-
+        List<FullTrack> GetArtistTopTracks(string artistId, string userCountry);
+ 
         /// <summary>
         /// async load tracks for album list
         /// </summary>
         /// <returns></returns>
-        Task<List<SimpleTrack>> GetAlbumTracks(string albumId);
+        List<SimpleTrack> GetAlbumTracks(string albumId);
 
         /// <summary>
         /// async load albums  list for artist
         /// </summary>
         /// <returns></returns>
-        Task<List<SimpleAlbum>> GetArtistAlbums(string artistId);
+        List<SimpleAlbum> GetArtistAlbums(string artistId);
 
+        /// <summary>
+        /// get list of available devices
+        /// </summary>
+        /// <returns></returns>
+        List<SpotifyDevice> GetAvailableDevices();
+
+        /// <summary>
+        /// retreave deatail of current play / playing track etc
+        /// </summary>
+        /// <returns></returns>
+        CurrentlyPlayingContext GetCurrentContext();
+
+        /// <summary>
+        /// async load playlist list for current user
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<SavedAlbum> GetCurrentUsersAlbums();
+
+        /// <summary>
+        /// async load playlist list for current user
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<FullPlaylist> GetCurrentUsersPlaylists();
+
+        /// <summary>
+        /// async load tracks for playlist list
+        /// </summary>
+        /// <returns></returns>
+        List<FullTrack> GetPlaylistTracks(string playlistId);
+
+        /// <summary>
+        /// get details of current user on local machine
+        /// </summary>
+        /// <returns></returns>
+        PrivateUser GetUserDetails();
+     
+   
         /// <summary>
         /// async find all albums for artist
         /// </summary>
         /// <returns></returns>
-        Task<List<FullArtist>> SearchForArtists(string artistName);
+        List<FullArtist> SearchForArtists(string artistName);
 
         /// <summary>
-        /// async find all albums with this name
+        /// set volum of currently playing device
         /// </summary>
+        /// <param name="volumePercent"></param>
         /// <returns></returns>
-        Task<List<SimpleAlbum>> FindAlbums(string albumName);
-     
-        /// <summary>
-        /// async find all playlists with this name
-        /// </summary>
-        /// <returns></returns>
-        Task<List<FullPlaylist>> FindPlaylists(string playlistName);
-
-        /// <summary>
-        /// gets all albums for artist
-        /// </summary>
-        /// <param name="offset"></param>
-        /// <returns></returns>
-        Task<Paging<SimpleAlbum>> GetArtistAlbums(string artistId, int offset);
-
-        /// <summary>
-        /// gets all albums for artist
-        /// </summary>
-        /// <returns></returns>
-        Task<List<FullTrack>> GetArtistTopTracks(string artistId, string userCountry);
-        CurrentlyPlayingContext GetCurrentContext();
-        Task<bool> SetCurrentDeviceVolume(int volumePercent);
-        Task<FullArtist> FindArtist(string artistId);
+        bool SetCurrentDeviceVolume(int volumePercent);
     
+        /// <summary>
+        /// make this the active device
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <returns>true if success</returns>
+        bool SetDeviceAsActive(string deviceId);
 
-        /*   
-           /// <summary>
-           /// remove album from saved lists
-           /// </summary>
-           /// <param name="id"></param>
-           /// <returns></returns>
-           Task<bool> RemoveSavedAlbum(string id);
-
-           /// <summary>
-           /// remove playlis from saved lists
-           /// </summary>
-           /// <param name="id"></param>
-           /// <returns></returns>
-           Task<bool> RemoveSavedPlaylist(string id);
-        */
+    
     }
 }

@@ -4,6 +4,6 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
 {
     public interface IRecentItemRepository 
     { 
-        Task<int> UpdateLastAccessed(string? userId, string itemId, DateTime lastAccessed, bool isSaved);
+        int UpdateLastAccessed(string? userId, string itemId, DateTime lastAccessed, bool isSaved);
     }
 }

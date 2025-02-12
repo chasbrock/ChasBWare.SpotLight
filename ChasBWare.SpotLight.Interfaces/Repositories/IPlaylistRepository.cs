@@ -5,8 +5,10 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
 {
     public interface IPlaylistRepository
     {
-        Task<int> AddPlaylists(List<RecentPlaylist> playlists, string userId, bool isSaved);
-        Task<List<RecentPlaylist>> GetPlaylists(string userId, PlaylistType playlistType, bool isSaved);
-        Task<bool> RemoveSavedItem(string userId, string playlistId);
+        int AddPlaylists(List<RecentPlaylist> playlists, string userId, bool isSaved);
+        List<RecentPlaylist> GetPlaylists(string userId, PlaylistType playlistType, bool isSaved);
+        bool RemoveSaved(string userId, string playlistId);
+        bool RemoveUnsavedPlaylist(string userId, string artistId);
+        bool RemoveUnsavedPlaylists(string userId, PlaylistType playlistType);
     }
 }

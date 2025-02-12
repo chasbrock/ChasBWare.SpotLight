@@ -16,17 +16,17 @@ public class FindArtistTask(IServiceProvider _serviceProvider,
         Task.Run(() => RunTask(viewModel, artistId));
     }
 
-    private async void RunTask(IRecentArtistsViewModel viewModel, string artistId)
+    private void RunTask(IRecentArtistsViewModel viewModel, string artistId)
     {
         if (string.IsNullOrWhiteSpace(artistId))
         { 
             return; 
         }
 
-        Artist? artist = await _artistRepo.FindArtist(artistId);
+        Artist? artist = _artistRepo.FindArtist(artistId);
         if (artist == null)
         {
-            artist = await _spotifyArtistRepo.FindArtist(artistId);
+            artist =  _spotifyArtistRepo.FindArtist(artistId);
         }
 
         if (artist == null)

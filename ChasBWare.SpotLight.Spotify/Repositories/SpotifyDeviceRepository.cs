@@ -28,9 +28,9 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
             return null;
         }
 
-        public async Task<List<IDeviceViewModel>> GetAvailableDevices()
+        public List<IDeviceViewModel> GetAvailableDevices()
         {
-            var devices = await _actionManager.GetAvailableDevices();
+            var devices = _actionManager.GetAvailableDevices();
 
             List<IDeviceViewModel> viewModels = [];
             if (devices != null)
@@ -49,14 +49,14 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
             return viewModels;
         }
 
-        public async void SetDeviceVolume(int volumePercent)
+        public void SetDeviceVolume(int volumePercent)
         {
-            await _actionManager.SetCurrentDeviceVolume(volumePercent);
+            _actionManager.SetCurrentDeviceVolume(volumePercent);
         }
 
-        public async Task<bool> SetDeviceAsActive(string deviceId)
+        public bool SetDeviceAsActive(string deviceId)
         {
-            return await _actionManager.SetDeviceAsActive(deviceId);
+            return  _actionManager.SetDeviceAsActive(deviceId);
         }
     }
 }

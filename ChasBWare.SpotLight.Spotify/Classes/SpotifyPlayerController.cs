@@ -22,7 +22,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
 
         public async Task<PlayingTrack?> SkipNext()
         {
-            SpotifyClient client = await _spotifyConnectionManager.GetClient();
+            SpotifyClient client = _spotifyConnectionManager.GetClient();
             try
             {
                 await client.Player.SkipNext();
@@ -42,7 +42,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
 
         public async Task<PlayingTrack?> SkipPrevious()
         {
-            var client = await _spotifyConnectionManager.GetClient();
+            var client =  _spotifyConnectionManager.GetClient();
             try
             {
                 await client.Player.SkipPrevious();
@@ -62,7 +62,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
         
         public async Task<PlayingTrack?> StartPlayback(string playlistUri, int trackOffset)
         {
-            var client = await _spotifyConnectionManager.GetClient();
+            var client = _spotifyConnectionManager.GetClient();
             try
             {
                 PlayerResumePlaybackRequest request = new()
@@ -88,7 +88,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
 
         public async Task<PlayingTrack?> ResumePlayback(string trackUri, int position)
         {
-            var client = await _spotifyConnectionManager.GetClient();
+            var client = _spotifyConnectionManager.GetClient();
             try
             {
                 PlayerResumePlaybackRequest request = new()
@@ -114,7 +114,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
 
         public async Task<PlayingTrack?> PausePlayback()
         {
-            var client = await _spotifyConnectionManager.GetClient();
+            var client = _spotifyConnectionManager.GetClient();
             try
             {
                 await client.Player.PausePlayback();
@@ -134,7 +134,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
 
         public async Task<bool> TransferPlayback(IList<string> deviceIds, bool play)
         {
-            var client = await _spotifyConnectionManager.GetClient();
+            var client = _spotifyConnectionManager.GetClient();
             try
             {
                 var request = new PlayerTransferPlaybackRequest(deviceIds) { Play = play };
@@ -149,7 +149,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                
         public async Task<Tuple<Track,List<Track>>> GetQueue()
         {
-            var client = await _spotifyConnectionManager.GetClient();
+            var client = _spotifyConnectionManager.GetClient();
             try
             {
                 var queue = await client.Player.GetQueue();
@@ -166,7 +166,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
 
         public async Task<bool> SetVolume(int volume)
         {
-            var client = await _spotifyConnectionManager.GetClient();
+            var client = _spotifyConnectionManager.GetClient();
             try
             {
                 var request = new PlayerVolumeRequest(volume);
@@ -181,7 +181,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
 
         public async Task<PlayingTrack?> GetCurrentPlayingTrack()
         {
-            var client = await _spotifyConnectionManager.GetClient();
+            var client = _spotifyConnectionManager.GetClient();
             try
             {
                 var currentlyPlaying = await client.Player.GetCurrentlyPlaying(new PlayerCurrentlyPlayingRequest());
@@ -206,7 +206,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
 
         public async Task<bool> SetDeviceAsActive(string deviceId)
         {
-            var client = await _spotifyConnectionManager.GetClient();
+            var client = _spotifyConnectionManager.GetClient();
             try
             {
                 var request = new PlayerTransferPlaybackRequest([deviceId]);

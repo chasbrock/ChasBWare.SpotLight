@@ -11,11 +11,11 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
     public class SpotifyTrackRepository(ISpotifyActionManager _actionManager)
                : ISpotifyTrackRepository
     {
-        public async Task<List<Track>> GetPlaylistTracks(string playlistId, PlaylistType playlistType)
+        public List<Track> GetPlaylistTracks(string playlistId, PlaylistType playlistType)
         {
             if (playlistType == PlaylistType.Playlist)
             {
-                var fullTracks = await _actionManager.GetPlaylistTracks(playlistId);
+                var fullTracks = _actionManager.GetPlaylistTracks(playlistId);
                 if (fullTracks != null)
                 {
                     return fullTracks.Select(ft => ft.CopyToTrack()).ToList();
@@ -23,7 +23,7 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
             }
             else
             {
-                var simpleTracks = await _actionManager.GetAlbumTracks(playlistId);
+                var simpleTracks = _actionManager.GetAlbumTracks(playlistId);
                 if (simpleTracks != null)
                 {
                     return simpleTracks.Select(ft => ft.CopyToTrack()).OrderBy(t=>t.TrackNumber).ToList();

@@ -8,5 +8,4 @@ namespace ChasBWare.SpotLight.Definitions.Tasks
         void Execute(IRecentArtistsViewModel viewModel, IArtistViewModel item);
         void Execute(IRecentArtistsViewModel viewModel);
     }
-
 }

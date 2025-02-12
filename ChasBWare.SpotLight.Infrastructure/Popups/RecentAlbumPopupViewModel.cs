@@ -6,37 +6,38 @@ using ChasBWare.SpotLight.Definitions.Tasks;
 
 namespace ChasBWare.SpotLight.Infrastructure.Popups;
 
-public partial class RecentAlbumPopupViewModel(IPopupService popupService/*,
-                                               IServiceProvider _serviceProvider*/)
+public partial class RecentAlbumPopupViewModel(IPopupService popupService,
+                                               IServiceProvider _serviceProvider)
                     : PopupMenuViewModel(popupService)
 {
     public void SetItem(IRecentAlbumsViewModel viewModel, IPlaylistViewModel? item)
     {
         MenuGroups.Clear();
 
-        AddItem($"{PopupAction.Clear}",
+        AddItem(PopupActivity.Clear,
                 caption: "Clear List",
                 toolTip: "Clear all items from list",
                 action: (t) =>
                 {
-                    //var task = _serviceProvider.GetRequiredService<IRemoveRecentArtistTask>();
-                    //task.Execute(viewModel);
+                    var task = _serviceProvider.GetRequiredService<IRemoveRecentAlbumTask>();
+                    task.Execute(viewModel);
                     Close();
                 });
 
         if (item != null)
         {
-            AddItem(PopupGroup.Recent, $"{PopupAction.Delete}",
+            AddItem(PopupGroup.Recent, 
+                    PopupActivity.Delete,
                     caption: $"Delete",
                     toolTip: "Delete item from list",
                     action: (t) =>
                     {
-                      //  var task = _serviceProvider.GetRequiredService<IRemoveRecentArtistTask>();
-                      //  task.Execute(viewModel, item);
+                        var task = _serviceProvider.GetRequiredService<IRemoveRecentAlbumTask>();
+                        task.Execute(viewModel, item);
                         Close();
                     });
         }
-        Height = GetHeight();
+        RecalcSize();
 
     }
 }

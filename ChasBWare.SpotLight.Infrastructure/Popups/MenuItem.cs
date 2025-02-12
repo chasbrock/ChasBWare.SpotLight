@@ -1,4 +1,5 @@
-﻿using ChasBWare.SpotLight.Infrastructure.Utility;
+﻿using ChasBWare.SpotLight.Definitions.Enums;
+using ChasBWare.SpotLight.Infrastructure.Utility;
 using Microsoft.Maui;
 using System.Windows.Input;
 
@@ -12,9 +13,9 @@ namespace ChasBWare.SpotLight.Infrastructure.Popups
         private bool _visible = true;
         private string? _toolTip;
 
-        public MenuItem(object key, Action<object?> action, string caption, string? toolTip = null, object? tag = null) 
+        public MenuItem(PopupActivity activity, Action<object?> action, string caption, string? toolTip = null, object? tag = null) 
         {
-            Key = key;
+            Activity = activity;
             _caption = caption;
             _action = action;
             _toolTip = toolTip;
@@ -22,7 +23,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Popups
             Click = new Command(p => _action?.Invoke(Tag));
         }
 
-        public object Key { get; }
+        public PopupActivity Activity { get; }
         public ICommand Click { get; }
         public object? Tag { get; set; }
       
@@ -31,7 +32,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Popups
             get => _caption;
             set => SetField(ref _caption, value);
         }
-        
+
         public string? ToolTip
         {
             get => _toolTip;

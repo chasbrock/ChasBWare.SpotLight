@@ -3,17 +3,17 @@ using CommunityToolkit.Maui.Views;
 
 namespace ChasBWare.SpotLight.Popups;
 
-public partial class RecentAlbumPopupMenu : Popup
+public partial class TrackPopupMenu : Popup
 {
-    public RecentAlbumPopupMenu(RecentAlbumPopupViewModel viewModel)
-    {
+	public TrackPopupMenu(TrackPopupViewModel viewModel)
+	{
         CanBeDismissedByTappingOutsideOfPopup = true;
         BindingContext = viewModel;
         Content = new PopupMenu
         {
             HorizontalOptions = LayoutOptions.Fill,
             VerticalOptions = LayoutOptions.Fill,
-            BindingContext = viewModel,
+            BindingContext = viewModel
         };
         this.SetBinding(Popup.SizeProperty, nameof(IPopupMenuViewModel.Size));
     }

@@ -4,7 +4,7 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
 {
     public interface ITrackRepository
     {
-        Task<int> AddTracksToPlaylist(string playListId, IEnumerable<Track> tracks);
-        Task<List<Track>> GetPlaylistTracks(string playlistId);
+        int AddTracksToPlaylist(string playListId, IEnumerable<Track> tracks);
+        List<Track> GetPlaylistTracks(string playlistId);
     }
 }

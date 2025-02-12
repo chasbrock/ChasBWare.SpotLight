@@ -6,7 +6,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 
 public interface IPopupItemService
 {
-    void AddMenuItem(IPopupMenuViewModel popup, IPlaylistViewModel playlist, PopupAction action);
-    void AddMenuItem(IPopupMenuViewModel popup, ITrackViewModel track, PopupAction action);
-    void AddMenuItem(IPopupMenuViewModel popup, ILibraryViewModel library, PopupAction action);
+    void AddMenuItem(IPopupMenuViewModel popup, IPlaylistViewModel playlist, PopupActivity action);
+    void AddMenuItem(IPopupMenuViewModel popup, ITrackViewModel track, PopupActivity action);
+    void AddMenuItem(IPopupMenuViewModel popup, ILibraryViewModel library, PopupActivity action);
 }

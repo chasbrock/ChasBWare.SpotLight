@@ -13,7 +13,7 @@ public partial class RecentArtistPopupViewModel(IPopupService popupService,
     {
         MenuGroups.Clear();
 
-        AddItem($"{PopupAction.Clear}",
+        AddItem(PopupActivity.Clear,
                 caption: "Clear List",
                 toolTip: "Clear all items from list",
                 action: (t) =>
@@ -25,7 +25,8 @@ public partial class RecentArtistPopupViewModel(IPopupService popupService,
 
         if (item != null)
         {
-            AddItem(PopupGroup.Recent, $"{PopupAction.Delete}",
+            AddItem(PopupGroup.Recent, 
+                    PopupActivity.Delete,
                     caption: $"Delete",
                     toolTip: "Delete item from list",
                     action: (t) =>
@@ -35,8 +36,10 @@ public partial class RecentArtistPopupViewModel(IPopupService popupService,
                         Close();
                     });
         }
-        Height = GetHeight();
-
+        RecalcSize();
     }
+
+   
 }
+    
 

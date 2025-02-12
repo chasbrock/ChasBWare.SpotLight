@@ -7,13 +7,15 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
                                         IUserRepository _userRepository)
                : IUpdateLastAccessedTask
     {
-        public async void Execute(string itemId, DateTime lastAccessed, bool isSaved)
+        public void Execute(string itemId, DateTime lastAccessed, bool isSaved)
         {
-            await _recentItemRepository.UpdateLastAccessed(_userRepository.CurrentUserId,
-                                                           itemId, 
-                                                           lastAccessed, 
-                                                           isSaved);
+            Task.Run(() =>
+            {
+                 _recentItemRepository.UpdateLastAccessed(_userRepository.CurrentUserId,
+                                                          itemId,
+                                                          lastAccessed,
+                                                          isSaved);
+            });
         }
     }
-
 }

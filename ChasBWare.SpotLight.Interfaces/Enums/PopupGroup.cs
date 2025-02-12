@@ -5,6 +5,7 @@ public enum PopupGroup
     Default,
     Playlist,
     Track,
+    Library,
     Recent
 }
 

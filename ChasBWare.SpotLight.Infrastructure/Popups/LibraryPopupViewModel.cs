@@ -14,9 +14,10 @@ public partial class LibraryPopupViewModel
          : base(popupService)
     {
         MenuGroups.Clear();
-        _popupItemService.AddMenuItem(this, _library, PopupAction.ExpandAll);
-        _popupItemService.AddMenuItem(this, _library, PopupAction.CollapseAll);
-        Height = GetHeight();
+        _popupItemService.AddMenuItem(this, _library, PopupActivity.ExpandAll);
+        _popupItemService.AddMenuItem(this, _library, PopupActivity.CollapseAll);
+
+        RecalcSize();
     }
 }
 

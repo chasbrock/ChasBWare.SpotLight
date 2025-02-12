@@ -1,14 +1,16 @@
-﻿using ChasBWare.SpotLight.Infrastructure.Utility;
+﻿using ChasBWare.SpotLight.Definitions.Enums;
+using ChasBWare.SpotLight.Infrastructure.Utility;
 using System.Collections.ObjectModel;
 
 namespace ChasBWare.SpotLight.Infrastructure.Popups
 {
-    public class MenuItemGroup(object key, IPopupMenuViewModel owner) : Notifyable, IMenuItemGroup
+    public class MenuItemGroup(PopupGroup group, IPopupMenuViewModel owner) 
+               : Notifyable, 
+                 IMenuItemGroup
     {
         private bool _visible = true;
-              
   
-        public object Key { get; } = key;
+        public PopupGroup Group { get; } = group;
         public IPopupMenuViewModel Owner { get; } = owner;
         public ObservableCollection<IMenuItem> MenuItems { get; } = [];
 
@@ -22,10 +24,10 @@ namespace ChasBWare.SpotLight.Infrastructure.Popups
             get => _visible;
             set => SetField(ref _visible, value);
         }
-
+        
         public override string ToString()
         {
-            return $"{Key}";
+            return $"{Group}";
         }
     }
 }

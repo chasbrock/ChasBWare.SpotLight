@@ -17,20 +17,25 @@ public partial class TrackPopupViewModel(IPopupService popupService,
     public void SetTrack(IPlaylistViewModel? playlist, ITrackViewModel? track)
     {
         MenuGroups.Clear();
-        if (playlist != null)
-        { 
-            _popupItemService.AddMenuItem(this, playlist, PopupAction.Save);
-            _popupItemService.AddMenuItem(this, playlist, PopupAction.Play);
-            _popupItemService.AddMenuItem(this, playlist, PopupAction.AddToQueue);
+        if (track != null)
+        {
+            _popupItemService.AddMenuItem(this, track, PopupActivity.Play);
+            _popupItemService.AddMenuItem(this, track, PopupActivity.AddToQueue);
         }
 
-        if (track != null) 
-        {
-            _popupItemService.AddMenuItem(this, track, PopupAction.Hate);
-            _popupItemService.AddMenuItem(this, track, PopupAction.Play);
-            _popupItemService.AddMenuItem(this, track, PopupAction.AddToQueue);
+        if (playlist != null)
+        { 
+            _popupItemService.AddMenuItem(this, playlist, PopupActivity.Play);
+            _popupItemService.AddMenuItem(this, playlist, PopupActivity.AddToQueue);
+            _popupItemService.AddMenuItem(this, playlist, PopupActivity.Save);
         }
-        Height = GetHeight();
+
+        if (track != null)
+        {
+            _popupItemService.AddMenuItem(this, track, PopupActivity.Hate);
+        }
+
+        RecalcSize();
     }
 }
 

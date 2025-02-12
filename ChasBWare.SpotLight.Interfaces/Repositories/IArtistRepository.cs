@@ -10,14 +10,14 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
         /// </summary>
         /// <param name="artistId"></param>
         /// <returns></returns>
-        Task<Artist?> FindArtist(string artistId);
+        Artist? FindArtist(string artistId);
 
         /// <summary>
         /// add new artist
         /// </summary>
         /// <param name="artist"></param>
         /// <returns>records added</returns>
-        Task<int> Add(Artist artist);
+        int Add(Artist artist);
 
         /// <summary>
         /// remove recent artist for this user, this will cascade and 
@@ -25,7 +25,7 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
         /// </summary>
         /// <param name="artist"></param>
         /// <returns>success</returns>
-        Task<bool> Remove(string userId, string artistId);
+        bool RemoveUnsavedArtist(string userId, string artistId);
 
         /// <summary>
         /// remove all recent artist for this user, this will cascade and 
@@ -33,14 +33,14 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
         /// </summary>
         /// <param name="artist"></param>
         /// <returns>success</returns>
-        Task<bool> RemoveAll(string userId);
+        bool RemoveUnsavedArtists(string userId);
 
         /// <summary>
         /// find the atrist that user has shown interest in 
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>list of artist and the las time they were accessed</returns>
-        Task<List<Tuple<Artist, DateTime>>> GetRecentArtists(string userId);
+        List<Tuple<Artist, DateTime>> GetRecentArtists(string userId);
 
         /// <summary>
         /// link an album to an artist
@@ -48,16 +48,22 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
         /// <param name="artistId"></param>
         /// <param name="playListId"></param>
         /// <returns></returns>
-        Task<int> LinkAlbumToArtist(string artistId, string playListId);
+        int LinkAlbumToArtist(string artistId, string playListId);
 
         /// <summary>
         /// load allablbums that are linked to album
         /// </summary>
         /// <param name="artistId"></param>
         /// <returns></returns>
-        Task<List<RecentPlaylist>> LoadArtistAlbums(string artistId);
+        List<RecentPlaylist> LoadArtistAlbums(string artistId);
 
-        Task AddRecentArtistAndAlbums(string currentUserId, Artist artist, List<RecentPlaylist> albums);
+        /// <summary>
+        /// save details for selected search result
+        /// </summary>
+        /// <param name="currentUserId"></param>
+        /// <param name="artist"></param>
+        /// <param name="albums"></param>
+        void AddRecentArtistAndAlbums(string currentUserId, Artist artist, List<RecentPlaylist> albums);
 
     }
 }

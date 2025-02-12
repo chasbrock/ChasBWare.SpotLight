@@ -13,39 +13,33 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
                : IPlaylistRepository
     {
 
-        private static Random randy = new Random();
-
-        public async Task<List<RecentPlaylist>> GetPlaylists(string userId, PlaylistType playlistType, bool isSaved)
+        public List<RecentPlaylist> GetPlaylists(string userId, PlaylistType playlistType, bool isSaved)
         {
       
-            var connection = await _dbContext.GetConnection();
+           var connection = _dbContext.GetConnection().Result;
             if (connection != null)
             {
                 var sql = RepositoryHelper.GetPlaylists;
-                return await connection.QueryAsync<RecentPlaylist>(sql, userId, playlistType, isSaved);
+                return connection.QueryAsync<RecentPlaylist>(sql, userId, playlistType, isSaved).Result;
             }
             _logger.LogError("Could not access db connection");
 
             return [];
         }
 
-        public async Task<int> AddPlaylists(List<RecentPlaylist> playlists, string userId, bool isSaved)
+        public int AddPlaylists(List<RecentPlaylist> playlists, string userId, bool isSaved)
         {
             var count = 0;
 
-            var connection = await _dbContext.GetConnection();
+           var connection = _dbContext.GetConnection().Result;
             if (connection != null)
             {
                 foreach(var playlist in playlists) 
                 {
                     if (playlist.Id != null)
                     {
-                        count += await AddPlaylist(connection, playlist);
-
-                        // TODO remove this bit
-                        var lastAccessed = DateTime.Today.AddDays(-randy.NextDouble() * 40);
-
-                        await RepositoryHelper.UpdateLastAccessed(connection, userId, playlist.Id, lastAccessed, isSaved);
+                        count += AddPlaylist(connection, playlist);
+                        RepositoryHelper.UpdateLastAccessed(connection, userId, playlist.Id, DateTime.Today, isSaved);
                     }
                 }
             }
@@ -54,26 +48,29 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
             return count;
         }
 
-        private async Task<int> AddPlaylist(SQLiteAsyncConnection connection, RecentPlaylist playlist)
+        private int AddPlaylist(SQLiteAsyncConnection connection, RecentPlaylist playlist)
         {
-            var found = await connection.Table<Playlist>().FirstOrDefaultAsync(p => p.Id == playlist.Id);
+            var found = connection.Table<Playlist>()
+                                   .FirstOrDefaultAsync(p => p.Id == playlist.Id)
+                                   .Result;
             if (found == null)
             {
-                return await connection.InsertAsync(playlist.ToPlaylist());
+                return connection.InsertAsync(playlist.ToPlaylist()).Result;
             }
             return 0;
         }
 
-        public async Task<bool> RemoveSavedItem(string userId, string playlistId)
+        public bool RemoveSaved(string userId, string playlistId)
         {
-            var connection = await _dbContext.GetConnection();
+           var connection = _dbContext.GetConnection().Result;
             if (connection != null)
             {
                 // check to see it albums is indeed saved
-                var playlist = await connection.Table<RecentItem>()
-                                               .FirstOrDefaultAsync(ri => ri.ItemId == playlistId &&
-                                                                          ri.UserId == userId &&
-                                                                          ri.IsSaved);
+                var playlist = connection.Table<RecentItem>()
+                                         .FirstOrDefaultAsync(ri => ri.ItemId == playlistId &&
+                                                                    ri.UserId == userId &&
+                                                                    ri.IsSaved)
+                                         .Result;
                 if (playlist == null)
                 {
                     return true;
@@ -81,26 +78,36 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
 
                 // make sure no aartists have dibs on it
                 var sql = RepositoryHelper.CheckIfPlaylistBelongsToAnArtist;
-                var artistId = await connection.QueryScalarsAsync<string>(sql, playlistId);
+                var artistId = connection.QueryScalarsAsync<string>(sql, playlistId).Result;
                 if (artistId == null)
                 {
-                    await connection.Table<RecentItem>()
-                                    .DeleteAsync(ri => ri.UserId == userId &&
-                                                       ri.ItemId != playlistId);
+                    connection.Table<RecentItem>()
+                              .DeleteAsync(ri => ri.UserId == userId &&
+                                                 ri.ItemId != playlistId);
                     _logger.LogDebug($"did not delete playlist '{playlist}' because it is owned by artist '{artistId}'");
                     return true;
                 }
 
                 // we are ok top continue... remove any unshared tracks
-                await RepositoryHelper.RemovePlaylistTracks(connection, playlistId);
+                RepositoryHelper.RemovePlaylistTracks(connection, playlistId);
 
                 // remove playlist and and associated records
-                await RepositoryHelper.RemovePlaylists(connection, userId, new List<string> { playlistId });
+                RepositoryHelper.RemovePlaylists(connection, userId, new List<string> { playlistId });
 
             }
             _logger.LogError("Could not access db connection");
             return false;
 
+        }
+
+        public bool RemoveUnsavedPlaylist(string userId, string artistId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool RemoveUnsavedPlaylists(string userId, PlaylistType playlistType)
+        {
+            throw new NotImplementedException();
         }
     }
 }

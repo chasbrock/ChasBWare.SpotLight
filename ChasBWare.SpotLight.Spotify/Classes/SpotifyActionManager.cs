@@ -1,312 +1,199 @@
-﻿using ChasBWare.SpotLight.Spotify.Interfaces;
+﻿using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Spotify.Interfaces;
 using Microsoft.Extensions.Logging;
 using SpotifyAPI.Web;
+using SpotifyDevice = SpotifyAPI.Web.Device;
 
 namespace ChasBWare.SpotLight.Spotify.Classes
 {
-    public class SpotifyActionManager(ILogger _logger,
-                                      ISpotifyConnectionManager _spotifyConnectionManager)
+    public class SpotifyActionManager(ISpotifyConnectionManager _spotifyConnectionManager)
                : ISpotifyActionManager
     {
-        public async Task<bool> SetDeviceAsActive(string deviceId)
+        public List<SimpleAlbum> FindAlbums(string albumName)
         {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                var request = new PlayerTransferPlaybackRequest([deviceId]);
-                return await client.Player.TransferPlayback(request);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex, "Failed to connect to access user");
-                throw;
-            }
+            return SpotifyErrorCatcher.Execute<List<SimpleAlbum>>(_spotifyConnectionManager,
+                client =>
+                {
+                    var searchRequest = new SearchRequest(SearchRequest.Types.Album, albumName) { Offset = 0, Limit = 50 };
+                    var search = client.Search.Item(searchRequest).Result;
+                    return search.Albums?.Items?.Where(a => a != null && a.Name.Contains(albumName, StringComparison.CurrentCultureIgnoreCase)).ToList() ?? [];
+                });
         }
 
-        public async Task<bool> SetCurrentDeviceVolume(int volumePercent)
+        public FullArtist FindArtist(string artistId)
         {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                var request = new PlayerVolumeRequest(volumePercent);
-                return await client.Player.SetVolume(request);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex, "Failed to connect to access user");
-                throw;
-            }
+            return SpotifyErrorCatcher.Execute<FullArtist>(_spotifyConnectionManager,
+                client =>
+                {
+                    return client.Artists.Get(artistId).Result;
+                });
         }
 
-        
-        public CurrentlyPlayingContext GetCurrentContext()
+        public List<FullPlaylist> FindPlaylists(string playlistName)
         {
-            var tryCount = 0;
-            while (tryCount++ < 2)
-            {
-                var client = _spotifyConnectionManager.GetClient().Result;
-                try
+            return SpotifyErrorCatcher.Execute<List<FullPlaylist>>(_spotifyConnectionManager,
+                client =>
                 {
-                    return client.Player.GetCurrentPlayback().Result;
-                }
-                catch (SpotifyAPI.Web.APIUnauthorizedException spex)
-                {
-                    if (spex.Message == "The access token expired")
+                    var searchRequest = new SearchRequest(SearchRequest.Types.Playlist, playlistName) { Offset = 0, Limit = 50 };
+                    var search = client.Search.Item(searchRequest).Result;
+                    var fullPlaylists = new List<FullPlaylist>();
+                    if (search.Playlists != null && search.Playlists.Items != null)
                     {
-                        _spotifyConnectionManager.Status = Domain.Enums.ConnectionStatus.TokenExpired;
-                        continue;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    if (ex.Message.Contains("The access token expired"))
-                    {
-                        _spotifyConnectionManager.Status = Domain.Enums.ConnectionStatus.TokenExpired;
-                        continue;
-                    }
-                }
-            }
-            throw new Exception("Shit");
-        }
-
-        public async Task<List<SpotifyAPI.Web.Device>> GetAvailableDevices()
-        {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                var devicesResponse = await client.Player.GetAvailableDevices();
-                return devicesResponse != null ? devicesResponse.Devices : [];
-            }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex, "Failed to connect to access user");
-                throw;
-            }
-        }
-
-        public async Task<PrivateUser> GetUserDetails()
-        {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                var currentUser = await client.UserProfile.Current();
- 
-                return currentUser;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to connect to access user");
-                return new PrivateUser();
-            }
-        }
-        
-
-
-        public async Task<IEnumerable<FullPlaylist>> GetCurrentUsersPlaylists()
-        {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                var fullPlaylists = new List<FullPlaylist>();
-                var page = await client.Playlists.CurrentUsers();
-                await foreach (var playlist in client.Paginate(page))
-                {
-                    fullPlaylists.Add(playlist);
-                }
-                return fullPlaylists;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to connect to access user");
-                return [];
-            }
-        }
-
-        public async Task<IEnumerable<SavedAlbum>> GetCurrentUsersAlbums()
-        {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                var savedAlbums = new List<SavedAlbum>();
-                var page = await client.Library.GetAlbums();
-                await foreach (var savedAlbum in client.Paginate(page))
-                {
-                    savedAlbums.Add(savedAlbum);
-                }
-                return savedAlbums;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to connect to access user");
-                return [];
-            }
-        }
-
-        public async Task<List<FullTrack>> GetPlaylistTracks(string playlistId)
-        {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                var playableTracks = new List<PlaylistTrack<IPlayableItem>>();
-                var page = await client.Playlists.GetItems(playlistId);
-                await foreach (var playable in client.Paginate(page))
-                {
-                    playableTracks.Add(playable);
-                }
-                return playableTracks.Select(t => t.Track).Cast<FullTrack>().ToList();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to connect to access user");
-                return [];
-            }
-        }
-
-        public async Task<List<SimpleTrack>> GetAlbumTracks(string albumId)
-        {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                var simpleTracks = new List<SimpleTrack>();
-                var page = await client.Albums.GetTracks(albumId);
-                await foreach (var simpleTrack in client.Paginate(page))
-                {
-                    simpleTracks.Add(simpleTrack);
-                }
-                return simpleTracks;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to connect to access user");
-                return [];
-            }
-        }
-
-        public async Task<List<SimpleAlbum>> GetArtistAlbums(string artistId)
-        {
-            var client = await _spotifyConnectionManager.GetClient();
-            var request = new ArtistsAlbumsRequest { IncludeGroupsParam = ArtistsAlbumsRequest.IncludeGroups.Album };
-            try
-            {
-                var simpleAlbums = new List<SimpleAlbum>();
-                var page = await client.Artists.GetAlbums(artistId, request);
-                await foreach (var simpleAlbum in client.Paginate(page))
-                {
-                    simpleAlbums.Add(simpleAlbum);
-                }
-                return simpleAlbums;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to connect to access user");
-                return [];
-            }
-        }
-
-        public async Task<FullArtist> FindArtist(string artistId)
-        {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                return await client.Artists.Get(artistId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to connect to access user");
-                throw;
-            }
-        }
-
-
-        public async Task<Paging<SimpleAlbum>> GetArtistAlbums(string artistId, int offset)
-        {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                return await client.Artists.GetAlbums(artistId, new ArtistsAlbumsRequest { Offset = offset });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to connect to access user");
-                throw;
-             }
-        }
-
-        public async Task<List<FullTrack>> GetArtistTopTracks(string artistId, string userCountry)
-        {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                var topTracks = await client.Artists.GetTopTracks(artistId, new ArtistsTopTracksRequest(userCountry));
-                return topTracks.Tracks;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to connect to access user");
-                return [];
-            }
-        }
-
-        public async Task<List<FullArtist>> SearchForArtists(string artistName)
-        {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                var searchRequest = new SearchRequest(SearchRequest.Types.Artist, artistName) { Offset = 0, Limit = 50 };
-                var search = await client.Search.Item(searchRequest);
-                return search.Artists?.Items?.Where(a => a.Name != null && 
-                                                         a.Name.Contains(artistName, StringComparison.CurrentCultureIgnoreCase))
-                                             .ToList() ?? [];
-
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to connect to access user");
-                return [];
-            }
-        }
-
-        public async Task<List<SimpleAlbum>> FindAlbums(string albumName)
-        {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                var searchRequest = new SearchRequest(SearchRequest.Types.Album, albumName) { Offset = 0, Limit = 50 };
-                var search = await client.Search.Item(searchRequest);
-                return search.Albums?.Items?.Where(a => a != null && a.Name.Contains(albumName, StringComparison.CurrentCultureIgnoreCase)).ToList() ?? [];
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to connect to access user");
-                return [];
-            }
-        }
-
-        public async Task<List<FullPlaylist>> FindPlaylists(string playlistName)
-        {
-            var client = await _spotifyConnectionManager.GetClient();
-            try
-            {
-                var searchRequest = new SearchRequest(SearchRequest.Types.Playlist, playlistName) { Offset = 0, Limit = 50 };
-                var search = await client.Search.Item(searchRequest);
-                var fullPlaylists = new List<FullPlaylist>();
-                if (search.Playlists != null && search.Playlists.Items != null)
-                {
-                    foreach (var fp in search.Playlists.Items)
-                    {
-                        if (fp != null && fp.Name != null && fp.Name.Contains(playlistName, StringComparison.CurrentCultureIgnoreCase))
+                        foreach (var fp in search.Playlists.Items)
                         {
-                            fullPlaylists.Add(fp);
+                            if (fp != null && fp.Name != null && fp.Name.Contains(playlistName, StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                fullPlaylists.Add(fp);
+                            }
                         }
                     }
-                }
-                return fullPlaylists;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to connect to access user");
-                return [];
-            }
+                    return fullPlaylists;
+                });
+        }
+ 
+        public List<FullTrack> GetArtistTopTracks(string artistId, string userCountry)
+        {
+            return SpotifyErrorCatcher.Execute<List<FullTrack>>(_spotifyConnectionManager,
+             client =>
+             {
+                 var topTracks = client.Artists.GetTopTracks(artistId, new ArtistsTopTracksRequest(userCountry)).Result;
+                 return topTracks.Tracks;
+             });
+        }
+
+        public List<SimpleTrack> GetAlbumTracks(string albumId)
+        {
+            return SpotifyErrorCatcher.Execute<Task<List<SimpleTrack>>>(_spotifyConnectionManager,
+                async client =>
+                {
+                    var simpleTracks = new List<SimpleTrack>();
+                    var page = client.Albums.GetTracks(albumId).Result;
+                    await foreach (var simpleTrack in client.Paginate(page))
+                    {
+                        simpleTracks.Add(simpleTrack);
+                    }
+                    return simpleTracks;
+                }).Result;
+        }
+
+        public List<SimpleAlbum> GetArtistAlbums(string artistId)
+        {
+            return SpotifyErrorCatcher.Execute<Task<List<SimpleAlbum>>>(_spotifyConnectionManager,
+                async client =>
+                {
+                    var request = new ArtistsAlbumsRequest { IncludeGroupsParam = ArtistsAlbumsRequest.IncludeGroups.Album };
+                    var simpleAlbums = new List<SimpleAlbum>();
+                    var page = await client.Artists.GetAlbums(artistId, request);
+                    await foreach (var simpleAlbum in client.Paginate(page))
+                    {
+                        simpleAlbums.Add(simpleAlbum);
+                    }
+                    return simpleAlbums;
+                }).Result;
+        }
+
+        public List<SpotifyDevice> GetAvailableDevices()
+        {
+            return SpotifyErrorCatcher.Execute<List<SpotifyDevice>>(_spotifyConnectionManager,
+                client =>
+                {
+                    var devicesResponse = client.Player.GetAvailableDevices().Result;
+                    return devicesResponse != null ? devicesResponse.Devices : [];
+                });
+        }
+
+        public CurrentlyPlayingContext GetCurrentContext()
+        {
+            return SpotifyErrorCatcher.Execute<CurrentlyPlayingContext>(_spotifyConnectionManager,
+                client =>
+                {
+                    return client.Player.GetCurrentPlayback().Result;
+                });
+        }
+
+        public IEnumerable<SavedAlbum> GetCurrentUsersAlbums()
+        {
+            return SpotifyErrorCatcher.Execute<Task<IEnumerable<SavedAlbum>>>(_spotifyConnectionManager,
+                 async client =>
+                 {
+                     var savedAlbums = new List<SavedAlbum>();
+                     var page = client.Library.GetAlbums().Result;
+                     await foreach (var savedAlbum in client.Paginate(page))
+                     {
+                         savedAlbums.Add(savedAlbum);
+                     }
+                     return savedAlbums;
+                 }).Result;
+        }
+
+        public IEnumerable<FullPlaylist> GetCurrentUsersPlaylists()
+        {
+            return SpotifyErrorCatcher.Execute<Task<IEnumerable<FullPlaylist>>>(_spotifyConnectionManager,
+                async client =>
+                {
+                    var fullPlaylists = new List<FullPlaylist>();
+                    var page = client.Playlists.CurrentUsers().Result;
+                    await foreach (var playlist in client.Paginate(page))
+                    {
+                        fullPlaylists.Add(playlist);
+                    }
+                    return fullPlaylists;
+                }).Result;
+        }
+
+        public List<FullTrack> GetPlaylistTracks(string playlistId)
+        {
+            return SpotifyErrorCatcher.Execute<Task<List<FullTrack>>>(_spotifyConnectionManager,
+                async client =>
+                {
+                    var playableTracks = new List<PlaylistTrack<IPlayableItem>>();
+                    var page = client.Playlists.GetItems(playlistId).Result;
+                    await foreach (var playable in client.Paginate(page))
+                    {
+                        playableTracks.Add(playable);
+                    }
+                    return playableTracks.Select(t => t.Track).Cast<FullTrack>().ToList();
+                }).Result;
+        }
+
+        public PrivateUser GetUserDetails()
+        {
+            return SpotifyErrorCatcher.Execute<PrivateUser>(_spotifyConnectionManager,
+                client =>
+                {
+                    return client.UserProfile.Current().Result;
+                });
+        }
+
+        public List<FullArtist> SearchForArtists(string artistName)
+        {
+            return SpotifyErrorCatcher.Execute<List<FullArtist>>(_spotifyConnectionManager,
+                client =>
+                {
+                    var searchRequest = new SearchRequest(SearchRequest.Types.Artist, artistName) { Offset = 0, Limit = 50 };
+                    var search = client.Search.Item(searchRequest).Result;
+                    return search.Artists?.Items?.Where(a => a.Name != null && a.Name.Contains(artistName, StringComparison.CurrentCultureIgnoreCase)).ToList() ?? [];
+                }); 
+        }
+
+        public bool SetCurrentDeviceVolume(int volumePercent)
+        {
+            return SpotifyErrorCatcher.Execute<bool>(_spotifyConnectionManager,
+                client =>
+                {
+                    var request = new PlayerVolumeRequest(volumePercent);
+                    return client.Player.SetVolume(request).Result;
+                });
+        }
+
+        public bool SetDeviceAsActive(string deviceId)
+        {
+            return SpotifyErrorCatcher.Execute<bool>(_spotifyConnectionManager,
+                client =>
+                {
+                    var request = new PlayerTransferPlaybackRequest([deviceId]);
+                    return client.Player.TransferPlayback(request).Result;
+                });
         }
     }
 }

@@ -23,24 +23,24 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
             Task.Run(() => RunTask(viewModel));
         }
 
-        private async void RunTask(ILibraryViewModel viewModel)
+        private void RunTask(ILibraryViewModel viewModel)
         {
             viewModel.LoadStatus = LoadState.Loading;
             // load albums
-            var albums = await _playlistRepository.GetPlaylists(_userRepository.CurrentUserId, PlaylistType.Album, true);
+            var albums =  _playlistRepository.GetPlaylists(_userRepository.CurrentUserId, PlaylistType.Album, true);
             if (albums.Count == 0)
             {
-                albums = await _spotifyPlaylistRepository.GetPlaylists(PlaylistType.Album);
-                await _playlistRepository.AddPlaylists(albums, _userRepository.CurrentUserId, true);
+                albums =  _spotifyPlaylistRepository.GetPlaylists(PlaylistType.Album);
+                 _playlistRepository.AddPlaylists(albums, _userRepository.CurrentUserId, true);
             }
             AddPlaylistsToModel(viewModel, albums, true);
 
             //load playlists
-            var playlists = await _playlistRepository.GetPlaylists(_userRepository.CurrentUserId, PlaylistType.Playlist, true);
+            var playlists =  _playlistRepository.GetPlaylists(_userRepository.CurrentUserId, PlaylistType.Playlist, true);
             if (playlists.Count == 0)
             {
-                playlists = await _spotifyPlaylistRepository.GetPlaylists(PlaylistType.Playlist);
-                await _playlistRepository.AddPlaylists(playlists, _userRepository.CurrentUserId, true);
+                playlists =  _spotifyPlaylistRepository.GetPlaylists(PlaylistType.Playlist);
+                 _playlistRepository.AddPlaylists(playlists, _userRepository.CurrentUserId, true);
             }
             AddPlaylistsToModel(viewModel, playlists, false);
   

@@ -17,9 +17,9 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
             Task.Run(() => RunTask(selectedDevice));
        }
 
-        private async void RunTask(IDeviceViewModel selectedDevice)
+        private void RunTask(IDeviceViewModel selectedDevice)
         {
-            if (await _spotifyDeviceRepository.SetDeviceAsActive(selectedDevice.Model.Id))
+            if (_spotifyDeviceRepository.SetDeviceAsActive(selectedDevice.Model.Id))
             {
                 _dispatcher.Dispatch(() =>
                 {

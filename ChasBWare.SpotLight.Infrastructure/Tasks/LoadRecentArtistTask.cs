@@ -16,9 +16,9 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
             Task.Run(() => RunTask(viewModel));
         }
 
-        private async void RunTask(IRecentArtistsViewModel viewModel)
+        private  void RunTask(IRecentArtistsViewModel viewModel)
         {
-            var items = await _artistRepository.GetRecentArtists(_userRepository.CurrentUserId);
+            var items =  _artistRepository.GetRecentArtists(_userRepository.CurrentUserId);
             if (items.Count > 0)
             {
                 _dispatcher.Dispatch(() =>

@@ -20,9 +20,9 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
             Task.Run(() => RunTask(viewModel));
         }
 
-        private async void RunTask(IDeviceListViewModel viewModel)
+        private void RunTask(IDeviceListViewModel viewModel)
         {
-            var devices = await _deviceRepository.GetAvailableDevices();
+            var devices =  _deviceRepository.GetAvailableDevices();
             _dispatcher.Dispatch(() =>
             {
                 viewModel.Devices.Clear();

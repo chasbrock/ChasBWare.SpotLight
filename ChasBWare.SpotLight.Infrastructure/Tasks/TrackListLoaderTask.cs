@@ -18,7 +18,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
             Task.Run(() => RunTask(viewModel));
         }
 
-        private async void RunTask(IPlaylistViewModel viewModel)
+        private void RunTask(IPlaylistViewModel viewModel)
         {
             if (!_hatedService.Initialised)
             {
@@ -26,11 +26,11 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
             }
 
             //try to get from db first
-            var tracks = await _trackRepository.GetPlaylistTracks(viewModel.Id);
+            var tracks = _trackRepository.GetPlaylistTracks(viewModel.Id);
             if (tracks.Count == 0)
             {
-                tracks = await _spotifyTrackRepository.GetPlaylistTracks(viewModel.Id, viewModel.PlaylistType);
-                await _trackRepository.AddTracksToPlaylist(viewModel.Id, tracks);
+                tracks = _spotifyTrackRepository.GetPlaylistTracks(viewModel.Id, viewModel.PlaylistType);
+                _trackRepository.AddTracksToPlaylist(viewModel.Id, tracks);
             }
 
             _dispatcher.Dispatch(() =>

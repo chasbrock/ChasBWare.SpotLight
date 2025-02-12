@@ -1,58 +1,33 @@
-﻿using ChasBWare.SpotLight.Spotify.Interfaces;
+﻿using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Spotify.Interfaces;
 using SpotifyAPI.Web;
 
 namespace ChasBWare.SpotLight.Spotify.Classes
 {
-    internal class SpotifyErrorCatcher<TReturn>(ISpotifyConnectionManager _spotifyConnectionManager)
+    internal static class SpotifyErrorCatcher
     {
-        private const int MaxTryCount = 2;
-
-        public Task<TReturn> Execute(Func<SpotifyClient, Task<TReturn>> body)
+        public static TReturn Execute<TReturn>(ISpotifyConnectionManager spotifyConnectionManager,
+                                               Func<SpotifyClient, TReturn> body)
         {
-            var tryCount = 0;
-            while (tryCount++ < MaxTryCount)
+            bool retry = true;
+            while (retry)
             {
-                var client = _spotifyConnectionManager.GetClient().Result;
                 try
                 {
-                    return body.Invoke(client);
-                }
-                catch (SpotifyAPI.Web.APIUnauthorizedException spex)
-                {
-                    if (spex.Message == "The access token expired")
-                    {
-                        _spotifyConnectionManager.Status = Domain.Enums.ConnectionStatus.TokenExpired;
-                        continue;
-                    }
+                    var client = spotifyConnectionManager.GetClient();
+                    return body(client);
                 }
                 catch (Exception ex) 
                 {
-                    throw;
-                }
-            }
-            throw new Exception("Shit!");
-        }
-
-        public async Task<TReturn> Execute<TParam>(Func<TParam, Task<TReturn>> body, TParam value) 
-        {
-            var tryCount = 0;
-            while (tryCount++ < MaxTryCount)
-            {
-                var client = await _spotifyConnectionManager.GetClient();
-                try
-                {
-                    return await body.Invoke(value);
-                }
-                catch (SpotifyAPI.Web.APIUnauthorizedException spex)
-                {
-                    if (spex.Message == "Token Expired")
+                    if (ex.Message.Contains("The access token expired"))
                     {
-                        _spotifyConnectionManager.Status = Domain.Enums.ConnectionStatus.TokenExpired;
+                        spotifyConnectionManager.Status = ConnectionStatus.TokenExpired;
                         continue;
                     }
+                    retry = false;
                 }
             }
-            throw new Exception("Shit!");
+            throw new Exception("Unexpectedly failed to run Spotify command!");
         }
     }
 }

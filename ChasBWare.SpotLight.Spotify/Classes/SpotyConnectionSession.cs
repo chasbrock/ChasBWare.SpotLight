@@ -1,4 +1,5 @@
-﻿using ChasBWare.SpotLight.Spotify.Interfaces;
+﻿using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Spotify.Interfaces;
 using SpotifyAPI.Web;
 
 namespace ChasBWare.SpotLight.Spotify.Classes
@@ -9,47 +10,16 @@ namespace ChasBWare.SpotLight.Spotify.Classes
     public class SpotyConnectionSession : ISpotyConnectionSession
     {
         private const int defaultPort = 8888;
+        private  SpotifyClientConfig _config  = SpotifyClientConfig.CreateDefault();
 
-        private string? _accessToken;
-
-        /// <summary>
-        /// default details for connecting to spotify
-        /// </summary>
-        public SpotifyClientConfig GetDefaultConfig { get; set; } = SpotifyClientConfig.CreateDefault();
-
-        /// <summary>
-        /// unique app id from spotify
-        /// </summary>
-        public string? ClientId { get; set; } 
-
-        /// <summary>
-        /// unique id created for me by spotify
-        /// </summary>
-        public string? ClientSecret { get; set; } 
-
+        public string ClientId { get; set; } = "";
+        public string ClientSecret { get; set; } = "";
         public int RedirectPort { get; set; } = defaultPort;
-
         public string RedirectUrl { get; set; } = $"http://localhost:{defaultPort}/callback";
+        public string? AccessToken { get; private set; }
+        public string? RefreshToken { get; private set; }
 
-        /// <summary>
-        /// token created by OAuth
-        /// </summary>
-        public string? AccessToken
-        {
-            get => _accessToken;
-            set
-            {
-                _accessToken = value;
-                if (_accessToken != null)
-                {
-                    GetDefaultConfig = SpotifyClientConfig.CreateDefault(_accessToken);
-                }
-                else
-                {
-                    GetDefaultConfig = SpotifyClientConfig.CreateDefault();
-                }
-            }
-        }
+     
 
         /// <summary>
         /// get a new spotify client
@@ -58,10 +28,69 @@ namespace ChasBWare.SpotLight.Spotify.Classes
         /// <exception cref="InvalidDataException">thrown if access token not set</exception>
         public SpotifyClient GetClient()
         {
-            return string.IsNullOrEmpty(_accessToken)
-                ? throw new InvalidDataException("access token has not been set")
-                : new SpotifyClient(GetDefaultConfig);
+            if (AccessToken != null)
+            {
+                _config = SpotifyClientConfig.CreateDefault(AccessToken);
+            }
+            else
+            {
+                _config = SpotifyClientConfig.CreateDefault();
+            }
+        
+            var client =  new SpotifyClient(_config);
+            return client;
         }
 
+        public ConnectionStatus UpdateTokens(string accessToken, string refreshToken)
+        {
+            RefreshToken = refreshToken;
+            SecureStorage.SetAsync(nameof(ISpotyConnectionSession.RefreshToken), refreshToken);
+            return UpdateToken(accessToken);
+        }
+
+        public ConnectionStatus UpdateToken(string accessToken)
+        {
+            AccessToken = accessToken;
+            SecureStorage.SetAsync(nameof(ISpotyConnectionSession.AccessToken), accessToken);
+      
+            return string.IsNullOrWhiteSpace(AccessToken) ? ConnectionStatus.Unauthorised : ConnectionStatus.Connected;
+        }
+
+        public ConnectionStatus RestoreTokens()
+        {
+            var clientId = SecureStorage.Default.GetAsync(nameof(ISpotyConnectionSession.ClientId)).Result;
+            var clientSecret = SecureStorage.Default.GetAsync(nameof(ISpotyConnectionSession.ClientSecret)).Result;
+            if (string.IsNullOrWhiteSpace(clientId) || string.IsNullOrWhiteSpace(clientSecret))
+            {
+                throw new SystemException("Fatal Error ClientIs / CleitnSecret not set");
+            }
+            ClientId = clientId;
+            ClientSecret = clientSecret;
+
+            AccessToken = SecureStorage.Default.GetAsync(nameof(ISpotyConnectionSession.AccessToken)).Result;
+            RefreshToken = SecureStorage.Default.GetAsync(nameof(ISpotyConnectionSession.RefreshToken)).Result;
+            
+            return string.IsNullOrWhiteSpace(AccessToken) ? ConnectionStatus.Unauthorised : ConnectionStatus.Connected;
+        }
+
+        public ICollection<string> GetScopes()
+        {
+            return [Scopes.AppRemoteControl,
+                    Scopes.PlaylistModifyPrivate,
+                    Scopes.PlaylistModifyPublic,
+                    Scopes.PlaylistReadCollaborative,
+                    Scopes.PlaylistReadPrivate,
+                    Scopes.UgcImageUpload,
+                    Scopes.UserFollowModify,
+                    Scopes.UserFollowRead,
+                    Scopes.UserLibraryModify,
+                    Scopes.UserLibraryRead,
+                    Scopes.UserModifyPlaybackState,
+                    Scopes.UserReadCurrentlyPlaying,
+                    Scopes.UserReadPlaybackPosition,
+                    Scopes.UserReadPlaybackState,
+                    Scopes.UserReadPrivate,
+                    Scopes.UserReadRecentlyPlayed];
+        }
     }
 }

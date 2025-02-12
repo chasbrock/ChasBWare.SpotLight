@@ -18,9 +18,9 @@ public class SetPlaylistSavedStatus (IDispatcher _dispatcher,
         Task.Run(() => RunTask(viewModel, save));
     }
 
-    private async void RunTask(IPlaylistViewModel viewModel, bool save)
+    private void RunTask(IPlaylistViewModel viewModel, bool save)
     {
-        await _recentItemsRepo.UpdateLastAccessed(_userRepo.CurrentUserId, viewModel.Id, DateTime.Now, save);
+        _recentItemsRepo.UpdateLastAccessed(_userRepo.CurrentUserId, viewModel.Id, DateTime.Now, save);
         viewModel.IsSaved = save;
         _dispatcher.Dispatch(() =>
         {

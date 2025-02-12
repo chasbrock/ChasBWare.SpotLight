@@ -1,30 +1,28 @@
 ﻿using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks;
 using ChasBWare.SpotLight.Definitions.ViewModels;
-using ChasBWare.SpotLight.Domain.Entities;
+using ChasBWare.SpotLight.Infrastructure.Repositories;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks
 {
-
-    public class RemoveArtistTask(IDispatcher _dispatcher,
-                                  IArtistRepository _artistRepository,
-                                  IUserRepository _userRepository) 
-               : IRemoveRecentArtistTask
+    public class RemoveRecentAlbumTask(IDispatcher _dispatcher,
+                                  IPlaylistRepository _playlistRepository,
+                                  IUserRepository _userRepository)
+               : IRemoveRecentAlbumTask
     {
-    
-        public void Execute(IRecentArtistsViewModel viewModel, IArtistViewModel item)
+        public void Execute(IRecentAlbumsViewModel viewModel, IPlaylistViewModel item)
         {
             Task.Run(() => RunTask(viewModel, item));
         }
 
-        public void Execute(IRecentArtistsViewModel viewModel)
+        public void Execute(IRecentAlbumsViewModel viewModel)
         {
             Task.Run(() => RunTask(viewModel));
         }
 
-        private void RunTask(IRecentArtistsViewModel viewModel)
+        private void RunTask(IRecentAlbumsViewModel viewModel)
         {
-            if (_artistRepository.RemoveUnsavedArtists(_userRepository.CurrentUserId))
+            if (_playlistRepository.RemoveUnsavedPlaylists(_userRepository.CurrentUserId, Domain.Enums.PlaylistType.Album))
             {
                 _dispatcher.Dispatch(() =>
                 {
@@ -35,9 +33,9 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
             }
         }
 
-        private void RunTask(IRecentArtistsViewModel viewModel, IArtistViewModel item)
+        private void RunTask(IRecentAlbumsViewModel viewModel, IPlaylistViewModel item)
         {
-            if (_artistRepository.RemoveUnsavedArtist(_userRepository.CurrentUserId, item.Id))
+            if (_playlistRepository.RemoveUnsavedPlaylist(_userRepository.CurrentUserId, item.Id))
             {
                 _dispatcher.Dispatch(() =>
                 {
@@ -48,5 +46,4 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
             }
         }
     }
-
 }

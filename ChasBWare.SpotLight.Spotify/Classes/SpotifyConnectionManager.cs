@@ -4,17 +4,34 @@ using ChasBWare.SpotLight.Spotify.Interfaces;
 using Microsoft.Extensions.Logging;
 using SpotifyAPI.Web;
 using SpotifyAPI.Web.Auth;
+using SpotifyAPI.Web.Http;
 
 namespace ChasBWare.SpotLight.Spotify.Classes
 {
 
-    public class SpotifyConnectionManager(ILogger _logger,
-                                          ISpotyConnectionSession _session,
-                                          IMessageService<ConnectionStatusChangedMessage> _messageService) 
+    public class SpotifyConnectionManager
                : ISpotifyConnectionManager
     {
+        private readonly ILogger _logger;
+        private readonly ISpotyConnectionSession _session;
+        private readonly IMessageService<ConnectionStatusChangedMessage> _messageService;
+        private readonly EmbedIOAuthServer _server;
         private ConnectionStatus _status = ConnectionStatus.NotConnected;
+        
+        
+        public SpotifyConnectionManager(ILogger logger,
+                                          ISpotyConnectionSession session,
+                                          IMessageService<ConnectionStatusChangedMessage> messageService)
+        {
+            _logger = logger;
+            _session = session;
+            _messageService = messageService;
+            _server = new EmbedIOAuthServer(new Uri(_session.RedirectUrl), _session.RedirectPort);
+            _server.AuthorizationCodeReceived += OnAuthorizationCodeReceived;
+            _server.ErrorReceived += OnErrorReceived;
+        }
 
+     
         public ConnectionStatus Status
         {
             get => _status;
@@ -28,26 +45,22 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
         }
 
-        public async Task<SpotifyClient> GetClient()
+        public SpotifyClient GetClient()
         {
             // if this is the first call try loading AccessToken from secure storage    
             if (Status == ConnectionStatus.NotConnected)
             {
-                _session.ClientId = await SecureStorage.Default.GetAsync(nameof(ISpotyConnectionSession.ClientId));
-                _session.ClientSecret = await SecureStorage.Default.GetAsync(nameof(ISpotyConnectionSession.ClientSecret));
-                _session.AccessToken = await SecureStorage.GetAsync(nameof(ISpotyConnectionSession.AccessToken));
-                 Status = string.IsNullOrWhiteSpace(_session.AccessToken) ? ConnectionStatus.Unauthorised : ConnectionStatus.Connected;
+                Status = _session.RestoreTokens();
             }
+
             switch (Status)
             {
                 case ConnectionStatus.Unauthorised:
                     AuthoriseConnection();
                     break;
                 case ConnectionStatus.TokenExpired:
-                    _session.AccessToken = null;
-                    await SecureStorage.SetAsync(nameof(ISpotyConnectionSession.AccessToken), "");
-                    await GetAccessToken();
-                    break;
+                    RefreshAccessToken();      
+                break;
             }
 
             var i = 10;
@@ -55,40 +68,31 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             {
                 Thread.Sleep(1000);
             }
+
             if (i > 0)
             {
                 return _session.GetClient();
             }
             throw new Exception("Timed out connecting to spotify");
         }
-        
-        protected async Task GetAccessToken()
+
+        private async void RefreshAccessToken()
         {
-            try
+            if (!string.IsNullOrWhiteSpace(_session.RefreshToken))
             {
-                _logger.LogInformation("Getting spotify access token");
-                var config = SpotifyClientConfig.CreateDefault();
-
-                if (_session.ClientId == null || _session.ClientSecret == null)
+                try
                 {
-                    throw new SystemException("Big problem ClientId / Cleint Secret not set");
+                    var request = new AuthorizationCodeRefreshRequest(_session.ClientId, _session.ClientSecret, _session.RefreshToken);
+                    var reply = await new OAuthClient().RequestToken(request);
+                    Status = _session.UpdateToken(reply.AccessToken);
                 }
-
-                var request = new ClientCredentialsRequest(_session.ClientId, _session.ClientSecret);
-                var response = await new OAuthClient(config).RequestToken(request);
-                _session.AccessToken = response.AccessToken;
-                await SecureStorage.SetAsync(nameof(ISpotyConnectionSession.AccessToken), response.AccessToken);
-                _logger.LogInformation("Spotify access token updated");
-                Status = ConnectionStatus.Connected;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex, "Failed to connect to spotify");
-                Status = ConnectionStatus.Faulted;
+                catch (Exception ex) 
+                {
+                    _logger.LogError("Error refreshing token: {error}", ex.Message);
+                }
             }
         }
-        
-
+            
         private async void AuthoriseConnection()
         {
             try
@@ -96,61 +100,20 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                 _logger.LogInformation("Getting spotify authorising connection");
                 Status = ConnectionStatus.Authorising;
 
-                var callBack = new Uri(_session.RedirectUrl);
-                var config = SpotifyClientConfig.CreateDefault();
-                var server = new EmbedIOAuthServer(callBack, _session.RedirectPort);
-                server.AuthorizationCodeReceived += async (sender, response) =>
-                    {
-                        await server.Stop();
+                await _server.Start();
 
-                        if (_session.ClientId == null || _session.ClientSecret == null)
-                        {
-                            throw new SystemException("Big problem ClientId / Cleint Secret not set");
-                        }
-                        AuthorizationCodeTokenRequest tokenRequest = new(_session.ClientId,
-                                                                         _session.ClientSecret,
-                                                                         response.Code,
-                                                                         callBack);
-                        AuthorizationCodeTokenResponse tokenResponse = await new OAuthClient(config).RequestToken(tokenRequest);
-                        _session.AccessToken = tokenResponse.AccessToken;
-                        if (_session.AccessToken != null)
-                        {
-                            await SecureStorage.SetAsync(nameof(ISpotyConnectionSession.AccessToken), _session.AccessToken);
-                            Status = ConnectionStatus.Connected;
-                        }
-                        else
-                        {
-                            Status = ConnectionStatus.Unauthorised;
-                        }
-                    };
-                await server.Start();
-
-                if (_session.ClientId == null) 
+                if (_session.ClientId == null)
                 {
                     throw new SystemException("Big problem - not client Id set");
                 }
 
-                LoginRequest loginRequest = new(server.BaseUri,
-                                                _session.ClientId,
-                                                LoginRequest.ResponseType.Code)
+                var loginRequest = new LoginRequest(_server.BaseUri,
+                                                    _session.ClientId,
+                                                    LoginRequest.ResponseType.Code)
                 {
-                    Scope = [Scopes.AppRemoteControl,
-                             Scopes.PlaylistModifyPrivate,
-                             Scopes.PlaylistModifyPublic,
-                             Scopes.PlaylistReadCollaborative,
-                             Scopes.PlaylistReadPrivate,
-                             Scopes.UgcImageUpload,
-                             Scopes.UserFollowModify,
-                             Scopes.UserFollowRead,
-                             Scopes.UserLibraryModify,
-                             Scopes.UserLibraryRead,
-                             Scopes.UserModifyPlaybackState,
-                             Scopes.UserReadCurrentlyPlaying,
-                             Scopes.UserReadPlaybackPosition,
-                             Scopes.UserReadPlaybackState,
-                             Scopes.UserReadPrivate,
-                             Scopes.UserReadRecentlyPlayed]
+                    Scope = _session.GetScopes()
                 };
+
                 await Browser.Default.OpenAsync(loginRequest.ToUri(), BrowserLaunchMode.SystemPreferred);
 
                 _logger.LogInformation("Getting spotify authorising connection");
@@ -158,8 +121,37 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to connect to spotify");
-                Status = ConnectionStatus.TokenExpired;
+                Status = ConnectionStatus.Unauthorised;
                 throw;
+            }
+        }
+
+        private async Task OnErrorReceived(object sender, string error, string? state)
+        {
+            _logger.LogError("Aborting authorization, error received: {error}", error);
+            await _server.Stop();
+        }
+
+        private async Task OnAuthorizationCodeReceived(object sender, AuthorizationCodeResponse response)
+        {
+            await _server.Stop();
+
+            var config = SpotifyClientConfig.CreateDefault();
+            var request = new AuthorizationCodeTokenRequest(_session.ClientId,
+                                                             _session.ClientSecret,
+                                                             response.Code,
+                                                             new Uri(_session.RedirectUrl));
+
+            var reply = await new OAuthClient(config).RequestToken(request);
+             _session.UpdateTokens(reply.AccessToken, reply.RefreshToken);
+
+            if (!string.IsNullOrWhiteSpace(_session.AccessToken))
+            {
+                Status = ConnectionStatus.Connected;
+            }
+            else
+            {
+                Status = ConnectionStatus.Unauthorised;
             }
         }
 

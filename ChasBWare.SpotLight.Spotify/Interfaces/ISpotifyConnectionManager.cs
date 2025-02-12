@@ -16,6 +16,6 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// ensure that client is authorised before returning client
         /// </summary>
         /// <returns></returns>        
-        Task<SpotifyClient> GetClient();
+        SpotifyClient GetClient();
     }
 }

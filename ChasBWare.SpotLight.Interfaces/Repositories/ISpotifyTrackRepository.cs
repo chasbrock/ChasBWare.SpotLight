@@ -5,6 +5,6 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
 {
     public interface ISpotifyTrackRepository 
     {
-        Task<List<Track>> GetPlaylistTracks(string playlistId, PlaylistType playlistType);
+        List<Track> GetPlaylistTracks(string playlistId, PlaylistType playlistType);
     }
 }

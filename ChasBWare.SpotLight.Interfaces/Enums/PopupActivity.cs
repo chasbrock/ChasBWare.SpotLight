@@ -1,6 +1,6 @@
 ﻿namespace ChasBWare.SpotLight.Definitions.Enums;
 
-public enum PopupAction
+public enum PopupActivity
 { 
     Save,
     Play,

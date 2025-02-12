@@ -9,16 +9,16 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
                                       ILogger _logger)
                : IRecentItemRepository
     {
-        public async Task<int> UpdateLastAccessed(string? userId, string itemId, DateTime lastAccessed, bool isSaved)
+        public int UpdateLastAccessed(string? userId, string itemId, DateTime lastAccessed, bool isSaved)
         {
             if (userId == null)
             { 
                 return 0;
             }
-            var connection = await _dbContext.GetConnection();
+            var connection = _dbContext.GetConnection().Result;
             if (connection != null)
             {
-                return await RepositoryHelper.UpdateLastAccessed(connection, userId, itemId, lastAccessed, isSaved);
+                return RepositoryHelper.UpdateLastAccessed(connection, userId, itemId, lastAccessed, isSaved);
             }
             _logger.LogError("Could not access db connection");
 

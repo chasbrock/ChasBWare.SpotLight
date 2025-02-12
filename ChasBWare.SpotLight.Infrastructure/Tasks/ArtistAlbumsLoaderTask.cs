@@ -17,14 +17,14 @@ public class ArtistAlbumsLoaderTask(IServiceProvider _serviceProvider,
         Task.Run(() => RunTask(viewModel));
     }
 
-    private async void RunTask(IArtistViewModel viewModel)
+    private void RunTask(IArtistViewModel viewModel)
     {
         // try to get from database
-        var albums = await _artistRepo.LoadArtistAlbums(viewModel.Id);
+        var albums = _artistRepo.LoadArtistAlbums(viewModel.Id);
         if (albums.Count == 0)
         {
-            albums = await _spotifyArtistRepo.LoadArtistAlbums(viewModel.Id);
-            await _artistRepo.AddRecentArtistAndAlbums(_userRepository.CurrentUserId, viewModel.Model, albums);
+            albums = _spotifyArtistRepo.LoadArtistAlbums(viewModel.Id);
+            _artistRepo.AddRecentArtistAndAlbums(_userRepository.CurrentUserId, viewModel.Model, albums);
         }
 
         _dispatcher.Dispatch(() =>

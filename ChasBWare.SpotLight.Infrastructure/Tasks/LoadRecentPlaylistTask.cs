@@ -16,9 +16,9 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
             Task.Run(() => RunTask(viewModel, playlistType));
         }
 
-        private async void RunTask(IRecentViewModel<IPlaylistViewModel> viewModel, PlaylistType playlistType)
+        private void RunTask(IRecentViewModel<IPlaylistViewModel> viewModel, PlaylistType playlistType)
         {
-            var items = await _playlistRepository.GetPlaylists(_userRepository.CurrentUserId, playlistType, true);
+            var items = _playlistRepository.GetPlaylists(_userRepository.CurrentUserId, playlistType, true);
             if (items.Count == 0)
             {
                 _dispatcher.Dispatch(() =>

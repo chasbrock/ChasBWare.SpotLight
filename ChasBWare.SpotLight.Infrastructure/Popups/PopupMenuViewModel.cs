@@ -1,5 +1,7 @@
-﻿using ChasBWare.SpotLight.Infrastructure.Utility;
+﻿using ChasBWare.SpotLight.Definitions.Enums;
+using ChasBWare.SpotLight.Infrastructure.Utility;
 using CommunityToolkit.Maui.Core;
+using Microsoft.Maui.Controls;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -10,8 +12,7 @@ public class PopupMenuViewModel(IPopupService _popupService)
              IPopupMenuViewModel
 
 {
-    private int _height = 100;
-
+    private Size _size = new Size(200,100);
     public const string DefaultGroup = "";
 
     public ObservableCollection<IMenuItemGroup> MenuGroups { get; } = [];
@@ -21,50 +22,48 @@ public class PopupMenuViewModel(IPopupService _popupService)
         await _popupService.ClosePopupAsync();
     }
 
-    public int Height
+    public Size Size
     {
-        get => _height;
-        set => SetField(ref _height, value);
+        get => _size;
+        set => SetField(ref _size, value);
     }
 
-    public int GetHeight()
+    public void RecalcSize()
     {
-        var height = 4 + (MenuGroups.Count - 1) * 2;
+        var totalHeight = 18 + (MenuGroups.Count - 1) * 4;
         foreach (var group in MenuGroups)
         {
-            height += group.MenuItems.Count(mi => mi.Visible) * 30;
+            totalHeight += group.MenuItems.Where(mi => mi.Visible)
+                                          .Sum(mi => (1 + mi.Caption.Length / 28) * 28);
         }
-        return height;
+        Size = new Size(Size.Width, totalHeight);
     }
 
-    public IMenuItem? FindMenuItem(object key)
+    public IMenuItem? FindMenuItem(PopupGroup group, PopupActivity activity)
     {
-        foreach (var group in MenuGroups)
+        var menuGroup = MenuGroups.FirstOrDefault(mg => mg.Group == group);
+        if (menuGroup != null)
         {
-            var found = group.MenuItems.FirstOrDefault(m => m.Key == key);
-            if (found != null)
-            {
-                return found;
-            }
+            return menuGroup.MenuItems.FirstOrDefault(m => m.Activity == activity);
         }
         return null;
     }
 
-    public IMenuItem AddItem(object key, string caption, Action<object?> action, string? toolTip = null, object? tag = null)
+    public IMenuItem AddItem(PopupActivity activity, string caption, Action<object?> action, string? toolTip = null, object? tag = null)
     {
-        return AddItem(DefaultGroup, key, caption, action, toolTip, tag);
+        return AddItem(PopupGroup.Default, activity, caption, action, toolTip, tag);
     }
 
-    public IMenuItem AddItem(object groupKey, object key, string caption, Action<object?> action, string? toolTip=null, object? tag=null) 
+    public IMenuItem AddItem(PopupGroup popupGroup, PopupActivity activity, string caption, Action<object?> action, string? toolTip=null, object? tag=null) 
     {
-        var group = MenuGroups.FirstOrDefault(g => g.Key == groupKey);
+        var group = MenuGroups.FirstOrDefault(g => g.Group == popupGroup);
         if (group == null)
         {
-            group = new MenuItemGroup(groupKey, this);
+            group = new MenuItemGroup(popupGroup, this);
             MenuGroups.Add(group);
         }
 
-        var newItem = new MenuItem(key, action, caption, toolTip, tag);
+        var newItem = new MenuItem(activity, action, caption, toolTip, tag);
        
         group.MenuItems.Add(newItem);
         return newItem;

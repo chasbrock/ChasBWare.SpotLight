@@ -68,7 +68,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddTransientPopup<LibraryPopupMenu, LibraryPopupViewModel>()
                            .AddTransientPopup<RecentArtistPopupMenu, RecentArtistPopupViewModel>()
                            .AddTransientPopup<RecentAlbumPopupMenu, RecentAlbumPopupViewModel>()
-                           .AddTransientPopup<TracksPopupMenu, TrackPopupViewModel>()
+                           .AddTransientPopup<TrackPopupMenu, TrackPopupViewModel>()
             ;
         }
 
@@ -91,8 +91,8 @@ namespace ChasBWare.SpotLight.DependencyInjection
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
             return services.AddSingleton<IAlertService, AlertService>()
-                           .AddSingleton<IHatedService, HatedService>()
                            .AddSingleton<IDeviceService, DeviceService>()
+                           .AddSingleton<IHatedService, HatedService>()
                            .AddSingleton<IPopupItemService, PopupItemService>()
                            .AddSingleton<ITrackPlayerService, TrackPlayerService>();
         }
@@ -109,6 +109,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
         public static IServiceCollection RegisterTasks(this IServiceCollection services)
         {
             return services.AddTransient<IArtistAlbumsLoaderTask, ArtistAlbumsLoaderTask>()
+                           .AddTransient < IChangeActiveDeviceTask, ChangeActiveDeviceTask>()
                            .AddTransient<IFindArtistTask, FindArtistTask>()
                            .AddTransient<ILibraryLoaderTask, LibraryLoaderTask>()
                            .AddTransient<ILoadAvailableDevicesTask, LoadAvailableDevicesTask>()

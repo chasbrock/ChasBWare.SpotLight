@@ -4,19 +4,17 @@
           xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
           xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.Popups;assembly=ChasBWare.SpotLight.Infrastructure"
           x:DataType="vm:PopupMenuViewModel"
-          x:Class="ChasBWare.SpotLight.Popups.PopupMenu"
-          Background="LightSkyBlue"
-          HeightRequest="{Binding Height}">
+          x:Class="ChasBWare.SpotLight.Popups.PopupMenu">
 
     <ContentView.Resources>
-        <Style TargetType="Label" x:Key="MenuItemHightList">
+        <Style TargetType="Label" x:Key="MenuItemHighLight">
             <Setter Property="VisualStateManager.VisualStateGroups">
                 <VisualStateGroupList>
                     <VisualStateGroup x:Name="CommonStates">
                         <VisualState x:Name="Normal" />
                         <VisualState x:Name="PointerOver">
                             <VisualState.Setters>
-                                <Setter Property="Background" Value="AliceBlue" />
+                                <Setter Property="FontAttributes" Value="Bold" />
                             </VisualState.Setters>
                         </VisualState>
                     </VisualStateGroup>
@@ -25,22 +23,30 @@
         </Style>
     </ContentView.Resources>
 
-    <Grid RowDefinitions="{Binding Height}" ColumnDefinitions="200">
+    <Grid Background="SkyBlue" Padding="8">
+        <Grid.Shadow>
+            <Shadow Brush="DarkGray"
+                Offset="10,10"
+                Radius="10"
+                Opacity="0.8" />
+        </Grid.Shadow>
+
         <CollectionView ItemsSource="{Binding Path=MenuGroups}" 
                         SelectionMode="Single">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:MenuItemGroup">
-                    <Grid RowDefinitions="*,2" 
-                          IsVisible="{Binding Visible}">
-                        <CollectionView ItemsSource="{Binding Path=MenuItems}" 
-                                        SelectionMode="Single">
+                    <Grid RowDefinitions="Auto,4" IsVisible="{Binding Visible}">
+                      <CollectionView ItemsSource="{Binding Path=MenuItems}" 
+                                      SelectionMode="Single">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="vm:MenuItem">
-                                    <Grid RowDefinitions="30" IsVisible="{Binding Visible}">
+                                    <Grid IsVisible="{Binding Visible}">
                                         <Label Text="{Binding Caption}"
+                                               LineBreakMode="WordWrap" MaxLines="5" 
                                                ToolTipProperties.Text="{Binding ToolTip}" 
                                                TextColor="{Binding Path=Enabled, Converter={StaticResource Key=EnabledText}}"
-                                                 Margin="8,0">
+                                               Style="{StaticResource MenuItemHighLight}"
+                                               Margin="8,4">
                                             <Label.GestureRecognizers>
                                                 <TapGestureRecognizer Command="{Binding Click}"
                                                                       NumberOfTapsRequired="1"/>

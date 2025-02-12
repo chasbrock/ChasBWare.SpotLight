@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.Intrinsics.Arm;
 using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Messaging;
@@ -17,18 +18,18 @@ namespace ChasBWare.SpotLight.Infrastructure.Services;
 public class PopupItemService(IServiceProvider _serviceProvider) 
            : IPopupItemService
 {
-    public void AddMenuItem(IPopupMenuViewModel popup, IPlaylistViewModel playlist, PopupAction action)
+    public void AddMenuItem(IPopupMenuViewModel popup, IPlaylistViewModel playlist, PopupActivity activity)
     {
-        var group = PopupGroup.Playlist;
-        switch (action)
+        switch (activity)
         {
-            case PopupAction.Save:
+            case PopupActivity.Save:
                 var save = !playlist.IsSaved;
                 var caption = save ? $"Add  '{playlist.Name}'" : $"Remove '{playlist.Name}'";
                 var toolTip = save ? $"Adds current {playlist.PlaylistType} to your library, but not to you Spotify profile"
                                    : $"Removes current {playlist.PlaylistType} from your library, but not to you Spotify profile";
 
-                popup.AddItem(group.ToString(), $"{group}_{action}",
+                popup.AddItem(PopupGroup.Library,
+                              activity,
                               caption: caption,
                               toolTip: toolTip,
                               action: (t) =>
@@ -41,8 +42,9 @@ public class PopupItemService(IServiceProvider _serviceProvider)
 
           
 
-            case PopupAction.Play:
-                popup.AddItem(group.ToString(), $"{group}_{action}",
+            case PopupActivity.Play:
+                popup.AddItem(PopupGroup.Playlist,
+                              activity,
                               caption: $"Play '{playlist.Name}'",
                               toolTip: $"Start playing current {playlist.PlaylistType}",
                               action: (t) =>
@@ -53,8 +55,9 @@ public class PopupItemService(IServiceProvider _serviceProvider)
                               });
                 break;
 
-            case PopupAction.AddToQueue:
-                popup.AddItem(group.ToString(), $"{group}_{action}",
+            case PopupActivity.AddToQueue:
+                popup.AddItem(PopupGroup.Playlist,
+                              activity,
                               caption: $"Queue '{playlist.Name}'",
                               toolTip: $"Add current {playlist.PlaylistType} to the Queue",
                               action: (t) =>
@@ -70,13 +73,13 @@ public class PopupItemService(IServiceProvider _serviceProvider)
         }
     }
 
-    public void AddMenuItem(IPopupMenuViewModel popup, ITrackViewModel track, PopupAction action)
+    public void AddMenuItem(IPopupMenuViewModel popup, ITrackViewModel track, PopupActivity activity)
     {
-        var group = PopupGroup.Track;
-        switch (action) 
+        switch (activity) 
         {
-            case PopupAction.Play:
-                popup.AddItem(group.ToString(), $"{group}_{action}",
+            case PopupActivity.Play:
+                popup.AddItem(PopupGroup.Track,
+                              activity,
                               caption: $"Play {track.Name}",
                               toolTip: $"Start playing current track",
                               action: (t) =>
@@ -91,8 +94,9 @@ public class PopupItemService(IServiceProvider _serviceProvider)
                               });
                 break;
 
-            case PopupAction.AddToQueue:
-                popup.AddItem(group.ToString(), $"{group}_{action}",
+            case PopupActivity.AddToQueue:
+                popup.AddItem(PopupGroup.Track,
+                              activity,
                               caption: $"Queue '{track.Name}'",
                               toolTip: $"Add current track to queue",
                               action: (t) =>
@@ -103,9 +107,10 @@ public class PopupItemService(IServiceProvider _serviceProvider)
                               });
                 break;
 
-            case PopupAction.Hate:
-                popup.AddItem(group.ToString(), $"{group}_{action}",
-                              caption: track.IsHated ? "Unhate" : "Hate",
+            case PopupActivity.Hate:
+                popup.AddItem(PopupGroup.Library,
+                              activity,
+                              caption: track.IsHated ? $"Unhate '{track.Name}'" : $"Hate '{track.Name}'",
                               toolTip: "Hated tracks will never be played by this app, does not effect Spotify App",
                               action: (t) =>
                               {
@@ -117,12 +122,12 @@ public class PopupItemService(IServiceProvider _serviceProvider)
         }
     }
 
-    public void AddMenuItem(IPopupMenuViewModel popup, ILibraryViewModel library, PopupAction action)
+    public void AddMenuItem(IPopupMenuViewModel popup, ILibraryViewModel library, PopupActivity activity)
     {
-        switch (action)
+        switch (activity)
         {
-            case PopupAction.ExpandAll:
-                popup.AddItem($"{action}",
+            case PopupActivity.ExpandAll:
+                popup.AddItem(activity,
                               caption: $"Expand All",
                               action: (t) =>
                               {
@@ -131,8 +136,8 @@ public class PopupItemService(IServiceProvider _serviceProvider)
                               });
                 break;
 
-            case PopupAction.CollapseAll:
-                popup.AddItem($"{action}",
+            case PopupActivity.CollapseAll:
+                popup.AddItem(activity,
                               caption: $"Collapse All",
                               action: (t) =>
                               {

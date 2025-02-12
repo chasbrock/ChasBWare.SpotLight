@@ -10,9 +10,9 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
                                          ISpotifyActionManager _actionManager) 
                : ISpotifyArtistRepository
     {
-        public  async Task<List<IArtistViewModel>> SearchForArtists(string searchText)
+        public List<IArtistViewModel> SearchForArtists(string searchText)
         {
-            var fullArtists = await _actionManager.SearchForArtists(searchText);
+            var fullArtists =  _actionManager.SearchForArtists(searchText);
 
             List<IArtistViewModel> artists = []; 
             foreach (var artist in fullArtists.Where(t => t != null).Select(fa => fa.CopyToArtist()))
@@ -25,9 +25,9 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
             return artists;
         }
 
-        public async Task<List<RecentPlaylist>> LoadArtistAlbums(string artistId)
+        public List<RecentPlaylist> LoadArtistAlbums(string artistId)
         {
-            var savedAlbums = await _actionManager.GetArtistAlbums(artistId);
+            var savedAlbums =  _actionManager.GetArtistAlbums(artistId);
             if (savedAlbums != null) 
             {
                 return savedAlbums.Select(sa => sa.CopyToPlaylist()).ToList();
@@ -35,9 +35,9 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
             return [];
         }
 
-        public async Task<Artist?> FindArtist(string artistId)
+        public Artist? FindArtist(string artistId)
         {
-            var found = await _actionManager.FindArtist(artistId);
+            var found = _actionManager.FindArtist(artistId);
             if (found != null)
             {
                 return found.CopyToArtist();

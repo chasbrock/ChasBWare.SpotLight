@@ -9,13 +9,13 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
                                  ILogger _logger)
                : ITrackRepository
     {
-        public async Task<List<Track>> GetPlaylistTracks(string playlistId)
+        public List<Track> GetPlaylistTracks(string playlistId)
         {
-            var connection = await _dbContext.GetConnection();
+            var connection = _dbContext.GetConnection().Result;
             if (connection != null)
             {
                 var sql = RepositoryHelper.GetPlaylistTracks;
-                return await connection.QueryAsync<Track>(sql, playlistId);
+                return connection.QueryAsync<Track>(sql, playlistId).Result;
 
             }
             _logger.LogError("Could not access db connection");
@@ -23,21 +23,21 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
             return [];
         }
 
-        public async Task<int> AddTracksToPlaylist(string playListId, IEnumerable<Track> tracks)
+        public int AddTracksToPlaylist(string playListId, IEnumerable<Track> tracks)
         {
-            var connection = await _dbContext.GetConnection();
+            var connection =  _dbContext.GetConnection().Result;
             if (connection != null)
             {
                 int order = 0;
                 foreach (var track in tracks)
                 {
-                    var foundTrack = await connection.Table<Track>().FirstOrDefaultAsync(t => t.Id == track.Id);
+                    var foundTrack =  connection.Table<Track>().FirstOrDefaultAsync(t => t.Id == track.Id).Result;
                     if (foundTrack == null)
                     {
-                        await connection.InsertAsync(track);
+                        connection.InsertAsync(track);
                     }
 
-                    var foundLink = await connection.Table<PlaylistTrack>().FirstOrDefaultAsync(t => t.PlaylistId == playListId && t.TrackId == track.Id);
+                    var foundLink =  connection.Table<PlaylistTrack>().FirstOrDefaultAsync(t => t.PlaylistId == playListId && t.TrackId == track.Id).Result;
                     if (foundLink == null)
                     {
                         var playlistTrack = new PlaylistTrack
@@ -46,7 +46,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Repositories
                             PlaylistId = playListId,
                             TrackOrder = order++
                         };
-                        await connection.InsertAsync(playlistTrack);
+                         connection.InsertAsync(playlistTrack);
                     }
                 }
             }

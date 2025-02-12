@@ -13,14 +13,14 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks
             Task.Run(() => RunTask(viewModel));
         }
 
-        private async void RunTask(ISearchArtistsViewModel viewModel)
+        private void RunTask(ISearchArtistsViewModel viewModel)
         {
             if (string.IsNullOrWhiteSpace(viewModel.SearchText))
             {
                 return;
             }
 
-            var items = await _artistRepository.SearchForArtists(viewModel.SearchText);
+            var items = _artistRepository.SearchForArtists(viewModel.SearchText);
             _dispatcher.Dispatch(() =>
             {
                 viewModel.Items.Clear();
