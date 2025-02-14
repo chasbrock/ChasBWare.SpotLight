@@ -75,7 +75,6 @@ public abstract class BaseSortedListViewModel<T>
         }
     }
 
-
     protected override async void LoadSettings()
     {
         var settingsRepo = _serviceProvider.GetService<IAppSettingsRepository>();

@@ -31,12 +31,14 @@
 
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="vm:PlaylistViewModel">
-                            <Border Margin="8,4">
-                                <VerticalStackLayout Margin="2">
-                                    <Label Text="{Binding Name}" 
-                                           Style="{StaticResource ListCaption}"/>
-                                     </VerticalStackLayout>
-                            </Border>
+                                <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="32,Auto"  Margin="2">
+                                    <Image Source="{Binding InLibrary, Converter={StaticResource Key=IsInLibray}}"
+                                           Grid.Row="0" Grid.RowSpan="2"  Grid.Column="0"/>
+                                    <Label Text="{Binding Name}" Style="{StaticResource ListCaption}"
+                                           Grid.Row="0" Grid.Column="1"/>
+                                    <Label Text="{Binding Owner}" Style="{StaticResource TrackOwner}"
+                                           Grid.Row="1" Grid.Column="1"/>
+                                </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
 

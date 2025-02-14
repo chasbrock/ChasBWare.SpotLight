@@ -5,11 +5,9 @@ using System.Windows.Input;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 using ChasBWare.SpotLight.Infrastructure.Utility;
-using ChasBWare.SpotLight.Spotify.Interfaces;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
-using Swan;
 
 namespace ChasBWare.SpotLight.Install;
 
@@ -45,7 +43,7 @@ public partial class InstallViewModel : Notifyable
     {
         try
         {
-            var fileStream = await FileSystem.Current.OpenAppPackageFileAsync("vault.bin");
+            var fileStream = await FileSystem.Current.OpenAppPackageFileAsync("SpotLight.vault");
             using StreamReader reader = new StreamReader(fileStream);
             var json = await reader.ReadToEndAsync();
             var items = JsonSerializer.Deserialize<List<KeyValue>>(json);

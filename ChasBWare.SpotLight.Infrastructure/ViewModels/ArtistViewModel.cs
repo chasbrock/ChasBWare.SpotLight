@@ -1,4 +1,4 @@
-﻿using ChasBWare.SpotLight.Definitions.Tasks;
+﻿using ChasBWare.SpotLight.Definitions.Tasks.ArtistSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
@@ -11,8 +11,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                  IArtistViewModel
     {
         private Artist _model = new() { Id = "" };
-        private DateTime _lastPlayed;
-
+   
         public Artist Model
         {
             get => _model;
@@ -37,8 +36,8 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         public DateTime LastAccessed
         {
-            get => _lastPlayed;
-            set => SetField(ref _lastPlayed, value);
+            get => Model.LastAccessed;
+            set => SetField(Model, value);
         }
         
         protected override void InitialiseSelectedItem(IPlaylistViewModel selectedItem)

@@ -2,7 +2,6 @@
 
 namespace ChasBWare.SpotLight.Domain.Entities
 {
-
     public class PlayingTrack 
     {
         public required string Id { get; set; }

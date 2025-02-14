@@ -1,4 +1,4 @@
-﻿using ChasBWare.SpotLight.Definitions.Tasks;
+﻿using ChasBWare.SpotLight.Definitions.Tasks.Queue;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using CommunityToolkit.Maui.Core;
 

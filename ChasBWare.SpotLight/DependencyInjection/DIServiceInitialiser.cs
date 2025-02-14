@@ -1,7 +1,11 @@
 ﻿using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Services;
-using ChasBWare.SpotLight.Definitions.Tasks;
+using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
+using ChasBWare.SpotLight.Definitions.Tasks.ArtistSearch;
+using ChasBWare.SpotLight.Definitions.Tasks.Device;
+using ChasBWare.SpotLight.Definitions.Tasks.Library;
+using ChasBWare.SpotLight.Definitions.Tasks.PlaylistSearch;
 using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.DbContext;
@@ -10,7 +14,11 @@ using ChasBWare.SpotLight.Infrastructure.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Repositories;
 using ChasBWare.SpotLight.Infrastructure.Services;
-using ChasBWare.SpotLight.Infrastructure.Tasks;
+using ChasBWare.SpotLight.Infrastructure.Tasks.AlbumSearch;
+using ChasBWare.SpotLight.Infrastructure.Tasks.ArtistSearch;
+using ChasBWare.SpotLight.Infrastructure.Tasks.Device;
+using ChasBWare.SpotLight.Infrastructure.Tasks.Library;
+using ChasBWare.SpotLight.Infrastructure.Tasks.PlaylistSearch;
 using ChasBWare.SpotLight.Infrastructure.ViewModels;
 using ChasBWare.SpotLight.Install;
 using ChasBWare.SpotLight.Pages;
@@ -77,14 +85,13 @@ namespace ChasBWare.SpotLight.DependencyInjection
             return services.AddTransient<IAppSettingsRepository, AppSettingsRepository>()
                            .AddTransient<IArtistRepository, ArtistRepository>()
                            .AddTransient<IHatedItemsRepository, HatedItemsRepository>()
-                           .AddTransient<IPlaylistRepository, PlaylistRepository>()
-                           .AddTransient<IRecentItemRepository, RecentItemRepository>()
+                           .AddTransient<ILibraryRepository, LibraryRepository>()
+                           .AddTransient<ISearchItemRepository, SearchItemRepository>()
                            .AddTransient<ISpotifyArtistRepository, SpotifyArtistRepository>()
                            .AddTransient<ISpotifyDeviceRepository, SpotifyDeviceRepository>()
                            .AddTransient<ISpotifyPlaylistRepository, SpotifyPlaylistRepository>()
                            .AddTransient<ISpotifyTrackRepository, SpotifyTrackRepository>()
                            .AddTransient<ITrackRepository, TrackRepository>()
-                           .AddTransient<IUserRepository, UserRepository>()
                            ;
         }
 
@@ -108,15 +115,18 @@ namespace ChasBWare.SpotLight.DependencyInjection
 
         public static IServiceCollection RegisterTasks(this IServiceCollection services)
         {
-            return services.AddTransient<IArtistAlbumsLoaderTask, ArtistAlbumsLoaderTask>()
-                           .AddTransient < IChangeActiveDeviceTask, ChangeActiveDeviceTask>()
+            return services.AddTransient<IAddRecentAlbumTask, AddRecentAlbumTask>()
+                           .AddTransient<IAddRecentArtistTask, AddRecentArtistTask>()
+                           .AddTransient<IArtistAlbumsLoaderTask, ArtistAlbumsLoaderTask>()
+                           .AddTransient<IChangeActiveDeviceTask, ChangeActiveDeviceTask>()
                            .AddTransient<IFindArtistTask, FindArtistTask>()
                            .AddTransient<ILibraryLoaderTask, LibraryLoaderTask>()
                            .AddTransient<ILoadAvailableDevicesTask, LoadAvailableDevicesTask>()
                            .AddTransient<ILoadRecentArtistTask, LoadRecentArtistTask>()
                            .AddTransient<ILoadRecentPlaylistTask, LoadRecentPlaylistTask>()
-                           .AddTransient<IRemoveRecentArtistTask, RemoveArtistTask>()
-                           .AddTransient<ISetPlaylistSavedStatus, SetPlaylistSavedStatus>()
+                           .AddTransient<IRemovePlaylistTask, RemoveRecentPlaylistTask>()
+                           .AddTransient<IRemoveRecentArtistTask, RemoveRecentArtistTask>()
+                           .AddTransient<ITransferToLibraryTask, TransferToLibraryTask>()
                            .AddTransient<ISearchForAlbumTask, SearchForAlbumTask>()
                            .AddTransient<ISearchForArtistTask, SearchForArtistTask>()
                            .AddTransient<ISetHatedTrackTask,SetHatedTrackTask>()

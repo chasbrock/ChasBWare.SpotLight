@@ -1,46 +1,45 @@
 ﻿using ChasBWare.SpotLight.Definitions.Messaging;
-using ChasBWare.SpotLight.Definitions.Tasks;
+using ChasBWare.SpotLight.Definitions.Tasks.Library;
+using ChasBWare.SpotLight.Definitions.Tasks.PlaylistSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
+using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
     public class RecentPlaylistsViewModel : BaseRecentViewModel<IPlaylistViewModel>, IRecentPlaylistsViewModel
     {
  
-        public RecentPlaylistsViewModel(IServiceProvider serviceProvider,
+        public RecentPlaylistsViewModel(IPopupService popupService,
+                                        IServiceProvider serviceProvider,
+                                        IPlayerControlViewModel playerControlViewModel,
                                         ISearchPlaylistsViewModel searchViewModel,
                                         IMessageService<ActivePlaylistChangedMessage> activeAlbumChangedMessageService)
-            : base(serviceProvider, searchViewModel, SorterHelper.GetPlaylistSorters())
+            : base(popupService, serviceProvider, playerControlViewModel, searchViewModel, SorterHelper.GetPlaylistSorters())
         {
             activeAlbumChangedMessageService.Register(OnSetActivePlaylist);
         }
 
-
-        protected override void LoadRecentItems()
+        protected override void LoadItems()
         {
-            var task = _serviceProvider.GetService<ILoadRecentPlaylistTask>();
-            task?.Execute(this, Domain.Enums.PlaylistType.Playlist);
+            var task = _serviceProvider.GetRequiredService<ILoadRecentPlaylistTask>();
+            task.Execute(this, Domain.Enums.PlaylistType.Playlist);
         }
-
-        protected override void DeleteItem()
-        {
-            if (SelectedItem != null)
-            {
-                Items.Remove(SelectedItem);
-                var task = _serviceProvider.GetService<ILoadRemoveRecentPlaylistTask>();
-                task?.Execute(this, SelectedItem.Id);
-            }
-        }
-
+           
         protected override void InitialiseSelectedItem(IPlaylistViewModel item)
         {
-            // TODO
+            item.IsExpanded = true;
         }
 
-        private IPlaylistViewModel? AddItemToList(RecentPlaylist playlist, DateTime? lastAccessed)
+        protected override void OpenPopup()
+        {
+           // _popupService.ShowPopup<RecentAlbumPopupViewModel>(onPresenting: vm => vm.SetItem(this, SelectedItem));
+        }
+
+        private IPlaylistViewModel? AddItemToList(Playlist playlist, DateTime? lastAccessed)
         {
             var viewModel = Items.FirstOrDefault(a => a.Model.Id == playlist.Id);
             if (viewModel == null)
@@ -52,8 +51,8 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
                     if (lastAccessed == null)
                     {
-                        var task = _serviceProvider.GetService<IUpdateLastAccessedTask>();
-                        task?.Execute(viewModel.Id, DateTime.Now, true);
+                        var task = _serviceProvider.GetRequiredService<IUpdateLastAccessedTask>();
+                        task.Execute(viewModel.Model);
                     }
                     viewModel.LastAccessed = lastAccessed ?? DateTime.Now;
                     Items.Add(viewModel);
@@ -66,11 +65,6 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         private void OnSetActivePlaylist(ActivePlaylistChangedMessage message)
         {
             SelectedItem = AddItemToList(message.Payload, null);
-        }
-
-        public void ExecuteLibrayCommand(IPlaylistViewModel? selectedItem)
-        {
-            throw new NotImplementedException();
         }
     }
 }

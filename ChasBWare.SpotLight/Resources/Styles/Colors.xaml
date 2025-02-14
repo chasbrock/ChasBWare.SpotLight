@@ -42,4 +42,13 @@
     <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+
+    <Color x:Key="BackGround1">#B6DCFE</Color>
+    <Color x:Key="BackGround2">#DFF0FE</Color>
+    <Color x:Key="MidHeader">#4788C7</Color>
+    <Color x:Key="DarkHeader">#285178</Color>
+    <SolidColorBrush x:Key="DarkHeaderBrush" Color="{StaticResource DarkHeader}"/>
+
+
+
 </ResourceDictionary>

@@ -11,14 +11,14 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
     public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
                : ISpotifyPlaylistRepository
     {
-        public List<RecentPlaylist> FindAlbums(string searchText)
+        public List<Playlist> FindAlbums(string searchText)
         {
             var simpleAlbums = _actionManager.FindAlbums(searchText);
             return simpleAlbums.Select(sa => sa.CopyToPlaylist()).ToList();
         }
 
 
-        public List<RecentPlaylist> GetPlaylists(PlaylistType playlistType)
+        public List<Playlist> GetPlaylists(PlaylistType playlistType)
         {
             return playlistType switch
             {
@@ -28,18 +28,21 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
             };
         }
 
-        private List<RecentPlaylist> GetCurrentUsersAlbums()
+        private List<Playlist> GetCurrentUsersAlbums()
         {
-            List<RecentPlaylist> playlists = [];
+            List<Playlist> playlists = [];
             var savedAlbums =  _actionManager.GetCurrentUsersAlbums();
             if (savedAlbums != null)
             {
+                // push last accessed date to way back so the
+                // the recently used it more reflective
+                var lastAccessed = DateTime.Today.AddYears(-1);
                 foreach (var savedAlbum in savedAlbums)
                 {
                     var playlist = savedAlbum.CopyToPlaylist();
                     if (playlist != null)
                     {
-                        playlist.LastAccessed = DateTime.Now;
+                        playlist.LastAccessed = lastAccessed;
                         playlists.Add(playlist);
                     }
                 }
@@ -47,18 +50,22 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
             return playlists; 
         }
 
-        private List<RecentPlaylist> GetCurrentUsersPlaylists()
+        private List<Playlist> GetCurrentUsersPlaylists()
         {
-            List<RecentPlaylist> playlists = [];
+            
+            List<Playlist> playlists = [];
             var fullPlaylists =  _actionManager.GetCurrentUsersPlaylists();
             if (fullPlaylists != null)
             {
+                // push last accessed date to way back so the
+                // the recently used it more reflective
+                var lastAccessed = DateTime.Today.AddYears(-1);
                 foreach (var fullPlaylist in fullPlaylists)
                 {
                     var playlist = fullPlaylist.CopyToPlaylist();
                     if (playlist != null)
                     {
-                        playlist.LastAccessed = DateTime.Now;
+                        playlist.LastAccessed = lastAccessed;
                         playlists.Add(playlist);
                     }
                 }

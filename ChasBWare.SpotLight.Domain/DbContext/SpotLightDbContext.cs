@@ -14,15 +14,14 @@ namespace ChasBWare.SpotLight.Domain.DbContext
             _database = new SQLiteAsyncConnection(_dbSettings.FullPath, _dbSettings.Flags, true);
             await _database.CreateTableAsync<AppSetting>();
             await _database.CreateTableAsync<Artist>();
-            await _database.CreateTableAsync<Playlist>();
-            await _database.CreateTableAsync<Track>();
-            await _database.CreateTableAsync<User>();
             await _database.CreateTableAsync<ArtistPlaylist>();
-            await _database.CreateTableAsync<UserPlaylist>();
-            await _database.CreateTableAsync<RecentItem>();
             await _database.CreateTableAsync<HatedItem>();
+            await _database.CreateTableAsync<LibraryItem>();
+            await _database.CreateTableAsync<Playlist>();
             await _database.CreateTableAsync<PlaylistTrack>();
-      
+            await _database.CreateTableAsync<SearchItem>();
+            await _database.CreateTableAsync<Track>();
+
             return _database;
         }
 

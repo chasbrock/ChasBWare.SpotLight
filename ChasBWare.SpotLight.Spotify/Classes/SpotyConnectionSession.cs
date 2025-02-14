@@ -19,8 +19,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
         public string? AccessToken { get; private set; }
         public string? RefreshToken { get; private set; }
 
-     
-
+    
         /// <summary>
         /// get a new spotify client
         /// </summary>
@@ -70,7 +69,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             AccessToken = SecureStorage.Default.GetAsync(nameof(ISpotyConnectionSession.AccessToken)).Result;
             RefreshToken = SecureStorage.Default.GetAsync(nameof(ISpotyConnectionSession.RefreshToken)).Result;
             
-            return string.IsNullOrWhiteSpace(AccessToken) ? ConnectionStatus.Unauthorised : ConnectionStatus.Connected;
+            return string.IsNullOrWhiteSpace(AccessToken) ? ConnectionStatus.Unauthorised : ConnectionStatus.TokenExpired;
         }
 
         public ICollection<string> GetScopes()

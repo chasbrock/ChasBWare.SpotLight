@@ -11,9 +11,6 @@ namespace ChasBWare.SpotLight.Domain.Entities
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        [Indexed(Name = "HatedItem_Key", Order = 0, Unique = true), NotNull]
-        public string? UserId { get; set; }
-
         [Indexed(Name = "HatedItem_Key", Order = 1, Unique = true), NotNull]
         public string? ItemId { get; set; }
     }

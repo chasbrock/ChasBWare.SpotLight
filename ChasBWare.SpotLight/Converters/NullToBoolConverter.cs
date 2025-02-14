@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
 using ChasBWare.SpotLight.Definitions.Enums;
 
-namespace ChasBWare.SpotLight.Converters;
+namespace ChasbWare.Spotlight.Converters;
 
-internal class NullToBoolConverter : IValueConverter
+public class NullToBoolConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {

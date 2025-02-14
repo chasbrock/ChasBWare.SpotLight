@@ -24,7 +24,7 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
         /// </summary>
         /// <param name="artistId"></param>
         /// <returns></returns>
-        List<RecentPlaylist> LoadArtistAlbums(string artistId);
+        List<Playlist> LoadArtistAlbums(string artistId);
 
     }
 

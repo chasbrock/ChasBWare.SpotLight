@@ -14,6 +14,4 @@ namespace ChasBWare.SpotLight.Domain.Entities
         public string? PlaylistId { get; set; }
     }
 
-
-
 }

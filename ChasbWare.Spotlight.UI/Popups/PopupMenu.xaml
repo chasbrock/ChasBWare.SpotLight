@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+          xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+          xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.Popups;assembly=ChasBWare.SpotLight.Infrastructure"
+          x:DataType="vm:PopupMenuViewModel"
+          x:Class="ChasBWare.SpotLight.UI.Popups.PopupMenu">
+
+    <ContentView.Resources>
+        <Style TargetType="Label" x:Key="MenuItemHighLight">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="FontAttributes" Value="Bold" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentView.Resources>
+
+    <Border Style="{StaticResource PopupBorder}">
+     
+        <CollectionView ItemsSource="{Binding Path=MenuGroups}" 
+                        SelectionMode="Single">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:MenuItemGroup">
+                    <Grid RowDefinitions="Auto,4" IsVisible="{Binding Visible}">
+                      <CollectionView ItemsSource="{Binding Path=MenuItems}" 
+                                      SelectionMode="Single">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="vm:MenuItem">
+                                    <Grid IsVisible="{Binding Visible}">
+                                        <Label Text="{Binding Caption}"
+                                               LineBreakMode="WordWrap" MaxLines="5" 
+                                               ToolTipProperties.Text="{Binding ToolTip}" 
+                                               TextColor="{Binding Path=Enabled, Converter={StaticResource Key=EnabledText}}"
+                                               Style="{StaticResource MenuItemHighLight}"
+                                               Margin="8,4">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Click}"
+                                                                      NumberOfTapsRequired="1"/>
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        <Rectangle HorizontalOptions="Fill" 
+                                   Background="DarkSlateBlue"
+                                   IsVisible="{Binding ShowSeparator}"
+                              Grid.Row="1"/>
+                    </Grid>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+                        
+    </Border>
+
+
+</ContentView>

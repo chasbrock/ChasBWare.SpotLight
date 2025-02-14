@@ -1,149 +1,138 @@
 ﻿
-namespace ChasBWare.SpotLight.Infrastructure.Repositories
+using ChasBWare.SpotLight.Domain.Entities;
+
+namespace ChasBWare.SpotLight.Infrastructure.Repositories;
+
+internal partial class RepositoryHelper
 {
-    internal partial class RepositoryHelper
-    {
-        /// <summary>
-        /// get non saved, artist
-        /// param: UserId 
-        /// </summary>
-        internal const string GetRecentArtists =
-@"select a.Id, a.Name, a.Image, ri.LastAccessed 
+    /// <summary>
+    /// delete all tracks that are not connected to
+    /// a playlist / album
+    /// </summary>
+    internal const string DeleteOrphanTracks =
+@"delete from track
+   where id in 
+        (select t.Id
+           from Track t
+            left join PlaylistTrack plt on plt.TrackId = t.id
+           where plt.id is null)";
+
+    internal const string DeleteOrphanPlaylistTracks =
+@"delete from PlaylistTrack
+   where playlistId in (  
+     select playlistId
+       from PlaylistTrack plt
+        left join Playlist pl on plt.PlaylistId = pl.id
+	   where pl.id is null)";
+
+    /// <summary>
+    /// delete all playlists    
+    /// </summary>
+    internal const string DeleteOrphanPlaylists =
+ @"delete from playlist
+    where if in (
+       select pl.id 
+         from playlist pl
+         left join ArtistPlaylist apl on pl.id= apl.PlaylistId
+         left join LibraryItem li on pl.id = li.id
+         left join SearchItem si on pl.Id = si.Itemid
+        where li.id is null
+          and si.id is null
+          and apl.id is null)";
+
+    /// <summary>
+    /// get all playlist in library
+    /// param: PlaylistType 
+    /// </summary>
+    internal const string DeleteLibraryItem =
+@"delete from LibraryPlaylist where Id = ?";
+
+    /// <summary>
+    /// get all playlist in library
+    /// param: PlaylistType 
+    /// </summary>
+    internal const string GetLibraryItems =
+@"select pl.*
+    from Playlist pl
+    join LibraryItem li on li.Id = pl.Id
+   where pl.PlaylistType = ?";
+
+    /// <summary>
+    /// get all artists in searchitems
+    /// </summary>
+    internal const string GetSearchArtists =
+@"select a.*
     from Artist a
-    join RecentItem ri on a.Id = ri.ItemId
-   where ri.Userid = ?";
+    join SearchItem si on si.ItemId = a.Id";
 
-        /// <summary>
-        /// find all tracks for playlist that vcan be deleted safely
-        /// param: "PlaylistId"
-        /// </summary>
-        internal const string GetDeleteableTracks =
-@"select TrackId 
-    from PlaylistTrack
-   where PlaylistId = ?
-     and TrackId not in 
-	     (select TrackId
-            from PlaylistTrack  
-           where TrackId in 
-		         (select TrackId
-    		     	from PlaylistTrack
-			  	   where PlaylistId = ?)
-          group by trackId
-         having count(*) > 1)";
+    /// <summary>
+    /// get all playlist in search
+    /// param: PlaylistType 
+    /// </summary>
+    internal const string GetSearchPlaylists =
+@"select pl.*
+    from Playlist pl
+    join SearchItem si on si.ItemId = pl.Id
+   where pl.PlaylistType = ?";
 
-        /// <summary>
-        /// delete all info for recent artists
-        /// </summary>
-        internal static string[] DeleteAllRecentArtists =[
-@"delete from playlist  
- where id in (
-	select pl.id 	
-  	  from ArtistPlaylist apl
-      join Playlist pl on pl.Id = apl.PlaylistId
-      left join RecentItem rPl on rPl.ItemId = pl.Id 
-     where apl.ArtistId in (
-	    select ri.ItemId
-	     from RecentItem ri
-         join Artist a on a.Id = ri.ItemId)
-    and IsSaved is null);",
-@"delete from ArtistPlaylist;",
-@"delete from Artist;",
-@"delete from track 
-  where id in 
-	(select t.Id
-       from Track t	
-		left join PlaylistTrack plt on plt.TrackId = t.id
-  where plt.id is  null);"];
+   /// <summary>
+   /// collection of scripts to remove a single
+   /// playlist from search history
+   /// </summary>
+    internal static string[] DeleteRecentPlaylist =[
+@"delete from SearchItem where ItemId = ?",
+@"delete from playlist
+   where id not in (select id from LibraryItem )
+     and id = ?",
+DeleteOrphanPlaylists,
+DeleteOrphanPlaylistTracks,
+DeleteOrphanTracks];
 
-        /// <summary>
-        /// find all playlists that can be deleted safely
-        /// for lis
-        /// param: UserId 
-        /// </summary>
-        internal const string GetDeleteableAllArtistPlaylists =
-@"select pl.Id
-  from ArtistPlaylist apl
-  join Playlist pl on pl.Id = apl.PlaylistId
-  left join RecentItem rPl on rPl.ItemId = pl.Id 
- where apl.ArtistId in (
-	select ri.ItemId
-	  from RecentItem ri
-      join Artist a on a.Id = ri.ItemId)
-  and IsSaved is null 
-  and UserId = ?";
+    /// <summary>
+    /// delete all info for recent artists
+    /// </summary>
+    internal static string[] DeleteAllRecentArtists = [
+@"delete from ArtistPlaylist",
+@"delete from Artist",
+DeleteOrphanPlaylists,
+DeleteOrphanPlaylistTracks,
+DeleteOrphanTracks];
 
-        /// <summary>
-        /// get all playlist for artist 
-        /// param: Artistid 
-        /// </summary>
-        internal const string GetArtistAlbums =
+    /// <summary>
+    /// collection of scripts to remove all
+    /// playlists from search history
+    /// </summary>
+    internal static string[] DeleteAllRecentPlaylists =[
+@"delete from SearchItem
+    where ItemId in (
+      select pl.id
+        from Playlist pl
+        join SearchItem si on si.ItemId = pl.Id
+       where plPlaylistType = ?)",
+ DeleteOrphanPlaylists,
+ DeleteOrphanPlaylistTracks,
+ DeleteOrphanTracks];
+
+    /// <summary>
+    /// get all playlist for artist 
+    /// param: Artistid 
+    /// </summary>
+    internal const string GetArtistAlbums =
 @"select pl.*, ri.LastAccessed
     from Playlist pl 
     join ArtistPlaylist apl on pl.Id = apl.PlaylistId
     left join RecentItem ri on ri.ItemId = pl.Id
    where apl.ArtistId = ?";
 
-        /// <summary>
-        /// get all playlist
-        /// param: UserId 
-        /// param: PlaylistType 
-        /// param: IsSaved 
-        /// </summary>
-        internal const string GetPlaylists =
-   @"select pl.*, ri.LastAccessed
-    from Playlist pl
-    join RecentItem ri on ri.ItemId = pl.Id
-   where ri.UserId = ?
-     and pl.PlaylistType = ?
-     and ri.IsSaved = ?";
-
-        /// <summary>
-        /// find id of first artist thatowns this album
-        /// param: PlaylistId
-        /// </summary>
-        internal const string CheckIfPlaylistBelongsToAnArtist =
-@"select a.Id 
-    from ArtistPlaylist apl
-    join Artist a on apl.ArtistId = a.Id
-    join Playlist pl on apl.PlaylistId = pl.id
-   where pl.Id = ?";
-
-        /// <summary>
-        /// select all tracks for playlist
-        /// param: PlaylistId
-        /// </summary>
-        internal const string GetPlaylistTracks =
+    /// <summary>
+    /// select all tracks for playlist
+    /// param: PlaylistId
+    /// </summary>
+    internal const string GetPlaylistTracks =
 @"select t.*
     from Track t
     join PlaylistTrack plt on plt.TrackId = t.Id
    where plt.PlaylistId = ?
    order by plt.TrackOrder";
-
-        /// <summary>
-        /// select all hated items regarless of type
-        /// param: UserId
-        /// </summary>
-        internal const string GetHatedItems =
-@"select ItemId 
-    from HatedItem
-   where UserId = ?";
-
-        /// <summary>
-        /// selects all artist that oner is linked to
-        /// but are not linked to others
-        /// param: userId
-        /// </summary>
-        internal const string GetDeleteableUserArtists =
-@"select ItemId, count(*)
-  from RecentItem
-  where ItemId in 
-	(select ItemId
-       from RecentItem ri
-       join Artist a on a.Id = ri.ItemId
-      where ri.UserId =?)
-group by ItemId
-having count(*) = 1";
-
-
-    }
+    
 }

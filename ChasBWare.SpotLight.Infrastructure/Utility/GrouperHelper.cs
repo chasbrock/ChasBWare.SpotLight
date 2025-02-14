@@ -36,20 +36,8 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
 
         internal static IGrouper<IPlaylistViewModel>[] GetPlaylistGroupers()
         {
-            return [new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.LastAccessed),
-                                                   i=> i.LastAccessed.GroupDate(),
-                                                   SortDirection.Ascending,
-                                                   new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)),
-                                                    (k,v) => new PlaylistGroup(k,v)),
-   
-                    new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.Owner),
+            return [new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.Owner),
                                                    i=> i.Owner,
-                                                   SortDirection.Ascending,
-                                                   new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)),
-                                                   (k,v) => new PlaylistGroup(k,v)),
-
-                    new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.PlaylistType),
-                                                   i=> i.PlaylistType,
                                                    SortDirection.Ascending,
                                                    new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)),
                                                    (k,v) => new PlaylistGroup(k,v)),
@@ -59,7 +47,19 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
                                                    SortDirection.Ascending,
                                                    new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)),
                                                    (k,v) => new PlaylistGroup(k,v)),
-                                                   ];
+
+                    new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.LastAccessed),
+                                                   i=> i.LastAccessed.GroupDate(),
+                                                   SortDirection.Ascending,
+                                                   new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)),
+                                                    (k,v) => new PlaylistGroup(k,v)),
+
+                    new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.PlaylistType),
+                                                   i=> i.PlaylistType,
+                                                   SortDirection.Ascending,
+                                                   new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)),
+                                                   (k,v) => new PlaylistGroup(k,v))
+                                  ];
         }
 
     }

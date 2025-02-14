@@ -4,7 +4,7 @@
              xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
              xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
-             xmlns:con="clr-namespace:ChasBWare.SpotLight.Converters"
+             xmlns:con="clr-namespace:ChasbWare.Spotlight.Converters"
              x:DataType="vm:DeviceListViewModel"
              x:Class="ChasBWare.SpotLight.Pages.DevicesPage"
               Style="{StaticResource AppBackground}">
@@ -24,18 +24,18 @@
                FalseObject="{StaticResource InactiveForeground}"/>
 
             <con:DeviceTypesToStringConverter x:Key="DeviceImage"
-                Computer= "icons8_computer.png"
-                AVR= "icons8_av_receiver.png"
-                Tablet="icons8_tablet.png"
-                Smartphone="icons8_phone.png"
-                Sonos= "icons8_sonos.png"
-                Unknown= "icons8_sound_other.png" />
+                Computer= "devices_computer.png"
+                AVR= "devices_av_receiver.png"
+                Tablet="devices_tablet.png"
+                Smartphone="devices_phone.png"
+                Sonos= "devices_sonos.png"
+                Unknown= "devices_other.png" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <Grid RowDefinitions="*, Auto">
         <Grid RowDefinitions="Auto,*" ColumnDefinitions="Auto,*"
               Grid.Row="0" >
-            <ImageButton Source="icons8_refresh.png" 
+            <ImageButton Source="system_refresh.png" 
                          HorizontalOptions="Start"
                          Command="{Binding RefreshCommand}"
                          Grid.Row="0"/>

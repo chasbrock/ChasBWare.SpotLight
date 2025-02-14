@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using ChasBWare.SpotLight.Domain.Enums;
 
-namespace ChasBWare.SpotLight.Converters
+namespace ChasbWare.Spotlight.Converters
 {
-    internal class TrackStatusToStringConverter : IValueConverter
+    public class TrackStatusToStringConverter : IValueConverter
     {
         public string? PausedValue { get; set; }
         public string? PlayingValue { get; set; }

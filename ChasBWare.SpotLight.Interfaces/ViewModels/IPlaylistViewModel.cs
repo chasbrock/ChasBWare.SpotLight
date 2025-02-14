@@ -6,7 +6,7 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels;
 
 public interface IPlaylistViewModel
 {
-    public RecentPlaylist Model { get; set; }
+    public Playlist Model { get; set; }
 
     string Id { get; }
     string Name { get; }
@@ -16,7 +16,6 @@ public interface IPlaylistViewModel
     string Uri { get; }
     string? Image { get;  }
     bool IsExpanded { get; set; }
-    bool IsSaved { get; set; }
     DateTime ReleaseDate { get;  }
     DateTime LastAccessed { get; set; }
 
@@ -25,4 +24,5 @@ public interface IPlaylistViewModel
     /// </summary>        
     ITrackListViewModel TracksViewModel { get; }
     ICommand PlayTracklistCommand { get; }
+    bool InLibrary { get; set; }
 }

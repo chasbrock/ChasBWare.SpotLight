@@ -2,7 +2,7 @@
 {
     public interface IHatedItemsRepository
     {
-        Task<HashSet<string>> GetItems(string userId);
-        Task<int> SetHated(string userId, string itemId, bool isHated);
+        Task<HashSet<string>> GetItems();
+        Task<int> SetHated(string itemId, bool isHated);
     }
 }

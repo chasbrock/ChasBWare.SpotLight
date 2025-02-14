@@ -1,7 +1,7 @@
 ﻿using System.Windows.Input;
 using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Repositories;
-using ChasBWare.SpotLight.Definitions.Tasks;
+using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
@@ -50,26 +50,33 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             get => _showOwner;
             set => SetField(ref _showOwner, value);
         }
-
-        protected override void InitialiseSelectedItem(IPlaylistViewModel item) 
+       
+        public bool Exists(string playlistId)
         {
-            item.IsExpanded = true;
-            item.LastAccessed = DateTime.Now;
-            var task = _serviceProvider.GetService<IUpdateLastAccessedTask>();
-
-            task?.Execute(item.Id, item.LastAccessed, true);
+            return !string.IsNullOrEmpty(playlistId) &&
+                    Items.Any(pl => pl.Id == playlistId);
         }
-
+        
         public override void RefreshView()
         {
             base.RefreshView();
             ShowOwner = SelectedGrouper.Name != nameof(IPlaylistViewModel.Owner);
         }
 
+        protected override void InitialiseSelectedItem(IPlaylistViewModel item)
+        {
+            item.IsExpanded = true;
+            item.LastAccessed = DateTime.Now;
+            var task = _serviceProvider.GetService<IUpdateLastAccessedTask>();
+
+            task?.Execute(item.Model);
+        }
+
+
         private void Initialise()
         {   
-            var loadPlaylistsTask = _serviceProvider.GetService<ILibraryLoaderTask>();
-            loadPlaylistsTask?.Execute(this);
+            var loadPlaylistsTask = _serviceProvider.GetRequiredService<ILibraryLoaderTask>();
+            loadPlaylistsTask.Execute(this);
         }
 
         private void OnTrackChangedMessage(CurrentTrackChangedMessage message)
@@ -90,5 +97,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                 }
             }
         }
+
+     
     }
 }

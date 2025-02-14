@@ -1,5 +1,5 @@
 ﻿using ChasBWare.SpotLight.Definitions.Enums;
-using ChasBWare.SpotLight.Definitions.Tasks;
+using ChasBWare.SpotLight.Definitions.Tasks.ArtistSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using CommunityToolkit.Maui.Core;
 

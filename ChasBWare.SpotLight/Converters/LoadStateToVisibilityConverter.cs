@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
 using ChasBWare.SpotLight.Domain.Enums;
 
-namespace ChasBWare.SpotLight.Converters;
+namespace ChasbWare.Spotlight.Converters;
 
-internal class LoadStateToVisibilityConverter : IValueConverter
+public class LoadStateToVisibilityConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {

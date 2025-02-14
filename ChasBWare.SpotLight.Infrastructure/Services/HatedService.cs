@@ -3,8 +3,7 @@ using ChasBWare.SpotLight.Definitions.Services;
 
 namespace ChasBWare.SpotLight.Infrastructure.Services
 {
-    public class HatedService(IServiceProvider _serviceProvider,
-                              IUserRepository _userRepository) 
+    public class HatedService(IServiceProvider _serviceProvider) 
                : IHatedService
     {
         private HashSet<string> _hatedItems = [];
@@ -25,7 +24,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
             var hatedRepo = _serviceProvider.GetService<IHatedItemsRepository>();
             if (hatedRepo != null)
             {
-                _hatedItems = await hatedRepo.GetItems(_userRepository.CurrentUserId);
+                _hatedItems = await hatedRepo.GetItems();
             }
         }
 
@@ -45,7 +44,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
                 var hatedRepo = _serviceProvider.GetService<IHatedItemsRepository>();
                 if (hatedRepo != null)
                 {
-                    hatedRepo.SetHated(_userRepository.CurrentUserId, itemId, isHated);
+                    hatedRepo.SetHated(itemId, isHated);
                 }
             });
 

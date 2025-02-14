@@ -2,7 +2,7 @@
 using System.Xml.Linq;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using CommunityToolkit.Maui.Core;
-using ChasBWare.SpotLight.Definitions.Tasks;
+using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
 
 namespace ChasBWare.SpotLight.Infrastructure.Popups;
 
@@ -19,7 +19,7 @@ public partial class RecentAlbumPopupViewModel(IPopupService popupService,
                 toolTip: "Clear all items from list",
                 action: (t) =>
                 {
-                    var task = _serviceProvider.GetRequiredService<IRemoveRecentAlbumTask>();
+                    var task = _serviceProvider.GetRequiredService<IRemovePlaylistTask>();
                     task.Execute(viewModel);
                     Close();
                 });
@@ -28,11 +28,11 @@ public partial class RecentAlbumPopupViewModel(IPopupService popupService,
         {
             AddItem(PopupGroup.Recent, 
                     PopupActivity.Delete,
-                    caption: $"Delete",
+                    caption: $"Delete '{item.Name}'",
                     toolTip: "Delete item from list",
                     action: (t) =>
                     {
-                        var task = _serviceProvider.GetRequiredService<IRemoveRecentAlbumTask>();
+                        var task = _serviceProvider.GetRequiredService<IRemovePlaylistTask>();
                         task.Execute(viewModel, item);
                         Close();
                     });

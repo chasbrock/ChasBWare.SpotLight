@@ -2,10 +2,9 @@
 using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Domain.Enums;
 
-namespace ChasBWare.SpotLight.Converters;
+namespace ChasbWare.Spotlight.Converters;
 
-
-internal class DeviceTypesToStringConverter : IValueConverter
+public class DeviceTypesToStringConverter : IValueConverter
 {
     public string? Computer { get; set; }
     public string? AVR { get; set; }

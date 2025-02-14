@@ -3,22 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
              xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
-             xmlns:con="clr-namespace:ChasBWare.SpotLight.Converters"
+             xmlns:con="clr-namespace:ChasbWare.Spotlight.Converters"
              x:DataType="vm:TrackListViewModel"
              x:Class="ChasBWare.SpotLight.Views.TrackListView">
 
     <ContentView.Resources>
         <ResourceDictionary>
             <con:TrackStatusToStringConverter x:Key="TrackStatusDisplay"
-                PausedValue="icons8_play_button_small.png"
-                PlayingValue="icons8_pause_button_small.png"/>
+                PlayingValue="player_play_small.png"
+                PausedValue="player_pause_small.png"/>
         </ResourceDictionary>
-
-       
-
     </ContentView.Resources>
 
-    <Grid >
+    <Grid>
         <CollectionView ItemsSource="{Binding Path=Items}" 
                         VerticalScrollBarVisibility="Always"
                         SelectionMode="Single"

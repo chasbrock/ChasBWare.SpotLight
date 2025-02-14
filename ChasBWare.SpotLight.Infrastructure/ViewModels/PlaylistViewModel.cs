@@ -1,7 +1,7 @@
 ﻿using System.Windows.Input;
 
 using ChasBWare.SpotLight.Definitions.Messaging;
-using ChasBWare.SpotLight.Definitions.Tasks;
+using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
@@ -19,7 +19,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         private readonly IMessageService<PlayPlaylistMessage> _messageService;
   
         private bool _isExpanded = false;
-        private RecentPlaylist _model = new() { Id = "" };
+        private Playlist _model = new() { Id = "" };
        
         public PlaylistViewModel(ITrackListViewModel tracksViewModel,
                                  IServiceProvider provider,
@@ -35,7 +35,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             OpenTrackPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<TrackPopupViewModel>(onPresenting: vm => vm.SetTrack(this, TracksViewModel.SelectedItem)));
         }
 
-        public RecentPlaylist Model 
+        public Playlist Model 
         { 
             get => _model;
             set
@@ -125,10 +125,9 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         {
             get => Model.LastAccessed;
             set => SetField(Model, value); 
-
         }
 
-        public bool IsSaved { get; set; }
+        public bool InLibrary { get; set; }
 
         public override string ToString()
         {

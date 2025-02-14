@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Runtime.Intrinsics.Arm;
 using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Messaging;
-using ChasBWare.SpotLight.Definitions.Tasks;
+using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
@@ -22,8 +22,10 @@ public class PopupItemService(IServiceProvider _serviceProvider)
     {
         switch (activity)
         {
+          
             case PopupActivity.Save:
-                var save = !playlist.IsSaved;
+                var library = _serviceProvider.GetRequiredService<ILibraryViewModel>();
+                var save = !library.Exists(playlist.Id);
                 var caption = save ? $"Add  '{playlist.Name}'" : $"Remove '{playlist.Name}'";
                 var toolTip = save ? $"Adds current {playlist.PlaylistType} to your library, but not to you Spotify profile"
                                    : $"Removes current {playlist.PlaylistType} from your library, but not to you Spotify profile";
@@ -34,7 +36,7 @@ public class PopupItemService(IServiceProvider _serviceProvider)
                               toolTip: toolTip,
                               action: (t) =>
                               {
-                                  var task = _serviceProvider.GetRequiredService<ISetPlaylistSavedStatus>();
+                                  var task = _serviceProvider.GetRequiredService<ITransferToLibraryTask>();
                                   task.Execute(playlist, save);
                                   popup.Close();
                               });

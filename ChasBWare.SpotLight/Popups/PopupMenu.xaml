@@ -23,14 +23,8 @@
         </Style>
     </ContentView.Resources>
 
-    <Grid Background="SkyBlue" Padding="8">
-        <Grid.Shadow>
-            <Shadow Brush="DarkGray"
-                Offset="10,10"
-                Radius="10"
-                Opacity="0.8" />
-        </Grid.Shadow>
-
+    <Border Style="{StaticResource PopupBorder}">
+     
         <CollectionView ItemsSource="{Binding Path=MenuGroups}" 
                         SelectionMode="Single">
             <CollectionView.ItemTemplate>
@@ -66,7 +60,7 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
                         
-    </Grid>
+    </Border>
 
 
 </ContentView>

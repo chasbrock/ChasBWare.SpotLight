@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
+             xmlns:vu="clr-namespace:ChasBWare.SpotLight.Infrastructure.Utility;assembly=ChasBWare.SpotLight.Infrastructure"
+             x:DataType="vm:LibraryViewModel"
+             x:Class="ChasBWare.SpotLight.UI.Views.PlaylistSelectorView">
+    <Grid RowDefinitions="Auto,*">
+
+        <Grid ColumnDefinitions="*,Auto" Grid.Row="0" >
+            <Picker ItemsSource="{Binding GrouperNames}"
+                                  SelectedItem="{Binding SelectedGrouperName}" 
+                                  Style="{StaticResource GroupPicker}" 
+                                  Grid.Column="0"/>
+            <ImageButton Command="{Binding Path=OpenPopupCommand}"
+                          Style="{StaticResource OpenMore}" Grid.Column="1"/>
+        </Grid>
+
+        <CollectionView ItemsSource="{Binding GroupedItems}"
+                        VerticalScrollBarVisibility="Always"
+                        SelectionMode="Single" 
+                        Grid.Row="1">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vu:PlaylistGroup">
+                    <Grid RowDefinitions="Auto,*" >
+                        <Label Text="{Binding Key}"
+                               Style="{StaticResource GroupHeader}" 
+                               Margin="0,1">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SetExpandedCommand}" NumberOfTapsRequired="1"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+
+                        <CollectionView ItemsSource="{Binding Items}"
+                                        SelectionMode="Single"
+                                        IsVisible="{Binding IsExpanded}"
+                                        Grid.Row="1" Margin="8,2">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="vm:PlaylistViewModel">
+                                    <Grid RowDefinitions="Auto,Auto,4" >
+                                        <Label Text="{Binding Name}" Style="{StaticResource ListCaption}" Grid.Row="0" >
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding x:DataType='vm:LibraryViewModel', 
+                                                                                        Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}},
+                                                                                        Path=ItemSelectedCommand}"
+                                                                        CommandParameter="{Binding}" 
+                                                                        NumberOfTapsRequired="1"/>
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                        <Label Text="{Binding Owner}" Style="{StaticResource ListDescription}" Grid.Row="1"
+                                               IsVisible="{Binding x:DataType='vm:LibraryViewModel', 
+                                                                    Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}},
+                                                                    Path=ShowOwner}">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding x:DataType='vm:LibraryViewModel', 
+                                                                                        Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}},
+                                                                                        Path=ItemSelectedCommand}"
+                                                                        CommandParameter="{Binding}" 
+                                                                        NumberOfTapsRequired="1"/>
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Grid>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentView>
+

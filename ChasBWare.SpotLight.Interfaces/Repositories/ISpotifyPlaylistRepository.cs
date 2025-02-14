@@ -6,7 +6,7 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
 {
     public interface ISpotifyPlaylistRepository 
     {
-        List<RecentPlaylist> FindAlbums(string searchText);
-        List<RecentPlaylist> GetPlaylists(PlaylistType playlistType);
+        List<Playlist> FindAlbums(string searchText);
+        List<Playlist> GetPlaylists(PlaylistType playlistType);
     }
 }

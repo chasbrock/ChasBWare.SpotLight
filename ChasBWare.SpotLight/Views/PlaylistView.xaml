@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
              xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
-             xmlns:con="clr-namespace:ChasBWare.SpotLight.Converters"   
+             xmlns:con="clr-namespace:ChasbWare.Spotlight.Converters"   
              xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="vm:PlaylistViewModel"
              x:Class="ChasBWare.SpotLight.Views.PlaylistView">
@@ -36,15 +36,15 @@
                        Style="{StaticResource ListDetail}"
                        Margin="10,0" />
             </HorizontalStackLayout>
-      
-            <ImageButton Source="icons8_morea.png" 
+
+            <ImageButton Source="system_more.png" 
                          Command="{Binding OpenTrackPopupCommand}"
                          Background="Transparent"
                          IsVisible="{Binding TracksViewModel.LoadStatus, Converter={StaticResource  LoadStateVisibility}}"
                          HorizontalOptions="Center" VerticalOptions="Center" 
                          Grid.Row="0" Grid.Column="2" Margin="4,0" />
 
-            <ImageButton Source="icons8_dropdown.png"
+            <ImageButton Source="system_dropdown.png"
                          Command="{Binding SetExpandedCommand}"
                          Background="Transparent"
                          HorizontalOptions="Center" VerticalOptions="Center"

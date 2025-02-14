@@ -1,16 +1,37 @@
 ﻿using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 
-namespace ChasBWare.SpotLight.Definitions.Repositories
+namespace ChasBWare.SpotLight.Definitions.Repositories;
+
+public interface IArtistRepository
 {
-    public interface IArtistRepository
-    {
-        /// <summary>
-        /// find artist in database
-        /// </summary>
-        /// <param name="artistId"></param>
-        /// <returns></returns>
-        Artist? FindArtist(string artistId);
+    /// <summary>
+    /// load allablbums that are linked to album
+    /// </summary>
+    /// <param name="artistId"></param>
+    /// <returns></returns>
+    List<Playlist> LoadArtistAlbums(string artistId);
+
+    /// <summary>
+    /// save details for selected search result
+    /// </summary>
+    /// <param name="artist"></param>
+    /// <param name="albums"></param>
+    void AddArtistAndAlbums(Artist artist, List<Playlist> albums);
+    
+    /// <summary>
+    /// find artist in database
+    /// </summary>
+    /// <param name="artistId"></param>
+    /// <returns></returns>
+    Artist? FindArtist(string artistId);
+
+    /// <summary>
+    /// update last accessed time
+    /// </summary>
+    /// <param name="artist"></param>
+    void UpdateLastAccessed(Artist artist);
+    /*   
 
         /// <summary>
         /// add new artist
@@ -25,7 +46,7 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
         /// </summary>
         /// <param name="artist"></param>
         /// <returns>success</returns>
-        bool RemoveUnsavedArtist(string userId, string artistId);
+        bool RemoveUnsavedArtist(string artistId);
 
         /// <summary>
         /// remove all recent artist for this user, this will cascade and 
@@ -33,14 +54,13 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
         /// </summary>
         /// <param name="artist"></param>
         /// <returns>success</returns>
-        bool RemoveUnsavedArtists(string userId);
+        bool RemoveUnsavedArtists();
 
         /// <summary>
         /// find the atrist that user has shown interest in 
         /// </summary>
-        /// <param name="userId"></param>
         /// <returns>list of artist and the las time they were accessed</returns>
-        List<Tuple<Artist, DateTime>> GetRecentArtists(string userId);
+        List<Tuple<Artist, DateTime>> GetRecentArtists();
 
         /// <summary>
         /// link an album to an artist
@@ -50,20 +70,6 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
         /// <returns></returns>
         int LinkAlbumToArtist(string artistId, string playListId);
 
-        /// <summary>
-        /// load allablbums that are linked to album
-        /// </summary>
-        /// <param name="artistId"></param>
-        /// <returns></returns>
-        List<RecentPlaylist> LoadArtistAlbums(string artistId);
 
-        /// <summary>
-        /// save details for selected search result
-        /// </summary>
-        /// <param name="currentUserId"></param>
-        /// <param name="artist"></param>
-        /// <param name="albums"></param>
-        void AddRecentArtistAndAlbums(string currentUserId, Artist artist, List<RecentPlaylist> albums);
-
-    }
+             */
 }

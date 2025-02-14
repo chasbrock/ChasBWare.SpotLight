@@ -2,6 +2,7 @@
 {
     public interface ILibraryViewModel : IPlaylistSelectorViewModel
     {
+        bool Exists(string playlistId);
         bool ShowOwner { get; }
     }
 }

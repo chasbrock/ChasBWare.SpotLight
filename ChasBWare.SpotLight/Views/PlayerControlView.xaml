@@ -27,8 +27,8 @@
 
         <ResourceDictionary>
             <tk:BoolToObjectConverter x:Key="BoolToMuted" 
-                                    TrueObject="icons8_no_audio.png" 
-                                    FalseObject="icons8_audio.png"/>
+                                    TrueObject="player_muted.png" 
+                                    FalseObject="player_unmuted.png"/>
         </ResourceDictionary>
 
     </ContentView.Resources>
@@ -82,29 +82,29 @@
                 <Grid ColumnDefinitions="*,Auto,Auto,Auto,*" Grid.Row="0">
                     <ImageButton Command="{Binding Path=BackCommand}" Background="Transparent"
                           IsEnabled="{Binding Path=CurrentDevice.IsActive}"
-                          Source ="icons8_rewind_button_round.png" 
+                          Source ="player_backward.png" 
                           ToolTipProperties.Text="Skip to previous track"
                           Grid.Column="1" Margin="1,2"/>
  
                     <ImageButton Command="{Binding Path=PlayCommand}" Background="Transparent"
                           IsEnabled="{Binding Path=CurrentDevice.IsActive}"
                           IsVisible="{Binding Path=IsPaused}"
-                          Source="icons8_play_button.png"
+                          Source="player_play.png"
                           ToolTipProperties.Text="Resume playing"
                           Grid.Column="2" Margin="1,2"/>
 
                     <ImageButton Command="{Binding Path=PauseCommand}" Background="Transparent"
                           IsEnabled="{Binding Path=CurrentDevice.IsActive}"
                           IsVisible="{Binding Path=IsPlaying}" 
-                          Source="icons8_pause_button.png"
+                          Source="player_pause.png"
                           ToolTipProperties.Text="Pause playing"
-                          Grid.Column="2" Margin="1,2"/>
+                          Grid.Column="2" />
 
                     <ImageButton Command="{Binding Path=ForwardCommand}" Background="Transparent"
                           IsEnabled="{Binding Path=CurrentDevice.IsActive}"
-                          Source="icons8_fast_forward_round.png"
+                          Source="player_forward.png"
                           ToolTipProperties.Text="Skip to next track"
-                          Grid.Column="3" Margin="1,2"/>
+                          Grid.Column="3" />
                 </Grid>
 
                 <Grid ColumnDefinitions="Auto,130,Auto" Grid.Row="1">
@@ -155,7 +155,7 @@
                 <ImageButton Command="{Binding Path=OpenDevicesPopupCommand}" Background="Transparent"
                              Grid.Column="2" Grid.Row="0" Padding="8"
                              ToolTipProperties.Text="Select playback device"
-                             Source="icons8_spotify.png"/>
+                             Source="player_devices.png"/>
             </Grid>
         </Border>
     </Grid>

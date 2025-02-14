@@ -25,7 +25,7 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
             return artists;
         }
 
-        public List<RecentPlaylist> LoadArtistAlbums(string artistId)
+        public List<Playlist> LoadArtistAlbums(string artistId)
         {
             var savedAlbums =  _actionManager.GetArtistAlbums(artistId);
             if (savedAlbums != null) 

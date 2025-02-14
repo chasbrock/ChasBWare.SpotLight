@@ -1,7 +1,10 @@
 ﻿using System.Windows.Input;
 using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Messaging;
-using ChasBWare.SpotLight.Definitions.Tasks;
+using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
+using ChasBWare.SpotLight.Definitions.Tasks.ArtistSearch;
+using ChasBWare.SpotLight.Definitions.Tasks.Library;
+using ChasBWare.SpotLight.Definitions.Tasks.PlaylistSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
@@ -11,99 +14,90 @@ using ChasBWare.SpotLight.Infrastructure.Utility;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
-namespace ChasBWare.SpotLight.Infrastructure.ViewModels
+namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
+
+public class RecentAlbumsViewModel 
+           : BaseRecentViewModel<IPlaylistViewModel>, 
+             IRecentAlbumsViewModel
 {
-    public class RecentAlbumsViewModel : BaseRecentViewModel<IPlaylistViewModel>, IRecentAlbumsViewModel
+    private readonly ILibraryViewModel _library;
+    public RecentAlbumsViewModel(IPopupService popupService,
+                                 IServiceProvider serviceProvider,
+                                 IPlayerControlViewModel playerControlViewModel,
+                                 ISearchAlbumsViewModel searchViewModel,
+                                 IMessageService<FindItemMessage> findItemMessageService,
+                                 IMessageService<ActiveAlbumChangedMessage> activeAlbumChangedMessageService,
+                                 ILibraryViewModel library)
+         : base(popupService,serviceProvider, playerControlViewModel, searchViewModel, SorterHelper.GetPlaylistSorters())
     {
-        private readonly IPopupService _popupService;
+        _library = library;
+        findItemMessageService.Register(OnFindItem);
+        activeAlbumChangedMessageService.Register(OnSetActiveAlbum);
+    }
+
+    protected override void LoadItems()
+    {
+        var task = _serviceProvider.GetService<ILoadRecentPlaylistTask>();
+        task?.Execute(this, PlaylistType.Album);
+    }
         
-        public RecentAlbumsViewModel(IPopupService popupService,
-                                     IServiceProvider serviceProvider,
-                                     IPlayerControlViewModel playerControlViewModel,
-                                     ISearchAlbumsViewModel searchViewModel,
-                                     IMessageService<FindItemMessage> findItemMessageService,
-                                     IMessageService<ActiveAlbumChangedMessage> activeAlbumChangedMessageService)
+    protected override void InitialiseSelectedItem(IPlaylistViewModel item)
+    {
+        item.IsExpanded = true;
+        LoadItem(item);
+    }
+    
+    protected override void OpenPopup()
+    {
+        _popupService.ShowPopup<RecentAlbumPopupViewModel>(onPresenting: vm => vm.SetItem(this, SelectedItem));
+    }
 
-            : base(serviceProvider, searchViewModel, SorterHelper.GetPlaylistSorters())
+    private IPlaylistViewModel? AddItemToList(Playlist playlist)
+    {
+        var viewModel = Items.FirstOrDefault(a => a.Model.Id == playlist.Id);
+        if (viewModel == null)
         {
-            _popupService = popupService;
-            findItemMessageService.Register(OnFindItem);
-            activeAlbumChangedMessageService.Register(OnSetActiveAlbum);
-            PlayerControlViewModel = playerControlViewModel;
-            LoadSettings();
-            OpenPopupCommand = new Command(track => OpenPopup());
+            var task = _serviceProvider.GetRequiredService<IAddRecentAlbumTask>();
+            task.Execute(this, playlist);
         }
-
-        private void OpenPopup()
+        else 
         {
-            _popupService.ShowPopup<RecentAlbumPopupViewModel>(onPresenting: vm => vm.SetItem(this, SelectedItem));
+            var task = _serviceProvider.GetRequiredService<IUpdateLastAccessedTask>();
+            task.Execute(viewModel.Model);
+            viewModel.InLibrary = _library.Exists(viewModel.Id);
         }
+        return viewModel;
+    }
 
-        public ICommand OpenPopupCommand { get; }
-        public IPlayerControlViewModel PlayerControlViewModel { get; }
-
-        protected override void LoadRecentItems()
+    private void LoadItem(IPlaylistViewModel item)
+    {
+        if (item!.TracksViewModel.LoadStatus == LoadState.NotLoaded)
         {
-            var task = _serviceProvider.GetService<ILoadRecentPlaylistTask>();
-            task?.Execute(this, PlaylistType.Album);
+            var task = _serviceProvider.GetService<IUpdateLastAccessedTask>();
+            task?.Execute(item.Model);
         }
+    }
 
-        protected override void DeleteItem()
+    private void OnFindItem(FindItemMessage message)
+    {
+        if (message.Payload.PageType == PageType.Albums)
         {
-            // TODO
-        }
-
-        protected override void InitialiseSelectedItem(IPlaylistViewModel item)
-        {
-            item.IsExpanded = true;
-        }
-
-        private IPlaylistViewModel? AddItemToList(RecentPlaylist playlist, DateTime lastAccessed)
-        {
-            var viewModel = Items.FirstOrDefault(a => a.Model.Id == playlist.Id);
-            if (viewModel == null)
-            {
-                viewModel = _serviceProvider.GetService<IPlaylistViewModel>();
-                if (viewModel != null)
-                {
-                    viewModel.Model = playlist;
-                    Items.Add(viewModel);
-                }
-            }
-            
+            var viewModel = Items.FirstOrDefault(a => a.Id == message.Payload.Id);
             if (viewModel != null)
             {
-                var updateLastAccessedTask = _serviceProvider.GetService<IUpdateLastAccessedTask>();
-                updateLastAccessedTask?.Execute(viewModel.Id, lastAccessed, false);
+                viewModel.LastAccessed = DateTime.Now;
+                SelectedItem = viewModel;
+                return;
             }
 
-            return viewModel;
+           // var task = _serviceProvider.GetService<IFindAlbumTask>();
+           // task?.Execute(this, message.Payload.Id); 
         }
+    }
 
-
-        private void OnFindItem(FindItemMessage message)
-        {
-            if (message.Payload.PageType == PageType.Albums)
-            {
-                var viewModel = Items.FirstOrDefault(a => a.Id == message.Payload.Id);
-                if (viewModel != null)
-                {
-                    viewModel.LastAccessed = DateTime.Now;
-                    SelectedItem = viewModel;
-                    return;
-                }
-
-               // var task = _serviceProvider.GetService<IFindAlbumTask>();
-               // task?.Execute(this, message.Payload.Id); 
-            }
-        }
-
-
-
-        private void OnSetActiveAlbum(ActiveAlbumChangedMessage message)
-        {
-            SelectedItem = AddItemToList(message.Payload, DateTime.Now);
-            RefreshView();
-        }
+    private void OnSetActiveAlbum(ActiveAlbumChangedMessage message)
+    {
+        SelectedItem = AddItemToList(message.Payload);
+        RefreshView();
     }
 }
