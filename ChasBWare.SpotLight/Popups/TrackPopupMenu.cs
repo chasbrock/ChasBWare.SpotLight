@@ -17,4 +17,7 @@ public partial class TrackPopupMenu : Popup
         };
         this.SetBinding(Popup.SizeProperty, nameof(IPopupMenuViewModel.Size));
     }
+
+
+  
 }

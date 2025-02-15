@@ -50,9 +50,10 @@ public abstract class BaseListViewModel<T>(IServiceProvider serviceProvider)
         get => _selectedItem;
         set
         {
+            var oldItem = _selectedItem;
             if (SetField(ref _selectedItem, value) && _selectedItem != null && !IsUpdating)
             {
-                SelectedItemChanged(_selectedItem);
+                SelectedItemChanged(oldItem, _selectedItem);
             }
         }
     }
@@ -68,7 +69,7 @@ public abstract class BaseListViewModel<T>(IServiceProvider serviceProvider)
     { 
     }
 
-    protected virtual void SelectedItemChanged(T selectedItem)
+    protected virtual void SelectedItemChanged(T? oldItem, T? newItem)
     {
     }
 }

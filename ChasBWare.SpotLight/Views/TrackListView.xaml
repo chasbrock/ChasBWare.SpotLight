@@ -23,10 +23,13 @@
                         Grid.Row="0">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:TrackViewModel">
-                    <Grid ColumnDefinitions="30,30,60,250,250,Auto" RowDefinitions="20">
+                    <Grid ColumnDefinitions="30,30,60,250,250,250" RowDefinitions="Auto">
                         <Grid.Resources>
-                            <Style x:Key="HatedStyle" TargetType="Label">
+                            <Style x:Key="TrackStyle" TargetType="Label">
                                 <Setter Property="TextColor" Value="Black"/>
+                                <Setter Property="LineBreakMode" Value="WordWrap"/>
+                                <Setter Property="Margin" Value="0,0,8,2"/>
+                                <Setter Property="VerticalTextAlignment" Value="Start"/>
                                 <Style.Triggers>
                                     <DataTrigger TargetType="Label" Binding="{Binding IsHated}" Value="False">
                                         <Setter Property="TextColor" Value="Black"/>
@@ -54,36 +57,24 @@
                         </Image>
 
                         <Label Text="{Binding Duration}"
-                               VerticalOptions="Center" FontSize="12" 
-                                Grid.Column="2" Padding="8,0">
-                            <Label.Resources>
-                                <Style TargetType="{x:Type Label}" BasedOn="{StaticResource HatedStyle}" />
-                            </Label.Resources>
-                        </Label>
+                               Style="{StaticResource TrackStyle}"
+                               FontSize="12" Grid.Column="2" />
 
-                        <Label Text="{Binding Name}" VerticalOptions="Center"
+                        <Label Text="{Binding Name}"
+                               Style="{StaticResource TrackStyle}"
                                FontSize="12" FontAttributes="Bold" 
-                               Grid.Column="3" Margin="8,0">
-                            <Label.Resources>
-                                <Style TargetType="{x:Type Label}" BasedOn="{StaticResource HatedStyle}" />
-                            </Label.Resources>
-                        </Label>
+                               Grid.Column="3" />
 
-                        <Label Text="{Binding Artists}" VerticalOptions="Center"
+                        <Label Text="{Binding Artists}"
+                               Style="{StaticResource TrackStyle}"
                                FontSize="10" FontAttributes="Italic" 
-                               Grid.Column="4" Margin="8,0" >
-                            <Label.Resources>
-                                <Style TargetType="{x:Type Label}" BasedOn="{StaticResource HatedStyle}" />
-                            </Label.Resources>
-                        </Label>
+                               Grid.Column="4"/>
 
                         <Label Text="{Binding Album}"
-                               VerticalOptions="Center" FontSize="10" 
-                               Grid.Column="5" Margin="8,0">
-                            <Label.Resources>
-                                <Style TargetType="{x:Type Label}" BasedOn="{StaticResource HatedStyle}" />
-                            </Label.Resources>
-                        </Label>
+                               Style="{StaticResource TrackStyle}"
+                               FontSize="10" 
+                               Grid.Column="5" />
+
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

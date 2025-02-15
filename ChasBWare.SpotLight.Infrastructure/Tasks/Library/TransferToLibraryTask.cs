@@ -8,6 +8,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks.Library;
 
 public class TransferToLibraryTask (IDispatcher _dispatcher,
                                     ILibraryViewModel _library,
+                                    ISpotifyPlaylistRepository spotifyPlaylistRepo,
                                     ILibraryRepository _libraryRepo)
            : ITransferToLibraryTask
 {
@@ -19,23 +20,26 @@ public class TransferToLibraryTask (IDispatcher _dispatcher,
 
     private void RunTask(IPlaylistViewModel viewModel, bool save)
     {
-        if (_libraryRepo.TransferPlaylistToLibrary(viewModel.Model, save))
+        if (spotifyPlaylistRepo.SetPlaylistSaveStatus(viewModel.Id, viewModel.PlaylistType, save))
         {
-            _dispatcher.Dispatch(() =>
+            if (_libraryRepo.TransferPlaylistToLibrary(viewModel.Model, save))
             {
-                if (save)
+                _dispatcher.Dispatch(() =>
                 {
-                    if (!_library.Items.Any(pl => pl.Id == viewModel.Id))
+                    if (save)
                     {
-                        _library.Items.Add(viewModel);
+                        if (!_library.Items.Any(pl => pl.Id == viewModel.Id))
+                        {
+                            _library.Items.Add(viewModel);
+                        }
                     }
-                }
-                else
-                {
-                    _library.Items.Remove(viewModel);
-                }
-                _library.RefreshView();
-            });
-        }
+                    else
+                    {
+                        _library.Items.Remove(viewModel);
+                    }
+                    _library.RefreshView();
+                });
+            } 
+            }
     }
 }

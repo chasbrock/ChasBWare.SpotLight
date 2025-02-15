@@ -7,6 +7,7 @@ using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using ChasBWare.SpotLight.Infrastructure.ViewModels;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {

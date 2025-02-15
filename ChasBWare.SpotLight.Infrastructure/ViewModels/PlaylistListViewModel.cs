@@ -16,10 +16,16 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         {
         }
 
-        protected override void InitialiseSelectedItem(IPlaylistViewModel selectedItem)
+        protected override void SelectedItemChanged(IPlaylistViewModel? oldItem, IPlaylistViewModel? newItem)
         {
-           
+            if (oldItem != null)
+            {
+                oldItem.IsSelected = false;
+            }
+            if (newItem != null)
+            {
+                newItem.IsSelected = true;
+            }
         }
-
     }
 }

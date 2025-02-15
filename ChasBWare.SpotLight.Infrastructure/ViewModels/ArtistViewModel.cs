@@ -39,15 +39,25 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             get => Model.LastAccessed;
             set => SetField(Model, value);
         }
-        
-        protected override void InitialiseSelectedItem(IPlaylistViewModel selectedItem)
+
+        protected override void SelectedItemChanged(IPlaylistViewModel? oldItem, IPlaylistViewModel? newItem)
         {
-            if (SelectedItem != null &&
-                SelectedItem.TracksViewModel.LoadStatus == LoadState.NotLoaded)
+            if (oldItem != null)
             {
-                SelectedItem.TracksViewModel.LoadStatus = LoadState.Loading;
-                var loadPlaylistTracksTask = _serviceProvider.GetService<IArtistAlbumsLoaderTask>();
-                loadPlaylistTracksTask?.Execute(this);
+                oldItem.IsSelected = false;
+            }
+
+            if (newItem != null )
+            {
+                newItem.IsSelected = true;
+                newItem.IsExpanded = true;
+
+                if (newItem.TracksViewModel.LoadStatus == LoadState.NotLoaded)
+                {
+                    newItem.TracksViewModel.LoadStatus = LoadState.Loading;
+                    var loadPlaylistTracksTask = _serviceProvider.GetService<IArtistAlbumsLoaderTask>();
+                    loadPlaylistTracksTask?.Execute(this);
+                }
             }
         }
 

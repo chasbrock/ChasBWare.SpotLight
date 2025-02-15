@@ -7,9 +7,18 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                        : BaseGroupedListViewModel<IPlaylistViewModel>( serviceProvider,
                             GrouperHelper.GetPlaylistGroupers())
     {
-        protected override void InitialiseSelectedItem(IPlaylistViewModel item)
+        protected override void SelectedItemChanged(IPlaylistViewModel? oldItem, IPlaylistViewModel? newItem)
         {
+            if (oldItem != null)
+            {
+                oldItem.IsSelected = false;
+            }
 
+            if (newItem != null)
+            {
+                newItem.IsSelected = true;
+                newItem.IsExpanded = true;
+            }
         }
     }
 }

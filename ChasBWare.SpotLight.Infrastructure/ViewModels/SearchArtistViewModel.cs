@@ -6,19 +6,12 @@ using ChasBWare.SpotLight.Infrastructure.Messaging;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
-    public class SearchArtistsViewModel 
-               : BaseSearchViewModel<IArtistViewModel>, 
+    public class SearchArtistsViewModel(IServiceProvider serviceProvider,
+                                        IMessageService<ActiveArtistChangedMessage> _messageService)
+               : BaseSearchViewModel<IArtistViewModel>(serviceProvider), 
                  ISearchArtistsViewModel
     {
-        private readonly IMessageService<ActiveArtistChangedMessage> _messageService;
-
-        public SearchArtistsViewModel(IServiceProvider serviceProvider,
-                                      IMessageService<ActiveArtistChangedMessage> messageService)
-            : base(serviceProvider)
-        {
-            _messageService = messageService;
-        }
-
+ 
         public override void OpenInViewer(IArtistViewModel viewModel)
         {
             _messageService.SendMessage(new ActiveArtistChangedMessage(viewModel.Model));

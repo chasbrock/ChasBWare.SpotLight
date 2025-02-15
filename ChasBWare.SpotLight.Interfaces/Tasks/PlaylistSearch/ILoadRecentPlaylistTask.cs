@@ -8,12 +8,4 @@ namespace ChasBWare.SpotLight.Definitions.Tasks.PlaylistSearch
     {
         void Execute(IRecentViewModel<IPlaylistViewModel> viewModel, PlaylistType playlistType);
     }
-
-    public interface IRemoveRecentPlaylistTask
-    {
-        void Execute(IRecentViewModel<IPlaylistViewModel> viewModel,string playlistId);
-    }
-
-
-    
 }

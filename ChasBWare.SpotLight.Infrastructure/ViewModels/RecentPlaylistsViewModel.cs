@@ -1,70 +1,80 @@
 ﻿using ChasBWare.SpotLight.Definitions.Messaging;
+using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.Tasks.PlaylistSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
+using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
 using CommunityToolkit.Maui.Core;
 
-namespace ChasBWare.SpotLight.Infrastructure.ViewModels
+namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
+
+public class RecentPlaylistsViewModel 
+           : BaseRecentViewModel<IPlaylistViewModel>, 
+             IRecentPlaylistsViewModel
 {
-    public class RecentPlaylistsViewModel : BaseRecentViewModel<IPlaylistViewModel>, IRecentPlaylistsViewModel
+    private readonly ILibraryViewModel _library;
+
+    public RecentPlaylistsViewModel(IPopupService popupService,
+                                    IServiceProvider serviceProvider,
+                                    IPlayerControlViewModel playerControlViewModel,
+                                    ISearchPlaylistsViewModel searchViewModel,
+                                    IMessageService<ActivePlaylistChangedMessage> activeAlbumChangedMessageService,
+                                    ILibraryViewModel library)
+        : base(popupService, serviceProvider, playerControlViewModel, searchViewModel, SorterHelper.GetPlaylistSorters())
     {
- 
-        public RecentPlaylistsViewModel(IPopupService popupService,
-                                        IServiceProvider serviceProvider,
-                                        IPlayerControlViewModel playerControlViewModel,
-                                        ISearchPlaylistsViewModel searchViewModel,
-                                        IMessageService<ActivePlaylistChangedMessage> activeAlbumChangedMessageService)
-            : base(popupService, serviceProvider, playerControlViewModel, searchViewModel, SorterHelper.GetPlaylistSorters())
+        _library = library;
+        activeAlbumChangedMessageService.Register(OnSetActivePlaylist);
+    }
+
+    protected override void LoadItems()
+    {
+         var task = _serviceProvider.GetRequiredService<ILoadRecentPlaylistTask>();
+        task.Execute(this, PlaylistType.Playlist);
+    }
+
+    protected override void SelectedItemChanged(IPlaylistViewModel? oldItem, IPlaylistViewModel? newItem)
+    {
+        if (oldItem != null)
         {
-            activeAlbumChangedMessageService.Register(OnSetActivePlaylist);
+            oldItem.IsSelected = false;
         }
 
-        protected override void LoadItems()
+        if (newItem != null)
         {
-            var task = _serviceProvider.GetRequiredService<ILoadRecentPlaylistTask>();
-            task.Execute(this, Domain.Enums.PlaylistType.Playlist);
+            newItem.IsSelected = true;
+            newItem.IsExpanded = true;
         }
-           
-        protected override void InitialiseSelectedItem(IPlaylistViewModel item)
+    }
+
+    protected override void OpenPopup()
+    {
+        _popupService.ShowPopup<RecentPlaylistPopupViewModel>(onPresenting: vm => vm.SetItem(this, SelectedItem));
+    }
+
+    private IPlaylistViewModel? AddItemToList(Playlist playlist)
+    {
+        var viewModel = Items.FirstOrDefault(a => a.Model.Id == playlist.Id);
+        if (viewModel == null)
         {
-            item.IsExpanded = true;
+            var task = _serviceProvider.GetRequiredService<IAddRecentPlaylistTask>();
+            task.Execute(this, playlist);
         }
-
-        protected override void OpenPopup()
+        else
         {
-           // _popupService.ShowPopup<RecentAlbumPopupViewModel>(onPresenting: vm => vm.SetItem(this, SelectedItem));
+            var task = _serviceProvider.GetRequiredService<IUpdateLastAccessedTask>();
+            task.Execute(viewModel.Model);
+            viewModel.InLibrary = _library.Exists(viewModel.Id);
         }
+        return viewModel;
+    }
 
-        private IPlaylistViewModel? AddItemToList(Playlist playlist, DateTime? lastAccessed)
-        {
-            var viewModel = Items.FirstOrDefault(a => a.Model.Id == playlist.Id);
-            if (viewModel == null)
-            {
-                viewModel = _serviceProvider.GetService<IPlaylistViewModel>();
-                if (viewModel != null)
-                {
-                    viewModel.Model = playlist;
-
-                    if (lastAccessed == null)
-                    {
-                        var task = _serviceProvider.GetRequiredService<IUpdateLastAccessedTask>();
-                        task.Execute(viewModel.Model);
-                    }
-                    viewModel.LastAccessed = lastAccessed ?? DateTime.Now;
-                    Items.Add(viewModel);
-                }
-            }
-            return viewModel;
-        }
-
-
-        private void OnSetActivePlaylist(ActivePlaylistChangedMessage message)
-        {
-            SelectedItem = AddItemToList(message.Payload, null);
-        }
+    private void OnSetActivePlaylist(ActivePlaylistChangedMessage message)
+    {
+        SelectedItem = AddItemToList(message.Payload);
+        RefreshView();
     }
 }

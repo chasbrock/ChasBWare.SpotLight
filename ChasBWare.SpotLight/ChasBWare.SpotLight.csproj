@@ -104,6 +104,9 @@
 	  <MauiXaml Update="Pages\DevicesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\PlaylistPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Popups\PopupMenu.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

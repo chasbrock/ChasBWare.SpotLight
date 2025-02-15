@@ -109,16 +109,12 @@ public abstract class BaseGroupedListViewModel<T>
         LoadSettings();
     }
 
-    protected override void SelectedItemChanged(T selectedItem)
+    protected override void SelectedItemChanged(T? oldItem, T? newItem)
     {
         if (IsUpdating) 
         { 
             return;
         }
-                
-        InitialiseSelectedItem(selectedItem);
     }
-
-    protected abstract void InitialiseSelectedItem(T selectedItem);
 
 }

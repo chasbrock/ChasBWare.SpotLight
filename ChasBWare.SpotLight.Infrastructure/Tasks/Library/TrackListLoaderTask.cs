@@ -2,6 +2,7 @@
 using ChasBWare.SpotLight.Definitions.Services;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.Library;

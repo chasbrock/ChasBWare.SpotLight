@@ -10,27 +10,18 @@ public class RemoveRecentPlaylistTask(IDispatcher _dispatcher,
                                    ISearchItemRepository _searchRepo)
            : IRemovePlaylistTask
 {
-    public void Execute(IRecentAlbumsViewModel viewModel, IPlaylistViewModel item)
+    public void Execute(IRecentViewModel<IPlaylistViewModel> viewModel, IPlaylistViewModel item)
     {
         Task.Run(() => RunTask(viewModel, item));
     }
 
-    public void Execute(IRecentAlbumsViewModel viewModel)
+    public void Execute(IRecentViewModel<IPlaylistViewModel> viewModel)
     {
         Task.Run(() => RunTask(viewModel));
     }
 
-    public void Execute(IRecentPlaylistsViewModel viewModel, IPlaylistViewModel item)
-    {
-        Task.Run(() => RunTask(viewModel, item));
-    }
 
-    public void Execute(IRecentPlaylistsViewModel viewModel)
-    {
-        Task.Run(() => RunTask(viewModel));
-    }
-
-    private void RunTask(IRecentAlbumsViewModel viewModel)
+    private void RunTask(IRecentViewModel<IPlaylistViewModel> viewModel)
     {
         if (_searchRepo.RemovePlaylists(PlaylistType.Album))
         {
@@ -43,33 +34,7 @@ public class RemoveRecentPlaylistTask(IDispatcher _dispatcher,
         }
     }
 
-    private void RunTask(IRecentAlbumsViewModel viewModel, IPlaylistViewModel item)
-    {
-        if (_searchRepo.RemovePlaylist(item.Id))
-        {
-            _dispatcher.Dispatch(() =>
-            {
-                viewModel.Items.Remove(item);
-                viewModel.SelectedItem = null;
-                viewModel.RefreshView();
-            });
-        }
-    }
-
-    private void RunTask(IRecentPlaylistsViewModel viewModel)
-    {
-        if (_searchRepo.RemovePlaylists(PlaylistType.Playlist))
-        {
-            _dispatcher.Dispatch(() =>
-            {
-                viewModel.Items.Clear();
-                viewModel.SelectedItem = null;
-                viewModel.RefreshView();
-            });
-        }
-    }
-
-    private void RunTask(IRecentPlaylistsViewModel viewModel, IPlaylistViewModel item)
+    private void RunTask(IRecentViewModel<IPlaylistViewModel> viewModel, IPlaylistViewModel item)
     {
         if (_searchRepo.RemovePlaylist(item.Id))
         {

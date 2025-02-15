@@ -1,14 +1,20 @@
-﻿using ChasBWare.SpotLight.Definitions.Repositories;
+﻿using System;
+using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Infrastructure.Tasks.Base;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Maui.Dispatching;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.AlbumSearch;
 
-public class SearchForAlbumTask(IServiceProvider _serviceProvider, 
-                                IDispatcher _dispatcher, 
+public class SearchForAlbumTask(IServiceProvider serviceProvider, 
+                                IDispatcher dispatcher,
+                                ILibraryViewModel library,
                                 ISpotifyPlaylistRepository _playlistRepository)
-           : ISearchForAlbumTask
-{
+           : BasePlaylistLoaderTask(serviceProvider, dispatcher, library),
+           ISearchForAlbumTask
+    {
     public void Execute(ISearchAlbumsViewModel viewModel)
     {
         Task.Run(() => RunTask(viewModel));
@@ -22,18 +28,12 @@ public class SearchForAlbumTask(IServiceProvider _serviceProvider,
         }
 
         var items = _playlistRepository.FindAlbums(viewModel.SearchText);
-      
+
+        AddItems(viewModel, items);
         _dispatcher.Dispatch(() =>
         {
-            viewModel.Items.Clear();
-            foreach (var item in items)
-            {
-                var playlistViewModel = _serviceProvider.GetRequiredService<IPlaylistViewModel>();
-                playlistViewModel.Model = item;
-                viewModel.Items.Add(playlistViewModel);
-            }
-
             viewModel.IsPopupOpen = viewModel.Items.Count > 0;
         });
     }
 }
+

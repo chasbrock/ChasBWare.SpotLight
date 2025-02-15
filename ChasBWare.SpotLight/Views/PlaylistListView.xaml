@@ -18,6 +18,7 @@
         <CollectionView ItemsSource="{Binding SortedItems}"
                         VerticalScrollBarVisibility="Always"
                         SelectionMode="Single" 
+                        SelectedItem="{Binding SelectedItem}"
                         Grid.Row="1">
 
             <CollectionView.ItemTemplate>

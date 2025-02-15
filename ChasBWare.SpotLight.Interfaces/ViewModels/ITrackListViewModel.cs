@@ -1,7 +1,7 @@
 ﻿using ChasBWare.SpotLight.Domain.Enums;
 using System.Collections.ObjectModel;
 
-namespace ChasBWare.SpotLight.Definitions.ViewModels
+namespace ChasBWare.SpotLight.Definitions.ViewModels.Tracks
 {
     public interface ITrackListViewModel
     {

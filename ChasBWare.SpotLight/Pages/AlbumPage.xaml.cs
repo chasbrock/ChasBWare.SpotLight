@@ -8,6 +8,5 @@ public partial class AlbumPage : ContentPage
 	{
 		InitializeComponent();
 		BindingContext = viewModel;
-
     }
 }

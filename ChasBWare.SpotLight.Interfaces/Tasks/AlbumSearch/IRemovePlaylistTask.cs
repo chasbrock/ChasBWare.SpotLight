@@ -5,11 +5,7 @@ namespace ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch
 {
     public interface IRemovePlaylistTask
     {
-        void Execute(IRecentAlbumsViewModel viewModel, IPlaylistViewModel item);
-        void Execute(IRecentAlbumsViewModel viewModel);
-
-        void Execute(IRecentPlaylistsViewModel viewModel, IPlaylistViewModel item);
-        void Execute(IRecentPlaylistsViewModel viewModel);
-
+        void Execute(IRecentViewModel<IPlaylistViewModel> viewModel, IPlaylistViewModel item);
+        void Execute(IRecentViewModel<IPlaylistViewModel> viewModel);
     }
 }

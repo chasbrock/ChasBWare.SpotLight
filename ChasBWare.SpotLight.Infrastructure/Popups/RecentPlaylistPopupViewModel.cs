@@ -1,16 +1,16 @@
 ﻿using ChasBWare.SpotLight.Definitions.Enums;
 using System.Xml.Linq;
-using ChasBWare.SpotLight.Definitions.ViewModels;
 using CommunityToolkit.Maui.Core;
 using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
+using ChasBWare.SpotLight.Definitions.ViewModels;
 
 namespace ChasBWare.SpotLight.Infrastructure.Popups;
 
-public partial class RecentAlbumPopupViewModel(IPopupService popupService,
+public partial class RecentPlaylistPopupViewModel(IPopupService popupService,
                                                IServiceProvider _serviceProvider)
                     : PopupMenuViewModel(popupService)
 {
-    public void SetItem(IRecentAlbumsViewModel viewModel, IPlaylistViewModel? item)
+    public void SetItem(IRecentViewModel<IPlaylistViewModel> viewModel, IPlaylistViewModel? item)
     {
         MenuGroups.Clear();
 

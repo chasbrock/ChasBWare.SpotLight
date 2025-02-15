@@ -92,15 +92,4 @@ public abstract class BaseSortedListViewModel<T>
     {
         RefreshView();
     }
-
-    protected override void SelectedItemChanged(T? selectedItem)
-    {
-        if (selectedItem != null)
-        {
-            InitialiseSelectedItem(selectedItem);
-        }
-    }
-
-    protected abstract void InitialiseSelectedItem(T selectedItem);
-
 }

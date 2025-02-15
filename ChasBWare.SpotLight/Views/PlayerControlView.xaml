@@ -123,16 +123,22 @@
             </Grid>
         </Border>
 
-
+ 
         <!-- current device -->
         <Border Grid.Column="3" Margin="1" Style="{StaticResource RoundedBorder}">
             <Grid ColumnDefinitions="*,Auto,Auto,Auto" RowDefinitions="*,Auto">
+
+                <ImageButton Command="{Binding Path=CurrentDevice.MuteCommand}" Background="Transparent"
+                       IsVisible="{Binding Path=CurrentDevice.IsActive}" 
+                       Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                       ToolTipProperties.Text="Mute Sound"
+                       Source="{Binding Path=CurrentDevice.IsMuted, Converter={StaticResource BoolToMuted}}"/>
 
                 <Label Text="{Binding Path=CurrentDevice.Name}" 
                        VerticalTextAlignment="Center" HorizontalTextAlignment="Start"
                        FontSize="14" FontAttributes="Bold" 
                        IsVisible="{Binding Path=CurrentDevice.IsActive}"
-                       Grid.Column="0" Grid.Row="0" Margin="8,0" >
+                       Grid.Column="1" Grid.Row="0" Margin="8,0" >
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ResyncCommand}" NumberOfTapsRequired="2"/>
                     </Label.GestureRecognizers>
@@ -144,16 +150,11 @@
                         VerticalOptions="End" HorizontalOptions="Fill"
                         IsVisible="{Binding Path=CurrentDevice.IsActive}"
                         ToolTipProperties.Text="Set volume"
-                        Grid.Column="0" Grid.Row="1" Margin="16,0"/>
+                        Grid.Column="1" Grid.Row="1" />
 
-                <ImageButton Command="{Binding Path=CurrentDevice.MuteCommand}" Background="Transparent"
-                             IsVisible="{Binding Path=CurrentDevice.IsActive}" 
-                             Grid.Column="1" Grid.Row="0" Padding="8"
-                             ToolTipProperties.Text="Mute Sound"
-                             Source="{Binding Path=CurrentDevice.IsMuted, Converter={StaticResource BoolToMuted}}"/>
-                
+                    
                 <ImageButton Command="{Binding Path=OpenDevicesPopupCommand}" Background="Transparent"
-                             Grid.Column="2" Grid.Row="0" Padding="8"
+                             Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
                              ToolTipProperties.Text="Select playback device"
                              Source="player_devices.png"/>
             </Grid>

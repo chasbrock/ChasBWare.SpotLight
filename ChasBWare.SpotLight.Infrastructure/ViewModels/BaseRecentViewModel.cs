@@ -33,7 +33,7 @@ public abstract class BaseRecentViewModel<T>
     public ISearchViewModel<T> SearchViewModel { get; }
     public IPlayerControlViewModel PlayerControlViewModel { get; }
 
-
+   
     public void Initialise()
     {
         if (_initialised)
@@ -44,6 +44,7 @@ public abstract class BaseRecentViewModel<T>
         LoadItems();
         _initialised = true;
     }
+
 
     protected abstract void LoadItems();
     protected abstract void OpenPopup();

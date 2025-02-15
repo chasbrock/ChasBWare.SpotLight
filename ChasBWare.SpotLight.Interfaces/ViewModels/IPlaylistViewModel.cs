@@ -1,4 +1,5 @@
-﻿using ChasBWare.SpotLight.Domain.Entities;
+﻿using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
+using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using System.Windows.Input;
 
@@ -25,4 +26,5 @@ public interface IPlaylistViewModel
     ITrackListViewModel TracksViewModel { get; }
     ICommand PlayTracklistCommand { get; }
     bool InLibrary { get; set; }
+    bool IsSelected { get; set; }
 }

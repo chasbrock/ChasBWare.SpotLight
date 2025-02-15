@@ -38,9 +38,12 @@ public class RecentArtistsViewModel
         task?.Execute(this);
     }
     
-    protected override void InitialiseSelectedItem(IArtistViewModel item)
+    protected override void SelectedItemChanged(IArtistViewModel? oldItem, IArtistViewModel? newItem)
     {
-        LoadItem(item);
+        if (newItem != null)
+        {
+            LoadItem(newItem);
+        }
     }
 
     protected override void OpenPopup()

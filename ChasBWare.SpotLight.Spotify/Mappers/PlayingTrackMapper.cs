@@ -8,7 +8,7 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
     {
         public static PlayingTrack? CopyToPlayingTrack(this CurrentlyPlaying currentlyPlaying)
         {
-            if (!(currentlyPlaying.Item is FullTrack track))
+            if (!(currentlyPlaying?.Item is FullTrack track))
             {
                 return null;
             }
@@ -30,7 +30,7 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
 
         public static PlayingTrack CopyToPlayingTrack(this CurrentlyPlayingContext currentlyPlaying)
         {
-            if (!(currentlyPlaying.Item is FullTrack track))
+            if (!(currentlyPlaying?.Item is FullTrack track))
             {
                 return Empty;
             }

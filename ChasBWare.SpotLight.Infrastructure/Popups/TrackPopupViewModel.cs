@@ -3,6 +3,7 @@ using System.Windows.Input;
 using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Services;
 using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 using ChasBWare.SpotLight.Infrastructure.Services;
 using ChasBWare.SpotLight.Infrastructure.Utility;

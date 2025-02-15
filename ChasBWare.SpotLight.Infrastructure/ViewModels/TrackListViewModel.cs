@@ -1,4 +1,5 @@
 ﻿using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Infrastructure.Popups;

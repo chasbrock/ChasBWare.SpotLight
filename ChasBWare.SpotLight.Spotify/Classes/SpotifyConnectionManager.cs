@@ -57,23 +57,19 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             {
                 case ConnectionStatus.Unauthorised:
                     AuthoriseConnection();
+                    var i = 10;
+                    while (Status != ConnectionStatus.Connected && i-- > 0)
+                    {
+                        Thread.Sleep(1000);
+                    }
+                    
                     break;
                 case ConnectionStatus.TokenExpired:
                     RefreshAccessToken();      
                 break;
             }
-
-            var i = 10;
-            while (Status != ConnectionStatus.Connected && i-- > 0)
-            {
-                Thread.Sleep(1000);
-            }
-
-            if (i > 0)
-            {
-                return _session.GetClient();
-            }
-            throw new Exception("Timed out connecting to spotify");
+         
+            return _session.GetClient();
         }
 
         private async void RefreshAccessToken()

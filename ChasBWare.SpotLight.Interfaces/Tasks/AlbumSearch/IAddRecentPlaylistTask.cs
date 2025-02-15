@@ -3,7 +3,7 @@ using ChasBWare.SpotLight.Domain.Entities;
 
 namespace ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
 
-public interface IAddRecentAlbumTask
+public interface IAddRecentPlaylistTask
 {
-    void Execute(IRecentAlbumsViewModel viewModel, Playlist model);
+    void Execute(IRecentViewModel<IPlaylistViewModel> viewModel, Playlist model);
 }

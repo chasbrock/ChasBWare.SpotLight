@@ -1,8 +1,8 @@
 ﻿using System.Windows.Input;
-
 using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
@@ -19,6 +19,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         private readonly IMessageService<PlayPlaylistMessage> _messageService;
   
         private bool _isExpanded = false;
+        private bool _isSelected = false;
         private Playlist _model = new() { Id = "" };
        
         public PlaylistViewModel(ITrackListViewModel tracksViewModel,
@@ -78,6 +79,12 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                     LoadTracks();
                 }
             }
+        }
+
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => SetField(ref _isSelected, value);
         }
 
         private void PlayTrackList()

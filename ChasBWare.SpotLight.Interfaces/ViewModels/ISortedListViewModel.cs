@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-
 using ChasBWare.SpotLight.Definitions.Utility;
 
 namespace ChasBWare.SpotLight.Definitions.ViewModels;

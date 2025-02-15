@@ -21,6 +21,7 @@ public class RecentAlbumsViewModel
              IRecentAlbumsViewModel
 {
     private readonly ILibraryViewModel _library;
+
     public RecentAlbumsViewModel(IPopupService popupService,
                                  IServiceProvider serviceProvider,
                                  IPlayerControlViewModel playerControlViewModel,
@@ -32,24 +33,32 @@ public class RecentAlbumsViewModel
     {
         _library = library;
         findItemMessageService.Register(OnFindItem);
-        activeAlbumChangedMessageService.Register(OnSetActiveAlbum);
+        activeAlbumChangedMessageService.Register(OnSetActivePlaylist);
     }
 
     protected override void LoadItems()
     {
-        var task = _serviceProvider.GetService<ILoadRecentPlaylistTask>();
-        task?.Execute(this, PlaylistType.Album);
+        var task = _serviceProvider.GetRequiredService<ILoadRecentPlaylistTask>();
+        task.Execute(this, PlaylistType.Album);
     }
-        
-    protected override void InitialiseSelectedItem(IPlaylistViewModel item)
+
+    protected override void SelectedItemChanged(IPlaylistViewModel? oldItem, IPlaylistViewModel? newItem)
     {
-        item.IsExpanded = true;
-        LoadItem(item);
+        if (oldItem != null)
+        {
+            oldItem.IsSelected = false;
+        }
+
+        if (newItem != null)
+        {
+            newItem.IsSelected = true;
+            newItem.IsExpanded = true;
+        }
     }
-    
+
     protected override void OpenPopup()
     {
-        _popupService.ShowPopup<RecentAlbumPopupViewModel>(onPresenting: vm => vm.SetItem(this, SelectedItem));
+        _popupService.ShowPopup<RecentPlaylistPopupViewModel>(onPresenting: vm => vm.SetItem(this, SelectedItem));
     }
 
     private IPlaylistViewModel? AddItemToList(Playlist playlist)
@@ -57,7 +66,7 @@ public class RecentAlbumsViewModel
         var viewModel = Items.FirstOrDefault(a => a.Model.Id == playlist.Id);
         if (viewModel == null)
         {
-            var task = _serviceProvider.GetRequiredService<IAddRecentAlbumTask>();
+            var task = _serviceProvider.GetRequiredService<IAddRecentPlaylistTask>();
             task.Execute(this, playlist);
         }
         else 
@@ -95,7 +104,7 @@ public class RecentAlbumsViewModel
         }
     }
 
-    private void OnSetActiveAlbum(ActiveAlbumChangedMessage message)
+    private void OnSetActivePlaylist(ActiveAlbumChangedMessage message)
     {
         SelectedItem = AddItemToList(message.Payload);
         RefreshView();

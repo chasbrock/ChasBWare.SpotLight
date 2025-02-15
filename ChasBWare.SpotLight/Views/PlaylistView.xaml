@@ -39,13 +39,14 @@
 
             <ImageButton Source="system_more.png" 
                          Command="{Binding OpenTrackPopupCommand}"
+                         IsVisible="{Binding IsSelected}"
                          Background="Transparent"
-                         IsVisible="{Binding TracksViewModel.LoadStatus, Converter={StaticResource  LoadStateVisibility}}"
                          HorizontalOptions="Center" VerticalOptions="Center" 
                          Grid.Row="0" Grid.Column="2" Margin="4,0" />
 
             <ImageButton Source="system_dropdown.png"
                          Command="{Binding SetExpandedCommand}"
+                         IsVisible="{Binding IsSelected}"
                          Background="Transparent"
                          HorizontalOptions="Center" VerticalOptions="Center"
                          Grid.Row="1" Grid.Column="2" Margin="4,0" />

@@ -3,6 +3,7 @@ using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
@@ -51,7 +52,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             set => SetField(ref _showOwner, value);
         }
        
-        public bool Exists(string playlistId)
+        public bool Exists(string? playlistId)
         {
             return !string.IsNullOrEmpty(playlistId) &&
                     Items.Any(pl => pl.Id == playlistId);
@@ -63,15 +64,23 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             ShowOwner = SelectedGrouper.Name != nameof(IPlaylistViewModel.Owner);
         }
 
-        protected override void InitialiseSelectedItem(IPlaylistViewModel item)
+        protected override void SelectedItemChanged(IPlaylistViewModel? oldItem, IPlaylistViewModel? newItem)
         {
-            item.IsExpanded = true;
-            item.LastAccessed = DateTime.Now;
-            var task = _serviceProvider.GetService<IUpdateLastAccessedTask>();
+            if (oldItem != null)
+            {
+                oldItem.IsSelected = false;
+            }
 
-            task?.Execute(item.Model);
+            if (newItem != null)
+            {
+                newItem.IsExpanded = true;
+                newItem.IsSelected = true;
+                newItem.LastAccessed = DateTime.Now;
+                var task = _serviceProvider.GetService<IUpdateLastAccessedTask>();
+
+                task?.Execute(newItem.Model);
+            }
         }
-
 
         private void Initialise()
         {   

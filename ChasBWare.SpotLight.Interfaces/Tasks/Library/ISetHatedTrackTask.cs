@@ -1,4 +1,4 @@
-﻿using ChasBWare.SpotLight.Definitions.ViewModels;
+﻿using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 
 namespace ChasBWare.SpotLight.Definitions.Tasks.Library;
 

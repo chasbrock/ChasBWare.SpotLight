@@ -8,19 +8,14 @@ using ChasBWare.SpotLight.Infrastructure.Utility;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
-    public abstract class BaseSearchViewModel<T> : Notifyable, ISearchViewModel<T> where T: class
+    public abstract class BaseSearchViewModel<T>(IServiceProvider serviceProvider)
+                  : BaseListViewModel<T>(serviceProvider),
+                    ISearchViewModel<T> 
+                    where T: class
     {
         private bool _isPopupOpen = false;
-        protected readonly IServiceProvider _serviceProvider;
-        private T? _selectedItem = default(T);
         private string _searchText = string.Empty;
 
-        protected BaseSearchViewModel(IServiceProvider provisioner)
-        {
-            _serviceProvider = provisioner;
-        }
-
-        public ObservableCollection<T> Items { get; } = [];
         public ICommand ExecuteSearchCommand => new Command(()=>ExecuteSearch());
 
         public bool IsPopupOpen
@@ -33,23 +28,23 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             }
         }
 
-         public string SearchText
+        public string SearchText
         {
             get => _searchText;
             set => SetField(ref _searchText, value);
         }
-
-        public T? SelectedItem 
+             
+        protected override void SelectedItemChanged(T? oldItem, T? newItem)
         {
-            get => _selectedItem;
-            set 
+            if (newItem != null)
             {
-                if (SetField(ref _selectedItem, value) && SelectedItem != null)
-                {
-                    OpenInViewer(SelectedItem);
-                    IsPopupOpen = false;
-                }
+                OpenInViewer(newItem);
+                IsPopupOpen = false;
             }
+        }
+
+        protected override void LoadSettings()
+        {
         }
 
         protected abstract void ExecuteSearch();

@@ -101,7 +101,7 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// <param name="deviceId"></param>
         /// <returns>true if success</returns>
         bool SetDeviceAsActive(string deviceId);
-
-    
+        bool SetAlbumSaveStatus(string id, bool save);
+        bool SetPlaylistSaveStatus(string id, bool save);
     }
 }

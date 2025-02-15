@@ -17,6 +17,21 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
             return simpleAlbums.Select(sa => sa.CopyToPlaylist()).ToList();
         }
 
+        public List<Playlist> FindPlaylists(string searchText)
+        {
+            var fullPlaylists = _actionManager.FindPlaylists(searchText);
+            List<Playlist> items = [];
+            foreach (var fullPlaylist in fullPlaylists)
+            {
+                var playlist = fullPlaylist.CopyToPlaylist();
+                if (playlist != null) 
+                {
+                    items.Add(playlist);
+                }
+            }
+
+            return items;
+        }
 
         public List<Playlist> GetPlaylists(PlaylistType playlistType)
         {
@@ -27,6 +42,16 @@ namespace ChasBWare.SpotLight.Spotify.Repositories
                 _ => [],
             };
         }
+
+        public bool SetPlaylistSaveStatus(string playlistId, PlaylistType playlistType, bool save) 
+        { 
+          if (playlistType == PlaylistType.Album) 
+          {
+             return _actionManager.SetAlbumSaveStatus(playlistId, save);
+          }
+            return _actionManager.SetPlaylistSaveStatus(playlistId, save);
+        }
+
 
         private List<Playlist> GetCurrentUsersAlbums()
         {

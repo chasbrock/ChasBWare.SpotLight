@@ -5,6 +5,7 @@ using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 using ChasBWare.SpotLight.Infrastructure.Messaging;

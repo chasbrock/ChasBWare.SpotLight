@@ -8,6 +8,7 @@ using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.Tasks.PlaylistSearch;
 using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.DbContext;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
@@ -23,7 +24,6 @@ using ChasBWare.SpotLight.Infrastructure.ViewModels;
 using ChasBWare.SpotLight.Install;
 using ChasBWare.SpotLight.Pages;
 using ChasBWare.SpotLight.Popups;
-using ChasBWare.SpotLight.Popups.ViewModels;
 using ChasBWare.SpotLight.Spotify.Classes;
 using ChasBWare.SpotLight.Spotify.Interfaces;
 using ChasBWare.SpotLight.Spotify.Repositories;
@@ -75,7 +75,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
             return services.AddTransientPopup<InstallPopup, InstallViewModel>()
                            .AddTransientPopup<LibraryPopupMenu, LibraryPopupViewModel>()
                            .AddTransientPopup<RecentArtistPopupMenu, RecentArtistPopupViewModel>()
-                           .AddTransientPopup<RecentAlbumPopupMenu, RecentAlbumPopupViewModel>()
+                           .AddTransientPopup<RecentAlbumPopupMenu, RecentPlaylistPopupViewModel>()
                            .AddTransientPopup<TrackPopupMenu, TrackPopupViewModel>()
             ;
         }
@@ -115,7 +115,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
 
         public static IServiceCollection RegisterTasks(this IServiceCollection services)
         {
-            return services.AddTransient<IAddRecentAlbumTask, AddRecentAlbumTask>()
+            return services.AddTransient<IAddRecentPlaylistTask, AddRecentPlaylistTask>()
                            .AddTransient<IAddRecentArtistTask, AddRecentArtistTask>()
                            .AddTransient<IArtistAlbumsLoaderTask, ArtistAlbumsLoaderTask>()
                            .AddTransient<IChangeActiveDeviceTask, ChangeActiveDeviceTask>()
@@ -129,6 +129,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddTransient<ITransferToLibraryTask, TransferToLibraryTask>()
                            .AddTransient<ISearchForAlbumTask, SearchForAlbumTask>()
                            .AddTransient<ISearchForArtistTask, SearchForArtistTask>()
+                           .AddTransient<ISearchForPlaylistTask, SearchForPlaylistTask>()
                            .AddTransient<ISetHatedTrackTask,SetHatedTrackTask>()
                            .AddTransient<ISyncToDeviceTask, SyncToDeviceTask>()
                            .AddTransient<ITrackListLoaderTask, TrackListLoaderTask>()
@@ -152,7 +153,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddSingleton<IRecentPlaylistsViewModel, RecentPlaylistsViewModel>()
                            .AddSingleton<ISearchArtistsViewModel, SearchArtistsViewModel>()
                            .AddSingleton<ISearchAlbumsViewModel, SearchAlbumsViewModel>()
-                         //  .AddSingleton<ISearchPlaylistsViewModel, SearchPlaylistsViewModel>()
+                           .AddSingleton<ISearchPlaylistsViewModel, SearchPlaylistsViewModel>()
                            .AddTransient<ITrackViewModel, TrackViewModel>()
                            .AddTransient<ITrackListViewModel, TrackListViewModel>()
                            ;

@@ -7,6 +7,8 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
     public interface ISpotifyPlaylistRepository 
     {
         List<Playlist> FindAlbums(string searchText);
+        List<Playlist> FindPlaylists(string searchText);
         List<Playlist> GetPlaylists(PlaylistType playlistType);
+        bool SetPlaylistSaveStatus(string id, PlaylistType playlistType, bool save);
     }
 }
