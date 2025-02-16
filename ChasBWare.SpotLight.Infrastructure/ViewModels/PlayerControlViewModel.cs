@@ -235,7 +235,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             {
                 _currentTrackId = playingTrack.Id;
                 CurrentTrack = playingTrack.Name;
-                Artists = string.Join(',', playingTrack.Artists.Select(a => a.Value));
+                Artists = string.Join(',', playingTrack.Artists.Select(a => a.Key));
                 ArtistList = playingTrack.Artists;
                 Duration = playingTrack.Duration;
                 Image = playingTrack.Image ?? "";

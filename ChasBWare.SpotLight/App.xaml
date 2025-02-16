@@ -26,6 +26,29 @@
                 </Setter>
             </Style>
 
+            <Style TargetType="Label" x:Key="ArtistHighlight">
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="Selected">
+                                <VisualState.Setters>
+                                    <Setter Property="TextColor" Value="Blue" />
+                                    <Setter Property="TextDecorations" Value="Underline" />
+
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="PointerOver">
+                                <VisualState.Setters>
+                                    <Setter Property="TextColor" Value="DarkBlue" />
+                                    <Setter Property="TextDecorations" Value="Underline" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
             <Style x:Key="GroupPicker" TargetType="Picker">
                 <Setter Property="Background" Value="{StaticResource DarkHeader}" />
                 <Setter Property="TextColor" Value="White" />
@@ -79,7 +102,7 @@
             <Style TargetType="Label" x:Key="TrackOwner">
                 <Setter Property="HorizontalOptions" Value="Fill" />
                 <Setter Property="VerticalTextAlignment" Value="Center" />
-                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontSize" Value="12" />
                 <Setter Property="FontAttributes" Value="Italic"/>
             </Style>
 

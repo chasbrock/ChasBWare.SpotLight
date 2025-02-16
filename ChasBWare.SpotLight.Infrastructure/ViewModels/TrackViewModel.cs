@@ -1,59 +1,70 @@
-﻿using ChasBWare.SpotLight.Definitions.Messaging;
+﻿using ChasBWare.SpotLight.Definitions.Enums;
+using ChasBWare.SpotLight.Definitions.Messaging;
+using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using System.Reflection;
 using System.Windows.Input;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
-    public partial class TrackViewModel(IMessageService<PlayPlaylistMessage> _messageService)
+    public partial class TrackViewModel
                        : Notifyable, ITrackViewModel
     {
+        private readonly IMessageService<PlayPlaylistMessage> _messageService;
+
         private bool _isHated = false;
-        public Track Track { get; set; } = new Track { Id = "" };
+        private Track _model = new Track { Id = "" };
+        
+        public TrackViewModel(IMessageService<PlayPlaylistMessage> messageService) 
+        {
+              _messageService = messageService;
+        }
 
         public ICommand SetHatedTrackCommand { get; set; } = new Command<ITrackViewModel>(o => o.IsHated = !o.IsHated);
         public ICommand PlayTrackCommand { get; } = new Command<ITrackViewModel>(vm => vm.PlayTrackList());
+   
         public IPlaylistViewModel? Playlist { get; set; }
 
-       
-        // [WriteableDataIndex(4)]
+        public Track Model
+        {
+            get => _model;
+            set
+            {
+                _model = value;
+                Artists = _model!.Artists!.UnpackOwners() ?? [];
+            }
+        }
+
         public string Album
         {
-            get => Track.Album;
+            get => Model.Album;
         }
 
-        // [WriteableDataIndex(5)]
-        public string Artists
-        {
-            get => string.Join('|', Track.Artists);
-        }
-
-        // [WriteableDataIndex(3)]
+        public List<KeyValue> Artists { get; private set; } = [];
+     
         public string Duration
         {
-            get => Track.Duration.MSecsToMinsSecs();
+            get => Model.Duration.MSecsToMinsSecs();
         }
 
-        //[WriteableDataIndex(1)]
         public string Id
         {
-            get => Track.Id??"";
+            get => Model.Id??"";
         }
 
-        //[WriteableDataIndex(2)]
         public string Name
         {
-            get => Track.Name;
+            get => Model.Name;
         }
 
-        // [WriteableDataIndex(0)]
         public int TrackNumber
         {
-            get => Track.TrackNumber;
+            get => Model.TrackNumber;
         }
 
         public bool IsHated
@@ -64,10 +75,10 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                 
         public TrackStatus Status
         {
-            get => Track.Status;
+            get => Model.Status;
             set
             {
-                SetField(Track, value);
+                SetField(Model, value);
             }
         }
 
@@ -82,8 +93,9 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         public override string ToString()
         {
-            return Track.Name;
+            return Model.Name;
         }
 
+    
     }
 }

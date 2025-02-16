@@ -9,22 +9,6 @@
 
     <ContentView.Resources>
 
-
-        <Style TargetType="Label" x:Key="ArtistHighlight">
-            <Setter Property="VisualStateManager.VisualStateGroups">
-                <VisualStateGroupList>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Normal" />
-                        <VisualState x:Name="Selected">
-                            <VisualState.Setters>
-                                <Setter Property="TextColor" Value="Blue" />
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateGroupList>
-            </Setter>
-        </Style>
-
         <ResourceDictionary>
             <tk:BoolToObjectConverter x:Key="BoolToMuted" 
                                     TrueObject="player_muted.png" 
@@ -36,23 +20,19 @@
     <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" RowDefinitions="75">
 
         <Border Grid.Column="0" Margin="1" Style="{StaticResource RoundedBorder}" >
-            <Image Source="{Binding Path=Image}"
-                   VerticalOptions="Fill" HorizontalOptions="Fill" >
-                <Image.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding OpenAlbumCommand}"
-                                          CommandParameter="{Binding AlbumId}" 
-                                          NumberOfTapsRequired="2"/>
-                </Image.GestureRecognizers>
+            <ImageButton Source="{Binding Path=Image}"
+                         Command="{Binding OpenAlbumCommand}"
+                         CommandParameter="{Binding AlbumId}" 
+                         VerticalOptions="Fill" HorizontalOptions="Fill" />
 
-            </Image>
         </Border>
         <!-- current track -->
         <Border Grid.Column="1" Margin="1" Style="{StaticResource RoundedBorder}" >
             <Grid RowDefinitions="Auto,*" ColumnDefinitions="Auto, *">
                 <Label Text="{Binding Path=CurrentTrack}" 
-                        VerticalTextAlignment="Center" HorizontalTextAlignment="Start" 
-                        FontAttributes="Bold" FontSize="16"
-                        Grid.Row="0" Grid.Column="1" Margin ="4,10" />
+                       VerticalTextAlignment="Center" HorizontalTextAlignment="Start" 
+                       FontAttributes="Bold" FontSize="16"
+                       Grid.Row="0" Grid.Column="1" Margin ="4,10" />
 
                 <CollectionView ItemsSource="{Binding ArtistList}"
                                 ItemsLayout="HorizontalList"
@@ -60,13 +40,13 @@
                                 Grid.Row="1" Grid.Column="1" Margin="4,0">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="dom:KeyValue">
-                            <Label Text="{Binding Value}" Margin="0,0,2,0" Style="{StaticResource Key=ArtistHighlight}">
+                            <Label Text="{Binding Key}" Margin="2" Style="{StaticResource Key=ArtistHighlight}">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer 
                                         Command="{Binding x:DataType='vm:PlayerControlViewModel', 
                                                           Source={RelativeSource AncestorType={x:Type vm:PlayerControlViewModel}},
                                                           Path=OpenArtistCommand}"
-                                        CommandParameter="{Binding Key}" 
+                                        CommandParameter="{Binding Value}" 
                                         NumberOfTapsRequired="2"/>
                                 </Label.GestureRecognizers>
                              </Label>

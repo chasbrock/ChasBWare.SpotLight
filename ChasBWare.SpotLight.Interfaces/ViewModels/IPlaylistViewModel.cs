@@ -12,6 +12,7 @@ public interface IPlaylistViewModel
     string Id { get; }
     string Name { get; }
     string Description { get; }
+    List<KeyValue> Owners { get; }
     string Owner { get; }
     PlaylistType PlaylistType { get; }
     string Uri { get; }

@@ -23,4 +23,5 @@ namespace ChasBWare.SpotLight.Domain.Entities
             return Name;
         }
     }
+   
 }

@@ -24,18 +24,15 @@
 	            </HorizontalStackLayout>
 
                 <CollectionView ItemsSource="{Binding SortedItems}"
-                                VerticalScrollBarVisibility="Always"
                                 SelectionMode="Single" 
                                 SelectedItem="{Binding SelectedItem}"
                                 Grid.Row="1">
+
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="vm:ArtistViewModel">
-                            <Border Margin="8,4">
-                                <VerticalStackLayout Margin="2">
                                     <Label Text="{Binding Name}" 
-                                           Style="{StaticResource ListCaption}"/>
-                                </VerticalStackLayout>
-                            </Border>
+                                           Style="{StaticResource ListCaption}"
+                                           Padding="4"/>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
 
@@ -53,7 +50,7 @@
                                 Text="{Binding SearchViewModel.SearchText}"
                                 Placeholder="Search for Artist..." />
                         </tk:Expander.Header>
-                        <CollectionView ItemsSource="{Binding SearchViewModel.Items}"
+                        <CollectionView ItemsSource="{Binding SearchViewModel.FoundItems}"
                                 ItemsLayout="HorizontalList"
                                 SelectionMode="Single"
                                 SelectedItem="{Binding SearchViewModel.SelectedItem}">

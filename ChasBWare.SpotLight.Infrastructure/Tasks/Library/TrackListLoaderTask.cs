@@ -43,7 +43,7 @@ public class TrackListLoaderTask(IServiceProvider _serviceProvider,
                 {
                     var trackViewModel = _serviceProvider.GetRequiredService<ITrackViewModel>();
                     trackViewModel.Playlist = viewModel;
-                    trackViewModel.Track = track;
+                    trackViewModel.Model = track;
                     trackViewModel.IsHated = _hatedService.GetIsHated(track.Id);
                     viewModel.TracksViewModel.Items.Add(trackViewModel);
                 }

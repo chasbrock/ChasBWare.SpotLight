@@ -36,7 +36,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
 
         internal static IGrouper<IPlaylistViewModel>[] GetPlaylistGroupers()
         {
-            return [new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.Owner),
+            return [new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.Owners),
                                                    i=> i.Owner,
                                                    SortDirection.Ascending,
                                                    new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)),
@@ -51,8 +51,9 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
                     new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.LastAccessed),
                                                    i=> i.LastAccessed.GroupDate(),
                                                    SortDirection.Ascending,
-                                                   new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)),
-                                                    (k,v) => new PlaylistGroup(k,v)),
+                                                   new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.LastAccessed),
+                                                                                            SortDirection.Descending),
+                                                    (k,v) => new PlaylistGroup(k,v)), 
 
                     new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.PlaylistType),
                                                    i=> i.PlaylistType,

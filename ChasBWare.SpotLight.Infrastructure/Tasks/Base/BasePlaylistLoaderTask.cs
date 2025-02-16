@@ -38,6 +38,7 @@ public class BasePlaylistLoaderTask
                 }
 
                 viewModel.LoadStatus = LoadState.Loaded;
+                viewModel.RefreshView();
             });
         }
     }

@@ -18,6 +18,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         public ICommand ExecuteSearchCommand => new Command(()=>ExecuteSearch());
 
+        public ObservableCollection<T> FoundItems { get; } = [];
         public bool IsPopupOpen
         {
             get => _isPopupOpen;
@@ -49,6 +50,15 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         protected abstract void ExecuteSearch();
         public abstract void OpenInViewer(T viewModel);
+
+        public override void RefreshView()
+        {
+            FoundItems.Clear();
+            foreach (var item in Items)
+            {
+                FoundItems.Add(item);
+            }
+        }
 
     }
 }

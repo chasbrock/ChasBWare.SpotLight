@@ -6,12 +6,12 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels.Tracks
     public interface ITrackViewModel 
     {
         public IPlaylistViewModel? Playlist { get; set; }
-        public Track Track { get; set; }
+        public Track Model { get; set; }
       
         string Id { get; }
         string Name { get; }
         string Album { get; }
-        string Artists { get; }
+        List<KeyValue> Artists { get; }
         string Duration { get; }
         int TrackNumber { get; }
 

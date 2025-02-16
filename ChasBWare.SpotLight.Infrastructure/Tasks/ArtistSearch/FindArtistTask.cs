@@ -23,17 +23,23 @@ public class FindArtistTask(IServiceProvider _serviceProvider,
             return; 
         }
 
-        Artist? artist = _artistRepo.FindArtist(artistId);
+        var artistViewModel = viewModel.Items.FirstOrDefault(a => a.Model.Id == artistId);
+        Artist? artist = artistViewModel?.Model;
         if (artist == null)
         {
-            artist =  _spotifyArtistRepo.FindArtist(artistId);
+            artist = _artistRepo.FindArtist(artistId);
+            if (artist == null)
+            {
+                artist = _spotifyArtistRepo.FindArtist(artistId);
+            }
         }
 
         if (artist == null)
         {
             return;
         }
-        var artistViewModel = _serviceProvider.GetRequiredService<IArtistViewModel>();
+        
+        artistViewModel = _serviceProvider.GetRequiredService<IArtistViewModel>();
         artistViewModel.Model = artist;
 
         _dispatcher.Dispatch(() =>

@@ -61,7 +61,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         public override void RefreshView()
         {
             base.RefreshView();
-            ShowOwner = SelectedGrouper.Name != nameof(IPlaylistViewModel.Owner);
+            ShowOwner = SelectedGrouper.Name != nameof(IPlaylistViewModel.Owners);
         }
 
         protected override void SelectedItemChanged(IPlaylistViewModel? oldItem, IPlaylistViewModel? newItem)

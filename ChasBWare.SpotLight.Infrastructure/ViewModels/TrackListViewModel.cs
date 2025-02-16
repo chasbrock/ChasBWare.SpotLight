@@ -1,11 +1,16 @@
-﻿using ChasBWare.SpotLight.Definitions.ViewModels;
+﻿using ChasBWare.SpotLight.Definitions.Enums;
+using ChasBWare.SpotLight.Definitions.Messaging;
+using ChasBWare.SpotLight.Definitions.Utility;
+using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Infrastructure.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -13,17 +18,27 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
 public class TrackListViewModel : Notifyable, ITrackListViewModel
 {
+    protected readonly IServiceProvider _serviceProvider;
+    protected readonly INavigator _navigator;
 
     private ITrackViewModel? _selectedItem = null;
     private LoadState _loadStatus = LoadState.NotLoaded;
     private bool _showHatedTracks = false;
 
-    public TrackListViewModel(IPopupService popupService)
+    public TrackListViewModel(IServiceProvider serviceProvider,
+                              INavigator navigator,
+                              IPopupService popupService)
     {
+        _serviceProvider = serviceProvider;
+        _navigator = navigator;
+     
         OpenPopupCommand = new Command<ITrackViewModel>(track => popupService.ShowPopup<TrackPopupViewModel>(onPresenting: vm => vm.SetTrack(Playlist, track)));
+        OpenArtistCommand = new Command<string>(id => NavigateToArtist(id));
     }
 
     public ICommand OpenPopupCommand { get; }
+    public ICommand OpenArtistCommand { get; }
+
     public ObservableCollection<ITrackViewModel> Items { get; } = [];
     public IPlaylistViewModel? Playlist { get; set; }
      
@@ -43,6 +58,19 @@ public class TrackListViewModel : Notifyable, ITrackListViewModel
     {
         get => _loadStatus;
         set => SetField(ref _loadStatus, value);
+    }
+
+    private void NavigateToArtist(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            return;
+        }
+
+        var messageService = _serviceProvider.GetRequiredService<IMessageService<FindItemMessage>>();
+        messageService.SendMessage(new FindItemMessage(PageType.Artists, id));
+
+        _navigator.NavigateTo(PageType.Artists);
     }
 
 }

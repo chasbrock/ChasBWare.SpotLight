@@ -4,7 +4,7 @@ using SpotifyAPI.Web;
 namespace ChasBWare.SpotLight.Mappings.Mappers
 {
 
-    public static class TrackModelMapper
+    public static class TrackMapper
     {
         public static Track CopyToTrack(this FullTrack source)
         {
@@ -13,7 +13,7 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
                 Id = source.Id,
                 Name = source.Name,
                 Album = source.Album.Name,
-                Artists = string.Join('|', source.Artists.Select(a => a.Name)),
+                Artists = source.Artists.PackOwner(),
                 Duration = source.DurationMs,
                 TrackNumber = source.TrackNumber,
                 Uri = source.Uri
@@ -27,7 +27,7 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
                 Id = source.Id,
                 Name = source.Name,
                 Album = string.Empty,
-                Artists = string.Join('|', source.Artists.Select(a => a.Name)),
+                Artists = source.Artists.PackOwner(),
                 Duration = source.DurationMs,
                 TrackNumber = source.TrackNumber,
                 Uri = source.Uri

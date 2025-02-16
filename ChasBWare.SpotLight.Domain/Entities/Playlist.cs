@@ -18,5 +18,4 @@ namespace ChasBWare.SpotLight.Domain.Entities
         public string Uri { get; set; } = string.Empty;
         public DateTime LastAccessed { get; set; }
     }
-
 }

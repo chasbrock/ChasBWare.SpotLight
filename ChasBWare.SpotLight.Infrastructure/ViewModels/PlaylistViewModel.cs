@@ -1,6 +1,8 @@
 ﻿using System.Windows.Input;
+using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
+using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Entities;
@@ -15,33 +17,38 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
     public class PlaylistViewModel : Notifyable, IPlaylistViewModel
     {
-        private readonly IServiceProvider _provider;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly INavigator _navigator;
         private readonly IMessageService<PlayPlaylistMessage> _messageService;
   
         private bool _isExpanded = false;
         private bool _isSelected = false;
         private Playlist _model = new() { Id = "" };
        
-        public PlaylistViewModel(ITrackListViewModel tracksViewModel,
-                                 IServiceProvider provider,
+        public PlaylistViewModel(IServiceProvider serviceProvider,
+                                 INavigator navigator,
+                                 ITrackListViewModel tracksViewModel,
                                  IPopupService popupService,
                                  IMessageService<PlayPlaylistMessage> messageService)
         {
             TracksViewModel = tracksViewModel;
-            _provider = provider;
+            _serviceProvider = serviceProvider;
             _messageService = messageService;
-          
+            _navigator = navigator;
+
             SetExpandedCommand = new Command(() => IsExpanded = !IsExpanded);
             PlayTracklistCommand = new Command(PlayTrackList);
             OpenTrackPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<TrackPopupViewModel>(onPresenting: vm => vm.SetTrack(this, TracksViewModel.SelectedItem)));
+            OpenArtistCommand = new Command<string>(id => NavigateToArtist(id));
         }
 
         public Playlist Model 
         { 
             get => _model;
-            set
+            set 
             {
                 _model = value;
+                Owners = Model!.Owner!.UnpackOwners()??[];
                 TracksViewModel.Playlist = this;
             }
         }
@@ -49,6 +56,8 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         public ICommand OpenTrackPopupCommand { get; }
         public ICommand SetExpandedCommand { get; }
         public ICommand PlayTracklistCommand { get; } 
+        public ICommand OpenArtistCommand { get; }
+
         public ITrackListViewModel TracksViewModel { get; }
 
         public string Description
@@ -98,7 +107,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             if (TracksViewModel.LoadStatus == LoadState.NotLoaded)
             {
                 TracksViewModel.LoadStatus = LoadState.Loading;
-                var task = _provider.GetService<ITrackListLoaderTask>();
+                var task = _serviceProvider.GetService<ITrackListLoaderTask>();
                 task?.Execute(this);
             }
         }
@@ -108,9 +117,11 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
             get => Model.Name??"";
         }
 
+        public List<KeyValue> Owners { get; private set; } = [];
+        
         public string Owner
         {
-            get => Model.Owner?? "";
+            get => Owners.FirstOrDefault()!.Key ?? string.Empty;
         }
 
         public PlaylistType PlaylistType
@@ -135,6 +146,19 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
         }
 
         public bool InLibrary { get; set; }
+
+        private void NavigateToArtist(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return;
+            }
+
+            var messageService = _serviceProvider.GetRequiredService<IMessageService<FindItemMessage>>();
+            messageService.SendMessage(new FindItemMessage(PageType.Artists, id));
+
+            _navigator.NavigateTo(PageType.Artists);
+        }
 
         public override string ToString()
         {

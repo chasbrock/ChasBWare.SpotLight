@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
              xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
+             xmlns:dom="clr-namespace:ChasBWare.SpotLight.Domain.Entities;assembly=ChasBWare.SpotLight.Domain"
              xmlns:con="clr-namespace:ChasbWare.Spotlight.Converters"
              x:DataType="vm:TrackListViewModel"
              x:Class="ChasBWare.SpotLight.Views.TrackListView">
@@ -45,14 +46,14 @@
                                Grid.Column="0"/>
 
                         <Image Style="{StaticResource Key=ShowMoreMenu}" Background="Transparent"
-                             Grid.Column="1" >
+                               Grid.Column="1" >
                             <Image.GestureRecognizers>
                                 <TapGestureRecognizer 
-                                    Command="{Binding x:DataType='vm:TrackListViewModel', 
-                                                      Source={RelativeSource AncestorType={x:Type vm:TrackListViewModel}},
-                                                      Path=OpenPopupCommand}"
-                                                      CommandParameter="{Binding}" 
-                                                      NumberOfTapsRequired="1"/>
+                                        Command="{Binding x:DataType='vm:TrackListViewModel', 
+                                                          Source={RelativeSource AncestorType={x:Type vm:TrackListViewModel}},
+                                                          Path=OpenPopupCommand}"
+                                                          CommandParameter="{Binding}" 
+                                                          NumberOfTapsRequired="1"/>
                             </Image.GestureRecognizers>
                         </Image>
 
@@ -65,10 +66,29 @@
                                FontSize="12" FontAttributes="Bold" 
                                Grid.Column="3" />
 
-                        <Label Text="{Binding Artists}"
-                               Style="{StaticResource TrackStyle}"
-                               FontSize="10" FontAttributes="Italic" 
-                               Grid.Column="4"/>
+                        <Grid RowDefinitions="20" Grid.Column="4">
+                        <CollectionView ItemsSource="{Binding Artists}"
+                                        ItemsLayout="HorizontalList"
+                                        VerticalScrollBarVisibility="Never"
+                                        SelectionMode="Single">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="dom:KeyValue">
+                                    <Label Text="{Binding Key}" Margin="2" 
+                                           FontSize="10" FontAttributes="Italic" 
+                                           Style="{StaticResource Key=ArtistHighlight}">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                                  Command="{Binding x:DataType='vm:TrackListViewModel', 
+                                                  Source={RelativeSource AncestorType={x:Type vm:TrackListViewModel}},
+                                                  Path=OpenArtistCommand}"
+                                                  CommandParameter="{Binding Value}" 
+                                                  NumberOfTapsRequired="2"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        </Grid>
 
                         <Label Text="{Binding Album}"
                                Style="{StaticResource TrackStyle}"

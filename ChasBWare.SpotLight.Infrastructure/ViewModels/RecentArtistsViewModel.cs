@@ -90,8 +90,8 @@ public class RecentArtistsViewModel
                 return;
             }
 
-            var task = _serviceProvider.GetService<IFindArtistTask>();
-            task?.Execute(this, message.Payload.Id); 
+            var task = _serviceProvider.GetRequiredService<IFindArtistTask>();
+            task.Execute(this, message.Payload.Id); 
          }
     }      
 

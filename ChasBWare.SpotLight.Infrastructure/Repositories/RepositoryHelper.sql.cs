@@ -118,10 +118,10 @@ DeleteOrphanTracks];
     /// param: Artistid 
     /// </summary>
     internal const string GetArtistAlbums =
-@"select pl.*, ri.LastAccessed
+@"select pl.*
     from Playlist pl 
     join ArtistPlaylist apl on pl.Id = apl.PlaylistId
-    left join RecentItem ri on ri.ItemId = pl.Id
+    left join SearchItem si on si.ItemId = pl.Id
    where apl.ArtistId = ?";
 
     /// <summary>
