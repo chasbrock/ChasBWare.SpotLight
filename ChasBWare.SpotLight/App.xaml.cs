@@ -18,9 +18,9 @@ namespace ChasBWare.SpotLight
         {
             var appShell = new AppShell();
             var navigator = _serviceProvider.GetService<INavigator>() as Navigator;
-            navigator?.SetShell(appShell);
+            navigator?.SetShell(appShell, _serviceProvider);
 
-         //   SecureStorage.Default.RemoveAll();
+            SecureStorage.Default.RemoveAll();
 
             Task.Run(() => CheckForInitialisation());
             return new Window(appShell);

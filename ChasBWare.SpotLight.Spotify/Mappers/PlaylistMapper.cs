@@ -48,6 +48,23 @@ public static class PlaylistMapper
         };
     }
 
+    public static Playlist? CopyToPlaylist(this FullAlbum source)
+    {
+       
+        return new Playlist
+        {
+            Id = source.Id,
+            Description = source.Name!.Trim(),
+            Name = source.Name!.Trim(),
+            Owner = source.Artists.PackOwner(),
+            PlaylistType = PlaylistType.Album,
+            Uri = source.Uri,
+            ReleaseDate = source.ReleaseDate.ConvertReleaseDate(),
+            Image = source.Images.GetMediumImage(),
+            LastAccessed = DateTime.Now
+        };
+    }
+
     public static Playlist CopyToPlaylist(this SimpleAlbum source)
     {
         return new Playlist

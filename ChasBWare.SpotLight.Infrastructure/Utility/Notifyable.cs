@@ -109,7 +109,11 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
         /// </param>
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            try
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+            catch { }
         }
 
         protected void NotifyChanges(string propertyName)

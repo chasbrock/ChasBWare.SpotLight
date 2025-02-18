@@ -1,4 +1,5 @@
-﻿using ChasBWare.SpotLight.Definitions.Messaging;
+﻿using ChasBWare.SpotLight.Definitions.Enums;
+using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.Tasks.PlaylistSearch;
@@ -22,13 +23,17 @@ public class RecentPlaylistsViewModel
                                     IServiceProvider serviceProvider,
                                     IPlayerControlViewModel playerControlViewModel,
                                     ISearchPlaylistsViewModel searchViewModel,
+                                    IMessageService<FindItemMessage> findItemMessageService,
                                     IMessageService<ActivePlaylistChangedMessage> activeAlbumChangedMessageService,
                                     ILibraryViewModel library)
         : base(popupService, serviceProvider, playerControlViewModel, searchViewModel, SorterHelper.GetPlaylistSorters())
     {
         _library = library;
+        findItemMessageService.Register(OnFindItem);
         activeAlbumChangedMessageService.Register(OnSetActivePlaylist);
     }
+
+    public override PageType PageType => PageType.Playlists;
 
     protected override void LoadItems()
     {
@@ -70,6 +75,22 @@ public class RecentPlaylistsViewModel
             viewModel.InLibrary = _library.Exists(viewModel.Id);
         }
         return viewModel;
+    }
+
+    private void OnFindItem(FindItemMessage message)
+    {
+        if (message.Payload.PageType == PageType.Playlists)
+        {
+            var viewModel = Items.FirstOrDefault(a => a.Id == message.Payload.Id);
+            if (viewModel != null)
+            {
+                viewModel.LastAccessed = DateTime.Now;
+                SelectedItem = viewModel;
+                return;
+            }
+            var task = _serviceProvider.GetRequiredService<IFindPlaylistTask>();
+            task.Execute(this, message.Payload.Id, PlaylistType.Playlist);
+        }
     }
 
     private void OnSetActivePlaylist(ActivePlaylistChangedMessage message)

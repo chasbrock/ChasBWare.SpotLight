@@ -20,18 +20,20 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
         private readonly IDispatcherTimer _timer;
         private readonly IHatedService _hatedService;
 
-        private DateTime _playbackStarted = DateTime.Now;
+        private DateTime? _playbackStarted = null;
         private PlayingTrack? _nowPlaying = null;
         private IServiceProvider _serviceProvider;
    
         public TrackPlayerService(IServiceProvider serviceProvider,
                                   IDispatcher dispatcher,
                                   IHatedService hatedService,
-                                  IMessageService<CurrentTrackChangedMessage> currentTrackChangedMessage)
+                                  IMessageService<CurrentTrackChangedMessage> currentTrackChangedMessage,
+                                  IMessageService<ConnectionStatusChangedMessage> connectionStatusService)
         {
             _serviceProvider = serviceProvider;
             _currentTrackMessageService = currentTrackChangedMessage;
             _hatedService = hatedService;
+            connectionStatusService.Register(ConnectionStatusChange);
 
             _timer = dispatcher.CreateTimer();
             _timer.Interval = TimeSpan.FromMilliseconds(TimerIntervalMs);
@@ -142,12 +144,26 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
             // TODO
         }
 
+        public void AddPlaylistToQueue(string playListId)
+        {
+            // todo
+        }
+
+        private void ConnectionStatusChange(ConnectionStatusChangedMessage message)
+        {
+            if (message.Payload.ConnectionStatus == ConnectionStatus.NotConnected) 
+            {
+                _timer.Stop();
+                // if we disconnect we cannot resy
+                _playbackStarted = null;
+            }
+        }
 
         private async void OnTimerTick(object? sender, EventArgs e)
         {
             if (_nowPlaying != null)
             {
-                var progress = DateTime.Now - _playbackStarted;
+                var progress = _playbackStarted==null ? TimeSpan.Zero : DateTime.Now - (DateTime)_playbackStarted;
 
                 //have we finished playing track?
                 if (progress > _nowPlaying.Duration)
@@ -178,7 +194,8 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
 
         private void UpdateTrackProgress(PlayingTrack nowPlaying)
         {
-            nowPlaying.Progress = DateTime.Now - _playbackStarted;
+            TimeSpan progress = _playbackStarted == null ? TimeSpan.Zero : DateTime.Now - (DateTime)_playbackStarted;
+            nowPlaying.Progress = progress;
             OnTrackProgress?.Invoke(this, nowPlaying);
         }
                
@@ -190,9 +207,6 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
             }
         }
 
-        public void AddPlaylistToQueue(string playListId)
-        {
-            // todo
-          }
+    
     }
 }

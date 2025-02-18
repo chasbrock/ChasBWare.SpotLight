@@ -14,7 +14,7 @@ namespace ChasBWare.SpotLight.Definitions.Services
         /// get the spotify queue
         /// </summary>
         /// <returns></returns>
-        Task<Tuple<Track, List<Track>>> GetQueue();
+        Task<Tuple<Track, List<Track>>?> GetQueue();
 
         /// <summary>
         /// pause currently playing track

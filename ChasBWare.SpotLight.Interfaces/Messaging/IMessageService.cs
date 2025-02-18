@@ -3,6 +3,6 @@
     public interface IMessageService<T>
     {
         public void Register(Action<T> callback);
-        public void SendMessage(T message);
+        public bool SendMessage(T message);
     }
 }

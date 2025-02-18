@@ -33,31 +33,40 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <Grid RowDefinitions="*, Auto">
-        <Grid RowDefinitions="Auto,*" ColumnDefinitions="Auto,*"
+        <Grid RowDefinitions="Auto,*" ColumnDefinitions="Auto,Auto"
               Grid.Row="0" >
             <ImageButton Source="system_refresh.png" 
                          HorizontalOptions="Start"
                          Command="{Binding RefreshCommand}"
-                         Grid.Row="0"/>
+                         Grid.Column="0"/>
 
             <CollectionView ItemsSource="{Binding Devices}"
                             SelectionMode="Single"
                             SelectedItem="{Binding SelectedDevice}"
-                            Grid.Row="1" Margin="8">
+                            Grid.Column="1" Grid.RowSpan="2" Margin="8">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="vm:DeviceViewModel" >
                         <Border Style="{StaticResource RoundedBorder}" 
-                                Margin="4" Padding="4">
-                            <Grid ColumnDefinitions="Auto,*" Margin="2">
+                                Margin="4" Padding="4"  >
+                            <Grid ColumnDefinitions="Auto,*">
                                 <Image Source="{Binding DeviceType, Converter={StaticResource Key=DeviceImage}}"
                                        Grid.Column="0"/>
+                                <VerticalStackLayout Background="{Binding IsActive, Converter={StaticResource IsActiveBackground}}"
+                                                        Grid.Column="1" Margin="4">
+                                    <Label Text="{Binding Name}"
+                                           FontSize="14" FontAttributes="Bold"
+                                           VerticalTextAlignment="Center"
+                                           Background="{Binding IsActive, Converter={StaticResource IsActiveBackground}}" 
+                                           TextColor="{Binding IsActive, Converter={StaticResource IsActiveForeground}}"
+                                           Margin="8,0" Padding="8"/>
+                                    <Label Text="{Binding RawDeviceType}"
+                                            FontSize="10" FontAttributes="Italic" 
+                                            HorizontalOptions="Center"
+                                            Background="{Binding IsActive, Converter={StaticResource IsActiveBackground}}" 
+                                            TextColor="{Binding IsActive, Converter={StaticResource IsActiveForeground}}"
+                                            Margin="8,0" />
 
-                                <Label Text="{Binding Name}"
-                                       FontSize="Default" FontAttributes="Bold"
-                                       VerticalTextAlignment="Center"
-                                       Background="{Binding IsActive, Converter={StaticResource IsActiveBackground}}" 
-                                       TextColor="{Binding IsActive, Converter={StaticResource IsActiveForeground}}"
-                                       Grid.Column="1" Margin="8,0" Padding="8"/>
+                                </VerticalStackLayout>
                             </Grid>
                         </Border>
                     </DataTemplate>

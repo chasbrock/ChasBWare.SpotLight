@@ -67,7 +67,14 @@ namespace ChasBWare.SpotLight.DependencyInjection
 
         public static IServiceCollection RegisterNavigator(this IServiceCollection services)
         {
-            return services.AddSingleton<INavigator,Navigator>();
+            // find all singletons that implement INavigationClient
+            // when navigation is initialised it will link them up
+            var navigatable = services.Where(sd => sd.Lifetime == ServiceLifetime.Singleton &&
+                                                   typeof(INavigationClient).IsAssignableFrom(sd.ServiceType))
+                                      .Select(sd => sd.ServiceType)
+                                      .ToList(); 
+
+            return services.AddSingleton<INavigator>(new Navigator(navigatable));
         }
 
         public static IServiceCollection RegisterPopups(this IServiceCollection services)
@@ -120,6 +127,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddTransient<IArtistAlbumsLoaderTask, ArtistAlbumsLoaderTask>()
                            .AddTransient<IChangeActiveDeviceTask, ChangeActiveDeviceTask>()
                            .AddTransient<IFindArtistTask, FindArtistTask>()
+                           .AddTransient<IFindPlaylistTask, FindPlaylistTask>()
                            .AddTransient<ILibraryLoaderTask, LibraryLoaderTask>()
                            .AddTransient<ILoadAvailableDevicesTask, LoadAvailableDevicesTask>()
                            .AddTransient<ILoadRecentArtistTask, LoadRecentArtistTask>()
@@ -130,7 +138,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddTransient<ISearchForAlbumTask, SearchForAlbumTask>()
                            .AddTransient<ISearchForArtistTask, SearchForArtistTask>()
                            .AddTransient<ISearchForPlaylistTask, SearchForPlaylistTask>()
-                           .AddTransient<ISetHatedTrackTask,SetHatedTrackTask>()
+                           .AddTransient<ISetHatedTrackTask, SetHatedTrackTask>()
                            .AddTransient<ISyncToDeviceTask, SyncToDeviceTask>()
                            .AddTransient<ITrackListLoaderTask, TrackListLoaderTask>()
                            .AddTransient<IUpdateLastAccessedTask, UpdateLastAccessedTask>()
@@ -141,7 +149,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
         {
             return services.AddTransient<IArtistViewModel, ArtistViewModel>()
                            .AddTransient<ICurrentDeviceViewModel, CurrentDeviceViewModel>()
-                           .AddTransient<IDeviceListViewModel, DeviceListViewModel>()
+                           .AddSingleton<IDeviceListViewModel, DeviceListViewModel>()
                            .AddTransient<IDeviceViewModel, DeviceViewModel>()
                            .AddSingleton<ILibraryViewModel, LibraryViewModel>()
                            .AddSingleton<IPlayerControlViewModel, PlayerControlViewModel>()
@@ -164,6 +172,5 @@ namespace ChasBWare.SpotLight.DependencyInjection
             return services.AddSingleton<ArtistPage>()
                            .AddSingleton<LibraryPage>();
         }
-
     }
  }

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ChasBWare.SpotLight.Infrastructure.Services
 {
-    public class MessageService<T> : IMessageService<T>
+    public class MessageService<T> : IMessageService<T> 
     {
         private readonly ILogger _logger;
         private List<Action<T>> _callbacks = [];
@@ -23,11 +23,11 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
         }
 
 
-        public void SendMessage(T message)
+        public bool SendMessage(T message)
         {
             if (message == null)
             {
-                return;
+                return false;
             }
 
             foreach (var callback in _callbacks)
@@ -42,6 +42,8 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
                     _logger.LogError(ex, $"Removed handler from MessageService<{typeof(T)} to {callback?.Target?.GetType()}");
                 }
             }
+
+            return true;
         }
     }
 }

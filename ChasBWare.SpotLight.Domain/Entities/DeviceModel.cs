@@ -11,6 +11,7 @@ namespace ChasBWare.SpotLight.Domain.Models
         public bool SupportsVolume { get; set; }
         public int VolumePercent { get; set; }
         public bool IsMuted { get; set; }
+        public required string RawDeviceType { get; set; }
 
         public override string ToString()
         {

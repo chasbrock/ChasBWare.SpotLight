@@ -1,48 +1,51 @@
 ﻿using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
+using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Mappings.Mappers;
 using ChasBWare.SpotLight.Spotify.Interfaces;
 
-namespace ChasBWare.SpotLight.Spotify.Repositories
-{
-    public class SpotifyArtistRepository(IServiceProvider _serviceProvider,
-                                         ISpotifyActionManager _actionManager) 
-               : ISpotifyArtistRepository
-    {
-        public List<IArtistViewModel> SearchForArtists(string searchText)
-        {
-            var fullArtists =  _actionManager.SearchForArtists(searchText);
+namespace ChasBWare.SpotLight.Spotify.Repositories;
 
-            List<IArtistViewModel> artists = []; 
+public class SpotifyArtistRepository(IServiceProvider _serviceProvider,
+                                     ISpotifyActionManager _actionManager) 
+           : ISpotifyArtistRepository
+{
+    public List<IArtistViewModel> SearchForArtists(string searchText)
+    {
+        var fullArtists =  _actionManager.SearchForArtists(searchText);
+
+        List<IArtistViewModel> artists = [];
+        if (fullArtists != null)
+        {
             foreach (var artist in fullArtists.Where(t => t != null).Select(fa => fa.CopyToArtist()))
             {
                 var artistViewModel = _serviceProvider.GetRequiredService<IArtistViewModel>();
                 artistViewModel.Model = artist;
                 artists.Add(artistViewModel);
             }
-
-            return artists;
         }
+        return artists;
+    }
 
-        public List<Playlist> LoadArtistAlbums(string artistId)
+    public List<Playlist> LoadArtistAlbums(string artistId)
+    {
+        var savedAlbums =  _actionManager.GetArtistAlbums(artistId);
+        if (savedAlbums != null) 
         {
-            var savedAlbums =  _actionManager.GetArtistAlbums(artistId);
-            if (savedAlbums != null) 
-            {
-                return savedAlbums.Select(sa => sa.CopyToPlaylist()).ToList();
-            }
-            return [];
+            return savedAlbums.Select(sa => sa.CopyToPlaylist()).ToList();
         }
 
-        public Artist? FindArtist(string artistId)
+        return [];
+    }
+
+    public Artist? FindArtist(string artistId)
+    {
+        var found = _actionManager.FindArtist(artistId);
+        if (found != null)
         {
-            var found = _actionManager.FindArtist(artistId);
-            if (found != null)
-            {
-                return found.CopyToArtist();
-            }
-            return null;
+            return found.CopyToArtist();
         }
+        return null;
     }
 }

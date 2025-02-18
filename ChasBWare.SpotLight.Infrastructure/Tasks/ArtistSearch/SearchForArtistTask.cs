@@ -30,6 +30,7 @@ public class SearchForArtistTask(IDispatcher _dispatcher,
             }
 
             viewModel.IsPopupOpen = viewModel.Items.Count > 0;
+            viewModel.RefreshView();
         });
     }
 }

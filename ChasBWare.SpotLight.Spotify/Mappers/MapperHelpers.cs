@@ -49,7 +49,6 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
             return sorted[0].Url;
         }
 
-
         public static string? GetSmallImage(this List<SpotifyAPI.Web.Image>? images)
         {
             if (images == null || images.Count == 0)
@@ -62,7 +61,6 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
             return smallest?.Url;
         }
 
-
         public static string PackOwner(this List<SimpleArtist>? source)
         {
             if (source == null)
@@ -71,8 +69,13 @@ namespace ChasBWare.SpotLight.Mappings.Mappers
             }
 
             var result = new StringBuilder();
-            source.ForEach(sa => result.Append($"{sa.Name}={sa.Id},"));
+            source.ForEach(sa => result.Append($"{sa.PackOwner()},"));
             return result.ToString();
+        }
+
+        public static string PackOwner(this SimpleArtist source)
+        {
+            return $"{source.Name}={source.Id}";
         }
     }
 }

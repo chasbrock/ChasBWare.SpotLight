@@ -29,7 +29,7 @@
         <!-- current track -->
         <Border Grid.Column="1" Margin="1" Style="{StaticResource RoundedBorder}" >
             <Grid RowDefinitions="Auto,*" ColumnDefinitions="Auto, *">
-                <Label Text="{Binding Path=CurrentTrack}" 
+                <Label Text="{Binding Path=TrackName}" 
                        VerticalTextAlignment="Center" HorizontalTextAlignment="Start" 
                        FontAttributes="Bold" FontSize="16"
                        Grid.Row="0" Grid.Column="1" Margin ="4,10" />

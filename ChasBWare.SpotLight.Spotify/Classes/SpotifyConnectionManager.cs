@@ -16,8 +16,6 @@ namespace ChasBWare.SpotLight.Spotify.Classes
         private readonly ISpotyConnectionSession _session;
         private readonly IMessageService<ConnectionStatusChangedMessage> _messageService;
         private readonly EmbedIOAuthServer _server;
-        private ConnectionStatus _status = ConnectionStatus.NotConnected;
-        
         
         public SpotifyConnectionManager(ILogger logger,
                                           ISpotyConnectionSession session,
@@ -31,19 +29,17 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             _server.ErrorReceived += OnErrorReceived;
         }
 
-     
-        public ConnectionStatus Status
+        public void SetStatus(ConnectionStatus status, string? message = null) 
         {
-            get => _status;
-            set
+            if (Status != status || !string.IsNullOrEmpty(message))
             {
-                if (value != _status)
-                {
-                    _status = value;
-                    _messageService.SendMessage(new ConnectionStatusChangedMessage(_status));
-                }
+               _messageService.SendMessage(new ConnectionStatusChangedMessage(status, message));
             }
+            Status = status;
         }
+
+        public ConnectionStatus Status { get; private set; } = ConnectionStatus.NotConnected;
+
 
         public SpotifyClient GetClient()
         {

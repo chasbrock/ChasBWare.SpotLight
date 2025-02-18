@@ -24,7 +24,7 @@ public class SearchForPlaylistTask(IServiceProvider serviceProvider,
             return;
         }
 
-        var items = _playlistRepository.FindPlaylists(viewModel.SearchText);
+        var items = _playlistRepository.SearchForPlaylists(viewModel.SearchText);
         AddItems(viewModel, items);
         _dispatcher.Dispatch(() =>
         {

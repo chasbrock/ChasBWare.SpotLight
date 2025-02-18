@@ -13,7 +13,7 @@ public class SearchForAlbumTask(IServiceProvider serviceProvider,
                                 ILibraryViewModel library,
                                 ISpotifyPlaylistRepository _playlistRepository)
            : BasePlaylistLoaderTask(serviceProvider, dispatcher, library),
-           ISearchForAlbumTask
+             ISearchForAlbumTask
     {
     public void Execute(ISearchAlbumsViewModel viewModel)
     {
@@ -27,7 +27,7 @@ public class SearchForAlbumTask(IServiceProvider serviceProvider,
             return;
         }
 
-        var items = _playlistRepository.FindAlbums(viewModel.SearchText);
+        var items = _playlistRepository.SearchForAlbums(viewModel.SearchText);
 
         AddItems(viewModel, items);
         _dispatcher.Dispatch(() =>

@@ -12,6 +12,20 @@
         <ResourceDictionary>
             <con:LoadStateToVisibilityConverter x:Key="LoadStateVisibility" />
         </ResourceDictionary>
+        <Style TargetType="ImageButton" x:Key="PlayButtonShow">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="ZIndex" Value="2" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
     </ContentView.Resources>
 
     <Grid RowDefinitions="Auto,*" >
@@ -22,7 +36,14 @@
 
             <Image Source="{Binding Image}" 
                    VerticalOptions="Center" HorizontalOptions="Center" 
+                   ZIndex="1"
                    Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="4" />
+
+            <ImageButton Source="player_play.png" Background="Transparent"
+                         Command="{Binding PlayTracklistCommand}"
+                         ZIndex="0" Style="{StaticResource PlayButtonShow}"
+                         Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" />
+
 
             <Label Text="{Binding Path=Name}" 
                    Style="{StaticResource TrackCaption}"

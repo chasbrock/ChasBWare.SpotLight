@@ -17,15 +17,20 @@ public class SyncToDeviceTask(IDispatcher _dispatcher,
     private void RunTask(IPlayerControlViewModel viewModel)
     {
         var context = _spotifyDeviceRepository.GetCurrentContext();
-        if (context != null)
+        _dispatcher.Dispatch(() =>
         {
-            _dispatcher.Dispatch(() =>
+            if (context != null)
             {
                 viewModel.CurrentDevice.Device = context.Device;
                 viewModel.TrackPlayerService.UpdateNowPlaying(context.Track);
-                viewModel.IsSyncing = false;
-            });
-        }
+            }
+            else
+            {
+                viewModel.CurrentDevice.Device.IsActive = false;
+            }
+            viewModel.IsSyncing = false;
+        });
+        
     }
 
 }

@@ -32,7 +32,7 @@ public class ArtistRepository(IDbContext _dbContext,
         return -1;
     }
 
-    public void AddArtistAndAlbums(Artist artist, List<Playlist> albums)
+    public void StoreArtistAndAlbums(Artist artist, List<Playlist> albums)
     {
         if (artist.Id == null)
         {

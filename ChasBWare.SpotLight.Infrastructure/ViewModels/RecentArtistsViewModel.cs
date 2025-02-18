@@ -31,7 +31,9 @@ public class RecentArtistsViewModel
         findItemMessageService.Register(OnFindItem);
         activeArtistChangedMessageService.Register(OnSetActiveArtist);
     }
-            
+
+    public override PageType PageType => PageType.Artists;
+
     protected override void LoadItems()
     {
         var task = _serviceProvider.GetService<ILoadRecentArtistTask>();
@@ -98,6 +100,10 @@ public class RecentArtistsViewModel
     private void OnSetActiveArtist(ActiveArtistChangedMessage message)
     {
         SelectedItem = AddItemToList(message.Payload, DateTime.Now);
+        if (SelectedItem != null)
+        {
+            LoadItem(SelectedItem);
+        }
         RefreshView();
     }
 

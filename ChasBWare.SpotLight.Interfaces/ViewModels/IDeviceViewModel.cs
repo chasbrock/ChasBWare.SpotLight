@@ -9,5 +9,6 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
         bool IsActive { get; set; }
         string Name { get;  }
         DeviceModel Model { get; set; }
+        string RawDeviceType { get; }
     }
 }

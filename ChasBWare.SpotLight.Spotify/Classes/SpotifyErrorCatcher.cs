@@ -6,28 +6,56 @@ namespace ChasBWare.SpotLight.Spotify.Classes
 {
     internal static class SpotifyErrorCatcher
     {
-        public static TReturn Execute<TReturn>(ISpotifyConnectionManager spotifyConnectionManager,
-                                               Func<SpotifyClient, TReturn> body)
+        public static TReturn? Execute<TReturn>(ISpotifyConnectionManager connectionManager,
+                                               Func<SpotifyClient, TReturn?> body)
         {
-            bool retry = true;
-            while (retry)
+            int attempt = 2;
+            while (attempt-- > 0)
             {
                 try
                 {
-                    var client = spotifyConnectionManager.GetClient();
+                    var client = connectionManager.GetClient();
                     return body(client);
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
-                    if (ex.Message.Contains("The access token expired"))
+                    if (!ProcessException(connectionManager, ex))
                     {
-                        spotifyConnectionManager.Status = ConnectionStatus.TokenExpired;
-                        continue;
+                        return default;
                     }
-                    retry = false;
                 }
             }
-            throw new Exception("Unexpectedly failed to run Spotify command!");
+            // not sure what error is so just disconnect
+            connectionManager.SetStatus(ConnectionStatus.NotConnected, "SpotifyErrorCatcher ran through");
+            return default;
         }
+
+        public static  bool ProcessException(ISpotifyConnectionManager spotifyConnectionManager, Exception ex) 
+        {
+            var apiEx = ex as APIException;
+            if (apiEx == null && ex.InnerException is APIException)
+            {
+                apiEx = ex.InnerException as APIException;
+            }
+
+            if (apiEx != null)
+            {
+                switch (apiEx.Message)
+                {
+                    case "The access token expired":
+                        spotifyConnectionManager.SetStatus(ConnectionStatus.TokenExpired);
+                        return true;
+                    case "Player command failed: No active device found":
+                        spotifyConnectionManager.SetStatus(ConnectionStatus.NotConnected);
+                        return false;
+                    default:
+                        spotifyConnectionManager.SetStatus(ConnectionStatus.NotConnected, apiEx.Message);
+                        return false;
+                }
+            }
+            spotifyConnectionManager.SetStatus(ConnectionStatus.NotConnected, ex.Message);
+            return false;
+        }
+      
     }
 }

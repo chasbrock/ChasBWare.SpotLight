@@ -1,4 +1,5 @@
-﻿using ChasBWare.SpotLight.Definitions.Utility;
+﻿using ChasBWare.SpotLight.Definitions.Enums;
+using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
@@ -32,8 +33,8 @@ public abstract class BaseRecentViewModel<T>
     public ICommand OpenPopupCommand { get; }
     public ISearchViewModel<T> SearchViewModel { get; }
     public IPlayerControlViewModel PlayerControlViewModel { get; }
+    public abstract PageType PageType { get; }
 
-   
     public void Initialise()
     {
         if (_initialised)
@@ -45,7 +46,11 @@ public abstract class BaseRecentViewModel<T>
         _initialised = true;
     }
 
+    public virtual void OnNavigationRecieved(Uri? callerUri)
+    {
+    }
 
     protected abstract void LoadItems();
     protected abstract void OpenPopup();
+  
 }

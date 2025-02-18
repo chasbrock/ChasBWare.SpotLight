@@ -3,68 +3,67 @@ using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 
-namespace ChasBWare.SpotLight.Infrastructure.ViewModels
+namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
+
+
+public class ArtistViewModel(IServiceProvider serviceProvider)
+           : PlaylistListViewModel(serviceProvider),
+             IArtistViewModel
 {
+    private Artist _model = new() { Id = "" };
 
-    public class ArtistViewModel(IServiceProvider serviceProvider)
-               : PlaylistListViewModel(serviceProvider),
-                 IArtistViewModel
+    public Artist Model
     {
-        private Artist _model = new() { Id = "" };
-   
-        public Artist Model
-        {
-            get => _model;
-            set => SetField(ref _model, value);
-        }
-             
-        public string Id
-        {
-            get => Model.Id ?? string.Empty;
-        }
-
-        public string? Image
-        {
-            get => Model.Image;
-            set => SetField(Model, value);
-        }
-
-        public string Name
-        {
-            get => Model.Name ?? string.Empty;
-        }
-
-        public DateTime LastAccessed
-        {
-            get => Model.LastAccessed;
-            set => SetField(Model, value);
-        }
-
-        protected override void SelectedItemChanged(IPlaylistViewModel? oldItem, IPlaylistViewModel? newItem)
-        {
-            if (oldItem != null)
-            {
-                oldItem.IsSelected = false;
-            }
-
-            if (newItem != null )
-            {
-                newItem.IsSelected = true;
-                newItem.IsExpanded = true;
-
-                if (newItem.TracksViewModel.LoadStatus == LoadState.NotLoaded)
-                {
-                    newItem.TracksViewModel.LoadStatus = LoadState.Loading;
-                    var loadPlaylistTracksTask = _serviceProvider.GetService<IArtistAlbumsLoaderTask>();
-                    loadPlaylistTracksTask?.Execute(this);
-                }
-            }
-        }
-
-        public override string ToString()
-        {
-            return Name;
-        }
-      
+        get => _model;
+        set => SetField(ref _model, value);
     }
+         
+    public string Id
+    {
+        get => Model.Id ?? string.Empty;
+    }
+
+    public string? Image
+    {
+        get => Model.Image;
+        set => SetField(Model, value);
+    }
+
+    public string Name
+    {
+        get => Model.Name ?? string.Empty;
+    }
+
+    public DateTime LastAccessed
+    {
+        get => Model.LastAccessed;
+        set => SetField(Model, value);
+    }
+
+    protected override void SelectedItemChanged(IPlaylistViewModel? oldItem, IPlaylistViewModel? newItem)
+    {
+        if (oldItem != null)
+        {
+            oldItem.IsSelected = false;
+        }
+
+        if (newItem != null )
+        {
+            newItem.IsSelected = true;
+            newItem.IsExpanded = true;
+
+            if (newItem.TracksViewModel.LoadStatus == LoadState.NotLoaded)
+            {
+                newItem.TracksViewModel.LoadStatus = LoadState.Loading;
+                var loadPlaylistTracksTask = _serviceProvider.GetService<IArtistAlbumsLoaderTask>();
+                loadPlaylistTracksTask?.Execute(this);
+            }
+        }
+    }
+
+    public override string ToString()
+    {
+        return Name;
+    }
+  
 }

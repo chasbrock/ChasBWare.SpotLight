@@ -1,21 +1,37 @@
 ﻿using System;
+using System.Collections;
+using System.Linq;
 using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Utility;
 
 namespace ChasBWare.SpotLight
 {
-    public class Navigator() : INavigator
+    public class Navigator : INavigator
     {
         private AppShell? _shell;
+        private readonly List<Type> _navigatable;
         private readonly Dictionary<PageType, INavigationClient> _clients = [];
 
-        internal void SetShell(AppShell appShell) 
+        public Navigator(List<Type> navigatable)
+        {
+            _navigatable = navigatable;
+        }
+
+        internal void SetShell(AppShell appShell, IServiceProvider serviceProvider) 
         {
             _shell = appShell;
             appShell.Navigator = this;
-        }
+            foreach (var type in _navigatable)
+            {
+                var instance = serviceProvider.GetService(type);
+                if (instance is INavigationClient navigationClient)
+                {
+                    _clients.TryAdd(navigationClient.PageType, navigationClient);
+                }
+            }
 
-      
+        }
+              
         public void NavigateTo(PageType pageType)
         {
             if (_shell != null)
@@ -28,7 +44,6 @@ namespace ChasBWare.SpotLight
             }
         }
 
-
         public void NavigateTo(Uri uri)
         {
             if (_shell != null)
@@ -36,7 +51,6 @@ namespace ChasBWare.SpotLight
                 _shell.GoToAsync(uri);
             }
         }
-
 
         public void PopLastNavigation()
         {

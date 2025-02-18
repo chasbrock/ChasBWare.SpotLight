@@ -13,156 +13,155 @@ using ChasBWare.SpotLight.Infrastructure.Utility;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
-namespace ChasBWare.SpotLight.Infrastructure.ViewModels
+namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
+
+public class PlaylistViewModel : Notifyable, IPlaylistViewModel
 {
-    public class PlaylistViewModel : Notifyable, IPlaylistViewModel
+    private readonly IServiceProvider _serviceProvider;
+    private readonly INavigator _navigator;
+    private readonly IMessageService<PlayPlaylistMessage> _messageService;
+
+    private bool _isExpanded = false;
+    private bool _isSelected = false;
+    private Playlist _model = new() { Id = "" };
+   
+    public PlaylistViewModel(IServiceProvider serviceProvider,
+                             INavigator navigator,
+                             ITrackListViewModel tracksViewModel,
+                             IPopupService popupService,
+                             IMessageService<PlayPlaylistMessage> messageService)
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly INavigator _navigator;
-        private readonly IMessageService<PlayPlaylistMessage> _messageService;
-  
-        private bool _isExpanded = false;
-        private bool _isSelected = false;
-        private Playlist _model = new() { Id = "" };
-       
-        public PlaylistViewModel(IServiceProvider serviceProvider,
-                                 INavigator navigator,
-                                 ITrackListViewModel tracksViewModel,
-                                 IPopupService popupService,
-                                 IMessageService<PlayPlaylistMessage> messageService)
+        TracksViewModel = tracksViewModel;
+        _serviceProvider = serviceProvider;
+        _messageService = messageService;
+        _navigator = navigator;
+
+        SetExpandedCommand = new Command(() => IsExpanded = !IsExpanded);
+        PlayTracklistCommand = new Command(PlayTrackList);
+        OpenTrackPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<TrackPopupViewModel>(onPresenting: vm => vm.SetTrack(this, TracksViewModel.SelectedItem)));
+        OpenArtistCommand = new Command<string>(id => NavigateToArtist(id));
+    }
+
+    public Playlist Model 
+    { 
+        get => _model;
+        set 
         {
-            TracksViewModel = tracksViewModel;
-            _serviceProvider = serviceProvider;
-            _messageService = messageService;
-            _navigator = navigator;
-
-            SetExpandedCommand = new Command(() => IsExpanded = !IsExpanded);
-            PlayTracklistCommand = new Command(PlayTrackList);
-            OpenTrackPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<TrackPopupViewModel>(onPresenting: vm => vm.SetTrack(this, TracksViewModel.SelectedItem)));
-            OpenArtistCommand = new Command<string>(id => NavigateToArtist(id));
+            _model = value;
+            Owners = Model!.Owner!.UnpackOwners()??[];
+            TracksViewModel.Playlist = this;
         }
+    }
 
-        public Playlist Model 
-        { 
-            get => _model;
-            set 
+    public ICommand OpenTrackPopupCommand { get; }
+    public ICommand SetExpandedCommand { get; }
+    public ICommand PlayTracklistCommand { get; } 
+    public ICommand OpenArtistCommand { get; }
+
+    public ITrackListViewModel TracksViewModel { get; }
+
+    public string Description
+    {
+        get => Model.Description ?? "";
+        set => SetField(Model, value);
+    }
+
+    public string Id
+    {
+        get => Model.Id ?? "";
+    }
+
+    public string? Image
+    {
+        get => Model.Image;
+    }
+         
+    public bool IsExpanded
+    {
+        get => _isExpanded;
+        set
+        {
+            if (SetField(ref _isExpanded, value) &&
+                _isExpanded &&
+                TracksViewModel.LoadStatus == LoadState.NotLoaded)
             {
-                _model = value;
-                Owners = Model!.Owner!.UnpackOwners()??[];
-                TracksViewModel.Playlist = this;
+                LoadTracks();
             }
         }
+    }
 
-        public ICommand OpenTrackPopupCommand { get; }
-        public ICommand SetExpandedCommand { get; }
-        public ICommand PlayTracklistCommand { get; } 
-        public ICommand OpenArtistCommand { get; }
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set => SetField(ref _isSelected, value);
+    }
 
-        public ITrackListViewModel TracksViewModel { get; }
+    private void PlayTrackList()
+    {
+        IsExpanded = true;
+        _messageService.SendMessage(new PlayPlaylistMessage(this, 0));
+    }
 
-        public string Description
+    private void LoadTracks()
+    {
+        if (TracksViewModel.LoadStatus == LoadState.NotLoaded)
         {
-            get => Model.Description ?? "";
-            set => SetField(Model, value);
+            TracksViewModel.LoadStatus = LoadState.Loading;
+            var task = _serviceProvider.GetService<ITrackListLoaderTask>();
+            task?.Execute(this);
+        }
+    }
+      
+    public string Name
+    {
+        get => Model.Name??"";
+    }
+
+    public List<KeyValue> Owners { get; private set; } = [];
+    
+    public string Owner
+    {
+        get => Owners.FirstOrDefault()!.Key ?? string.Empty;
+    }
+
+    public PlaylistType PlaylistType
+    {
+        get => Model.PlaylistType;
+    }
+
+    public DateTime ReleaseDate
+    {
+        get => Model.ReleaseDate;
+    }
+
+    public string Uri
+    {
+        get => Model.Uri;
+    }
+
+    public DateTime LastAccessed
+    {
+        get => Model.LastAccessed;
+        set => SetField(Model, value); 
+    }
+
+    public bool InLibrary { get; set; }
+
+    private void NavigateToArtist(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            return;
         }
 
-        public string Id
-        {
-            get => Model.Id ?? "";
-        }
+        var messageService = _serviceProvider.GetRequiredService<IMessageService<FindItemMessage>>();
+        messageService.SendMessage(new FindItemMessage(PageType.Artists, id));
 
-        public string? Image
-        {
-            get => Model.Image;
-        }
-             
-        public bool IsExpanded
-        {
-            get => _isExpanded;
-            set
-            {
-                if (SetField(ref _isExpanded, value) &&
-                    _isExpanded &&
-                    TracksViewModel.LoadStatus == LoadState.NotLoaded)
-                {
-                    LoadTracks();
-                }
-            }
-        }
+        _navigator.NavigateTo(PageType.Artists);
+    }
 
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set => SetField(ref _isSelected, value);
-        }
-
-        private void PlayTrackList()
-        {
-            IsExpanded = true;
-            _messageService.SendMessage(new PlayPlaylistMessage(this, 0));
-        }
-
-        private void LoadTracks()
-        {
-            if (TracksViewModel.LoadStatus == LoadState.NotLoaded)
-            {
-                TracksViewModel.LoadStatus = LoadState.Loading;
-                var task = _serviceProvider.GetService<ITrackListLoaderTask>();
-                task?.Execute(this);
-            }
-        }
-          
-        public string Name
-        {
-            get => Model.Name??"";
-        }
-
-        public List<KeyValue> Owners { get; private set; } = [];
-        
-        public string Owner
-        {
-            get => Owners.FirstOrDefault()!.Key ?? string.Empty;
-        }
-
-        public PlaylistType PlaylistType
-        {
-            get => Model.PlaylistType;
-        }
-
-        public DateTime ReleaseDate
-        {
-            get => Model.ReleaseDate;
-        }
-
-        public string Uri
-        {
-            get => Model.Uri;
-        }
-
-        public DateTime LastAccessed
-        {
-            get => Model.LastAccessed;
-            set => SetField(Model, value); 
-        }
-
-        public bool InLibrary { get; set; }
-
-        private void NavigateToArtist(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                return;
-            }
-
-            var messageService = _serviceProvider.GetRequiredService<IMessageService<FindItemMessage>>();
-            messageService.SendMessage(new FindItemMessage(PageType.Artists, id));
-
-            _navigator.NavigateTo(PageType.Artists);
-        }
-
-        public override string ToString()
-        {
-            return Name;
-        }
+    public override string ToString()
+    {
+        return Name;
     }
 }

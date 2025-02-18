@@ -36,6 +36,8 @@ public class RecentAlbumsViewModel
         activeAlbumChangedMessageService.Register(OnSetActivePlaylist);
     }
 
+    public override PageType PageType => PageType.Albums;
+
     protected override void LoadItems()
     {
         var task = _serviceProvider.GetRequiredService<ILoadRecentPlaylistTask>();
@@ -96,11 +98,11 @@ public class RecentAlbumsViewModel
             {
                 viewModel.LastAccessed = DateTime.Now;
                 SelectedItem = viewModel;
+
                 return;
             }
-
-           // var task = _serviceProvider.GetService<IFindAlbumTask>();
-           // task?.Execute(this, message.Payload.Id); 
+            var task = _serviceProvider.GetRequiredService<IFindPlaylistTask>();
+            task.Execute(this, message.Payload.Id, PlaylistType.Album);
         }
     }
 
@@ -109,4 +111,6 @@ public class RecentAlbumsViewModel
         SelectedItem = AddItemToList(message.Payload);
         RefreshView();
     }
+
+  
 }

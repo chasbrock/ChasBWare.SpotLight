@@ -45,6 +45,18 @@ public class LibraryRepository(IDbContext _dbContext,
         return count;
     }
 
+    public Playlist? FindPlaylist(string playlistId)
+    {
+        var connection = _dbContext.GetConnection().Result;
+        if (connection != null)
+        {
+            return connection.Table<Playlist>()
+                             .FirstOrDefaultAsync(pl => pl.Id == playlistId)
+                             .Result;
+        }
+        return null;
+    }
+
     public List<Playlist> GetPlaylists(PlaylistType playlistType)
     {
         var connection = _dbContext.GetConnection().Result;

@@ -11,6 +11,7 @@ public partial class DeviceViewModel : Notifyable, IDeviceViewModel
 
     public string Name { get => Model.Name; }
     public DeviceTypes DeviceType { get => Model.DeviceType; }
+    public string RawDeviceType { get => Model.RawDeviceType;  }
 
     public bool IsActive
     {

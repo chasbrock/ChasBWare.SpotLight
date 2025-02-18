@@ -51,6 +51,10 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
 	  <AndroidPackageFormat>apk</AndroidPackageFormat>
 	</PropertyGroup>
+	
+	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' and '$(RuntimeIdentifierOverride)' != ''">
+	    <RuntimeIdentifier>$(RuntimeIdentifierOverride)</RuntimeIdentifier>    
+        </PropertyGroup>
 
 	<ItemGroup>
 		<!-- App Icon -->
@@ -79,7 +83,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui" Version="11.0.0" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="11.1.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.40" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.2" />
 	</ItemGroup>

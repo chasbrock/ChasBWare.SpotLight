@@ -24,23 +24,23 @@ namespace ChasBWare.SpotLight
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-
+            
             return builder.Build();
         }
 
 
         private static MauiAppBuilder RegisterMyServices(this MauiAppBuilder builder)
         {
-            builder.Services.RegisterDbContext()
+            builder.Services.RegisterViewModels()
+                            .RegisterNavigator()
+                            .RegisterDbContext()
                             .RegisterLogging()
                             .RegisterMessageHandlers()
                             .RegisterRepositories()
                             .RegisterServices()
-                            .RegisterNavigator()
                             .RegisterPopups()
                             .RegisterSpotify()
                             .RegisterTasks()
-                            .RegisterViewModels()
                             .RegisterViews();
 
             return builder;

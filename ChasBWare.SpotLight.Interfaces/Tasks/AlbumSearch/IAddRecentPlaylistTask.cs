@@ -7,3 +7,4 @@ public interface IAddRecentPlaylistTask
 {
     void Execute(IRecentViewModel<IPlaylistViewModel> viewModel, Playlist model);
 }
+

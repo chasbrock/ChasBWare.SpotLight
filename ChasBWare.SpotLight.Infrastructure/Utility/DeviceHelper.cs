@@ -16,8 +16,9 @@ public static class DeviceHelper
         {
             Name = $"Local {DeviceInfo.Current.Idiom}",
             DeviceType = DeviceInfo.Current.Idiom.ToDeviceTypes(),
-            Id = "LOCAL" 
-         };
+            Id = "LOCAL",
+            RawDeviceType = DeviceInfo.Current.Idiom.ToString()
+        };
     }
 
     public static DeviceTypes ToDeviceTypes(this DeviceIdiom idiom)

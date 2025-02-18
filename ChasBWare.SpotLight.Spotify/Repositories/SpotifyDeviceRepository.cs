@@ -7,56 +7,59 @@ using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Mappings.Mappers;
 using ChasBWare.SpotLight.Spotify.Interfaces;
 
-namespace ChasBWare.SpotLight.Spotify.Repositories
+namespace ChasBWare.SpotLight.Spotify.Repositories;
+
+
+public class SpotifyDeviceRepository(IServiceProvider _serviceProvider,
+                                     ISpotifyActionManager _actionManager)
+           : ISpotifyDeviceRepository
 {
-  
-    public class SpotifyDeviceRepository(IServiceProvider _serviceProvider,
-                                         ISpotifyActionManager _actionManager)
-               : ISpotifyDeviceRepository
+    public CurrentContext? GetCurrentContext()
     {
-        public CurrentContext? GetCurrentContext()
+        var context = _actionManager.GetCurrentContext();
+        if (context != null)
         {
-            var context = _actionManager.GetCurrentContext();
-            if (context != null) 
+            return new CurrentContext
             {
-                return new CurrentContext
-                {
-                    Device = context.Device.CopyToDevice(),
-                    Track = context.CopyToPlayingTrack()
-                };
-            }
-            return null;
+                Device = context.Device.CopyToDevice(),
+                Track = context.CopyToPlayingTrack()
+            };
         }
-
-        public List<IDeviceViewModel> GetAvailableDevices()
+        else
         {
-            var devices = _actionManager.GetAvailableDevices();
+            
+        }
+            return null;
+    }
 
-            List<IDeviceViewModel> viewModels = [];
-            if (devices != null)
+    public List<IDeviceViewModel> GetAvailableDevices()
+    {
+        var devices = _actionManager.GetAvailableDevices();
+
+        List<IDeviceViewModel> viewModels = [];
+        if (devices != null)
+        {
+            foreach (var model in devices.Select(d => d.CopyToDevice()))
             {
-                foreach (var model in devices.Select(d => d.CopyToDevice()))
-                {
-                    var viewModel = _serviceProvider.GetService<IDeviceViewModel>();
-                    if (viewModel != null) 
-                    { 
-                        viewModel.Model = model;
-                        viewModels.Add(viewModel);
-                    }
+                var viewModel = _serviceProvider.GetService<IDeviceViewModel>();
+                if (viewModel != null) 
+                { 
+                    viewModel.Model = model;
+                    viewModels.Add(viewModel);
                 }
             }
-
-            return viewModels;
         }
 
-        public void SetDeviceVolume(int volumePercent)
-        {
-            _actionManager.SetCurrentDeviceVolume(volumePercent);
-        }
+        return viewModels;
+    }
 
-        public bool SetDeviceAsActive(string deviceId)
-        {
-            return  _actionManager.SetDeviceAsActive(deviceId);
-        }
+    public void SetDeviceVolume(int volumePercent)
+    {
+        _actionManager.SetCurrentDeviceVolume(volumePercent);
+    }
+
+    public bool SetDeviceAsActive(string deviceId)
+    {
+        return  _actionManager.SetDeviceAsActive(deviceId);
     }
 }

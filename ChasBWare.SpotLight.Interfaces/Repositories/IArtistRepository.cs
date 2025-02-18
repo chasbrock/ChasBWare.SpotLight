@@ -17,7 +17,7 @@ public interface IArtistRepository
     /// </summary>
     /// <param name="artist"></param>
     /// <param name="albums"></param>
-    void AddArtistAndAlbums(Artist artist, List<Playlist> albums);
+    void StoreArtistAndAlbums(Artist artist, List<Playlist> albums);
     
     /// <summary>
     /// find artist in database
