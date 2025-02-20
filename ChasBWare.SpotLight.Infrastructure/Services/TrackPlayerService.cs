@@ -149,14 +149,15 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
             // todo
         }
 
-        private void ConnectionStatusChange(ConnectionStatusChangedMessage message)
+        private Continue ConnectionStatusChange(ConnectionStatusChangedMessage message)
         {
-            if (message.Payload.ConnectionStatus == ConnectionStatus.NotConnected) 
+            if (message.Payload.ConnectionStatus != ConnectionStatus.Connected) 
             {
                 _timer.Stop();
                 // if we disconnect we cannot resy
                 _playbackStarted = null;
             }
+            return Continue.Yes;
         }
 
         private async void OnTimerTick(object? sender, EventArgs e)

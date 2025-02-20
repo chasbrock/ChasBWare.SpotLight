@@ -181,5 +181,6 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                 return false;
             }
         }
+
     }
 }

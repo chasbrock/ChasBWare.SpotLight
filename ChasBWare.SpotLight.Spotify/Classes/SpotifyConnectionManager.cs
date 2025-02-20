@@ -17,9 +17,9 @@ namespace ChasBWare.SpotLight.Spotify.Classes
         private readonly IMessageService<ConnectionStatusChangedMessage> _messageService;
         private readonly EmbedIOAuthServer _server;
         
-        public SpotifyConnectionManager(ILogger logger,
-                                          ISpotyConnectionSession session,
-                                          IMessageService<ConnectionStatusChangedMessage> messageService)
+        public SpotifyConnectionManager(ILogger<SpotifyConnectionManager> logger,
+                                        ISpotyConnectionSession session,
+                                        IMessageService<ConnectionStatusChangedMessage> messageService)
         {
             _logger = logger;
             _session = session;
@@ -38,34 +38,44 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             Status = status;
         }
 
-        public ConnectionStatus Status { get; private set; } = ConnectionStatus.NotConnected;
+        public ConnectionStatus Status { get; private set; } = ConnectionStatus.NotInitialised;
 
 
         public SpotifyClient GetClient()
         {
-            // if this is the first call try loading AccessToken from secure storage    
-            if (Status == ConnectionStatus.NotConnected)
+            try
             {
-                Status = _session.RestoreTokens();
-            }
+                // if this is the first call try loading AccessToken from secure storage    
+                if (Status == ConnectionStatus.NotInitialised)
+                {
+                    Status = _session.RestoreTokens();
+                }
 
-            switch (Status)
-            {
-                case ConnectionStatus.Unauthorised:
-                    AuthoriseConnection();
-                    var i = 10;
-                    while (Status != ConnectionStatus.Connected && i-- > 0)
-                    {
-                        Thread.Sleep(1000);
-                    }
-                    
-                    break;
-                case ConnectionStatus.TokenExpired:
-                    RefreshAccessToken();      
-                break;
+                switch (Status)
+                {
+                    case ConnectionStatus.Unauthorised:
+                        AuthoriseConnection();
+                        var i = 10;
+                        while (Status != ConnectionStatus.Connected && i-- > 0)
+                        {
+                            Thread.Sleep(1000);
+                        }
+
+                        break;
+                    case ConnectionStatus.TokenExpired:
+                        RefreshAccessToken();
+                        break;
+                }
+
+                return _session.GetClient();
             }
-         
-            return _session.GetClient();
+            catch (Exception ex) 
+            {
+                Status = ConnectionStatus.NotConnected;
+                _session.ClearAccessTokens();
+                _logger.LogError(ex, "Error getting client");
+                return _session.GetClient();
+            }
         }
 
         private async void RefreshAccessToken()
@@ -80,7 +90,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                 }
                 catch (Exception ex) 
                 {
-                    _logger.LogError("Error refreshing token: {error}", ex.Message);
+                    _logger.LogError(ex, "Error refreshing token");
                 }
             }
         }

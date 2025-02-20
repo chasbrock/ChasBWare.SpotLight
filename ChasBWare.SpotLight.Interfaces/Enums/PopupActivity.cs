@@ -9,7 +9,8 @@ public enum PopupActivity
     CollapseAll,
     ExpandAll,
     Clear,
-    Delete
+    Delete,
+    Refresh
 }
 
 

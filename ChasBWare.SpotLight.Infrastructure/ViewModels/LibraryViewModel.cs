@@ -93,7 +93,7 @@ public partial class LibraryViewModel
         loadPlaylistsTask.Execute(this);
     }
 
-    private void OnTrackChangedMessage(CurrentTrackChangedMessage message)
+    private Continue OnTrackChangedMessage(CurrentTrackChangedMessage message)
     {
         // if there is no playlist selected then try and find the one playing
         if (SelectedItem == null)
@@ -110,9 +110,10 @@ public partial class LibraryViewModel
                 track.Status = message.Payload.State;
             }
         }
+        return Continue.Yes;
     }
 
-    private void OnFindItem(FindItemMessage message)
+    private Continue OnFindItem(FindItemMessage message)
     {
         if (message.Payload.PageType == PageType.Library)
         {
@@ -121,10 +122,10 @@ public partial class LibraryViewModel
             {
                 viewModel.LastAccessed = DateTime.Now;
                 SelectedItem = viewModel;
-                return;
+                return Continue.No;
             }
-
         }
+        return Continue.Yes;
     }
 
 

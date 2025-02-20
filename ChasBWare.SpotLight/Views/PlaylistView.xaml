@@ -44,34 +44,19 @@
                          ZIndex="0" Style="{StaticResource PlayButtonShow}"
                          Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" />
 
-
             <Label Text="{Binding Path=Name}" 
                    Style="{StaticResource TrackCaption}"
                    Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0" Margin="10,0" />
 
-            <HorizontalStackLayout  Grid.Column="1" Grid.Row="1" >
-                <CollectionView ItemsSource="{Binding Owners}"
-                                ItemsLayout="HorizontalList"
-                                SelectionMode="Single"
-                                Grid.Row="1" Grid.Column="1" Margin="4,0">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="dom:KeyValue">
-                            <Label Text="{Binding Key}" Margin="2" Style="{StaticResource Key=ArtistHighlight}">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer 
-                                         Command="{Binding x:DataType='vm:PlaylistViewModel', 
-                                         Source={RelativeSource AncestorType={x:Type vm:PlaylistViewModel}},
-                                         Path=OpenArtistCommand}"
-                                         CommandParameter="{Binding Value}" 
-                                         NumberOfTapsRequired="2"/>
-                                </Label.GestureRecognizers>
-                            </Label>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+            <HorizontalStackLayout Grid.Column="1" Grid.Row="1" >
+                <Label Text="{Binding Path=Owner}" 
+                       Style="{StaticResource ListDetail}"
+                       Margin="10,0" />
 
                 <Label Text="{Binding Path=ReleaseDate, StringFormat='{0:MMMM yyyy}'}" 
-                       Style="{StaticResource ListDetail}"
+                       Style="{StaticResource ListDetail}" 
+                       IsVisible="{Binding PlaylistType, Converter={StaticResource PlaylistTypeToBool}}"
+                  
                        Margin="10,0" />
             </HorizontalStackLayout>
 

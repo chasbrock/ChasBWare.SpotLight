@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 namespace ChasBWare.SpotLight.Infrastructure.Repositories;
 
 public class HatedItemsRepository(IDbContext _dbContext,
-                                  ILogger _logger)
+                                  ILogger<HatedItemsRepository> _logger)
            : IHatedItemsRepository
 {
     public async Task<HashSet<string>> GetItems()

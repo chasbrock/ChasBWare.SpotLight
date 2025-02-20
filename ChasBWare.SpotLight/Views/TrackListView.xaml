@@ -24,13 +24,14 @@
                         Grid.Row="0">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="vm:TrackViewModel">
-                    <Grid ColumnDefinitions="30,30,60,250,250,250" RowDefinitions="Auto">
+                    <Grid ColumnDefinitions="30,30,60,250,250,*" RowDefinitions="Auto">
                         <Grid.Resources>
                             <Style x:Key="TrackStyle" TargetType="Label">
                                 <Setter Property="TextColor" Value="Black"/>
                                 <Setter Property="LineBreakMode" Value="WordWrap"/>
                                 <Setter Property="Margin" Value="0,0,8,2"/>
                                 <Setter Property="VerticalTextAlignment" Value="Start"/>
+                                <Setter Property="FontSize" Value="14" />
                                 <Style.Triggers>
                                     <DataTrigger TargetType="Label" Binding="{Binding IsHated}" Value="False">
                                         <Setter Property="TextColor" Value="Black"/>
@@ -59,11 +60,11 @@
 
                         <Label Text="{Binding Duration}"
                                Style="{StaticResource TrackStyle}"
-                               FontSize="12" Grid.Column="2" />
+                               Grid.Column="2" />
 
                         <Label Text="{Binding Name}"
                                Style="{StaticResource TrackStyle}"
-                               FontSize="12" FontAttributes="Bold" 
+                               FontAttributes="Bold" 
                                Grid.Column="3" />
 
                         <Grid RowDefinitions="20" Grid.Column="4">
@@ -92,7 +93,7 @@
 
                         <Label Text="{Binding Album}"
                                Style="{StaticResource TrackStyle}"
-                               FontSize="10" 
+                               FontSize="12" 
                                Grid.Column="5" />
 
                     </Grid>

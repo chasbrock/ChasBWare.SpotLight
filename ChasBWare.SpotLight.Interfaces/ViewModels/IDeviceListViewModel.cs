@@ -7,6 +7,6 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
     {
         ObservableCollection<IDeviceViewModel> Devices { get; }
         IDeviceViewModel? SelectedDevice { get; set; }
-        ICommand RefreshCommand { get; }
+        ICommand OpenPopupCommand { get; }
     }
 }

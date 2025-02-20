@@ -10,7 +10,6 @@ namespace ChasBWare.SpotLight.Infrastructure.Popups;
 public class PopupMenuViewModel(IPopupService _popupService) 
            : Notifyable,
              IPopupMenuViewModel
-
 {
     private Size _size = new Size(200,100);
     public const string DefaultGroup = "";

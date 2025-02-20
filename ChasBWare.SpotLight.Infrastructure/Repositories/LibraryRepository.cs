@@ -9,15 +9,15 @@ using SQLite;
 namespace ChasBWare.SpotLight.Infrastructure.Repositories;
 
 public class LibraryRepository(IDbContext _dbContext,
-                               ILogger _logger)
+                               ILogger<LibraryRepository> _logger)
            : ILibraryRepository
 {
     public int AddPlaylists(List<Playlist> playlists)
     {
-        var count = 0;
-        var connection = _dbContext.GetConnection().Result;
+         var connection = _dbContext.GetConnection().Result;
         if (connection != null)
         {
+            var count = 0;
             foreach (var playlist in playlists)
             {
                 if (playlist.Id != null)
@@ -39,10 +39,12 @@ public class LibraryRepository(IDbContext _dbContext,
                     }
                 }
             }
+            return count;
+
         }
         _logger.LogError("Could not access db connection");
 
-        return count;
+        return -1;
     }
 
     public Playlist? FindPlaylist(string playlistId)
@@ -108,6 +110,7 @@ public class LibraryRepository(IDbContext _dbContext,
             else 
             {
                 connection.DeleteAsync(new LibraryItem { Id = playlist.Id });
+                return true;
             }
         }
         _logger.LogError("Could not access db connection");
@@ -128,6 +131,7 @@ public class LibraryRepository(IDbContext _dbContext,
             {
                 connection.InsertAsync(playlist);
             }
+            return;
         }
         _logger.LogError("Could not access db connection");
        

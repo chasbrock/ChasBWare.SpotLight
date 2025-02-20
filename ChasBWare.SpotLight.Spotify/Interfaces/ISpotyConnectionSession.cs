@@ -43,5 +43,6 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         ConnectionStatus RestoreTokens();
         ConnectionStatus UpdateTokens(string accessToken, string refreshToken);
         ConnectionStatus UpdateToken(string accessToken);
+        void ClearAccessTokens();
     }
 }

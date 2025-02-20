@@ -144,13 +144,14 @@ public class PlayerControlViewModel
         set => SetField(ref _albumId, value);
     }
 
-    private void PlayTracklist(PlayPlaylistMessage message)
+    private Continue PlayTracklist(PlayPlaylistMessage message)
     {
         TrackPlayerService.StartPlaylist(message.Payload.Playlist,
-                                         message.Payload.Offset); 
+                                         message.Payload.Offset);
+        return Continue.Yes;
     }
 
-    private async void ConnectionStatusChange(ConnectionStatusChangedMessage message)
+    private Continue ConnectionStatusChange(ConnectionStatusChangedMessage message)
     {
         _dispatcher.Dispatch(() =>
         {
@@ -164,17 +165,14 @@ public class PlayerControlViewModel
                     break;
             }
         });
+        return Continue.Yes;
 
-        if (!string.IsNullOrEmpty(message.Payload.Message))
-        {
-            var alertService = _serviceProvider.GetRequiredService<IAlertService>();
-            await alertService.ShowErrorAsync("Connection", message.Payload.Message, "Ok");
-        }
     }
 
-    private void SetCurrentDevice(ActiveDeviceChangedMessage message)
+    private Continue SetCurrentDevice(ActiveDeviceChangedMessage message)
     {
         CurrentDevice.Device = message.Payload;
+        return Continue.Yes;
     }
 
     private void SkipForward()
@@ -203,8 +201,8 @@ public class PlayerControlViewModel
         if (!IsSyncing)
         {
             IsSyncing = true;
-            var task = _serviceProvider.GetService<ISyncToDeviceTask>();
-            task?.Execute(this);
+            var task = _serviceProvider.GetRequiredService<ISyncToDeviceTask>();
+            task.Execute(this);
         }
     }
 
@@ -240,10 +238,11 @@ public class PlayerControlViewModel
         {
             return;
         }
-
         var messageService = _serviceProvider.GetRequiredService<IMessageService<FindItemMessage>>();
-        messageService.SendMessage(new FindItemMessage(PageType.Albums, id));
-
+        if (messageService.SendMessage(new FindItemMessage(PageType.Library, id)) == Continue.Yes)
+        {
+            messageService.SendMessage(new FindItemMessage(PageType.Albums, id));
+         }
         _navigator.NavigateTo(PageType.Albums);
     }
 

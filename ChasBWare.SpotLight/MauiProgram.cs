@@ -21,20 +21,17 @@ namespace ChasBWare.SpotLight
                        fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                    });
             
-#if DEBUG
-            builder.Logging.AddDebug();
-#endif
-            
             return builder.Build();
         }
 
 
         private static MauiAppBuilder RegisterMyServices(this MauiAppBuilder builder)
         {
+            builder.SetupLogging();
+
             builder.Services.RegisterViewModels()
                             .RegisterNavigator()
                             .RegisterDbContext()
-                            .RegisterLogging()
                             .RegisterMessageHandlers()
                             .RegisterRepositories()
                             .RegisterServices()

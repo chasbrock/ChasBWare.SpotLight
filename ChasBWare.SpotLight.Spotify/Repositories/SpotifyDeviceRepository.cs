@@ -25,11 +25,7 @@ public class SpotifyDeviceRepository(IServiceProvider _serviceProvider,
                 Track = context.CopyToPlayingTrack()
             };
         }
-        else
-        {
-            
-        }
-            return null;
+        return null;
     }
 
     public List<IDeviceViewModel> GetAvailableDevices()

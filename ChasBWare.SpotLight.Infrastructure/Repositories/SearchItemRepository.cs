@@ -9,7 +9,7 @@ using SQLite;
 namespace ChasBWare.SpotLight.Infrastructure.Repositories;
 
 public class SearchItemRepository(IDbContext _dbContext,
-                                ILogger _logger)
+                                  ILogger<SearchItemRepository> _logger)
            : ISearchItemRepository
 {
 
@@ -108,6 +108,7 @@ public class SearchItemRepository(IDbContext _dbContext,
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Remove all recent artists");
+                return false;
             }
         }
         _logger.LogError("Could not access db connection");
@@ -118,7 +119,26 @@ public class SearchItemRepository(IDbContext _dbContext,
 
     public bool RemoveArtist(string id)
     {
-        throw new NotImplementedException();
+        var connection = _dbContext.GetConnection().Result;
+        if (connection != null)
+        {
+            try
+            {
+                foreach (var sql in RepositoryHelper.DeleteRecentArtist)
+                {
+                    connection.ExecuteAsync(sql);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Remove all recent artists");
+                return false;
+            }
+        }
+        _logger.LogError("Could not access db connection");
+
+        return false;
     }
 
     public bool RemovePlaylist(string playlistId)

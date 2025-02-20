@@ -6,7 +6,9 @@ public enum PopupGroup
     Playlist,
     Track,
     Library,
-    Recent
+    Recent,
+    Devices,
+    Settings
 }
 
 

@@ -4,6 +4,7 @@ using ChasBWare.SpotLight.Definitions.Tasks.Device;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.Device;
@@ -11,6 +12,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks.Device;
 
 public class LoadAvailableDevicesTask(IServiceProvider _serviceporovider, 
                                       IDispatcher _dispatcher,
+                                      ILogger<LoadAvailableDevicesTask> _logger,
                                       ISpotifyDeviceRepository _deviceRepository,
                                       IMessageService<ActiveDeviceChangedMessage> _activeDeviceMessageService)
            : ILoadAvailableDevicesTask
@@ -22,33 +24,41 @@ public class LoadAvailableDevicesTask(IServiceProvider _serviceporovider,
 
     private void RunTask(IDeviceListViewModel viewModel)
     {
-        var devices =  _deviceRepository.GetAvailableDevices();
+         var devices = _deviceRepository.GetAvailableDevices();
+       
         _dispatcher.Dispatch(() =>
         {
-            viewModel.Devices.Clear();
-            IDeviceViewModel? activeDevice = null;
-
-            if (devices.Count == 0)
+            try
             {
-                var deviceViewModel = _serviceporovider.GetRequiredService<IDeviceViewModel>();
-                deviceViewModel.Model = DeviceHelper.GetLocalDevice();
-                viewModel.Devices.Add(deviceViewModel);
-                return;
-            }
+                viewModel.Devices.Clear();
+                IDeviceViewModel? activeDevice = null;
 
-            foreach (var device in devices)
-            {
-                viewModel.Devices.Add(device);
-                if (device.IsActive && activeDevice == null)
+                if (devices.Count == 0)
                 {
-                    activeDevice = device;
+                    var deviceViewModel = _serviceporovider.GetRequiredService<IDeviceViewModel>();
+                    deviceViewModel.Model = DeviceHelper.GetLocalDevice();
+                    viewModel.Devices.Add(deviceViewModel);
+                    return;
+                }
+
+                foreach (var device in devices)
+                {
+                    viewModel.Devices.Add(device);
+                    if (device.IsActive && activeDevice == null)
+                    {
+                        activeDevice = device;
+                    }
+                }
+
+                //signal that we have found an active device
+                if (activeDevice != null)
+                {
+                    _activeDeviceMessageService.SendMessage(new ActiveDeviceChangedMessage(activeDevice.Model));
                 }
             }
-
-            //signal that we have found an active device
-            if (activeDevice != null)
+            catch (Exception ex)
             {
-                _activeDeviceMessageService.SendMessage(new ActiveDeviceChangedMessage(activeDevice.Model));
+                _logger.LogError(ex, "faield to update ui");
             }
         });
     }

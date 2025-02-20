@@ -28,6 +28,8 @@ using ChasBWare.SpotLight.Spotify.Classes;
 using ChasBWare.SpotLight.Spotify.Interfaces;
 using ChasBWare.SpotLight.Spotify.Repositories;
 using CommunityToolkit.Maui;
+using MetroLog.MicrosoftExtensions;
+using MetroLog.Operators;
 using Microsoft.Extensions.Logging;
 
 namespace ChasBWare.SpotLight.DependencyInjection
@@ -43,13 +45,37 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddTransient<IDbSettings, DefaultDbSettings>();
         }
 
-        public static IServiceCollection RegisterLogging(this IServiceCollection services)
+        public static void SetupLogging(this MauiAppBuilder builder)
         {
-            using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
-            ILogger logger = factory.CreateLogger("Program");
-
-            return services.AddLogging(builder => builder.AddConsole())
-                           .AddSingleton(logger);
+            builder.Logging.SetMinimumLevel(LogLevel.Trace) // IMPORTANT: set your minimum log level, here Trace
+                           .AddTraceLogger(
+                               options =>
+                               {
+                                   options.MinLevel = LogLevel.Debug;
+                                   options.MaxLevel = LogLevel.Critical;
+                               }) // Will write to the Debug Output
+                           .AddConsoleLogger(
+                               options =>
+                                {
+                                    options.MinLevel = LogLevel.Information;
+                                    options.MaxLevel = LogLevel.Critical;
+                                }) // Will write to the Console Output (logcat for android)
+                           .AddInMemoryLogger(
+                                options =>
+                                {
+                                    options.MaxLines = 1024;
+                                    options.MinLevel = LogLevel.Debug;
+                                    options.MaxLevel = LogLevel.Critical;
+                                })
+                           .AddStreamingFileLogger(
+                               options =>
+                                {
+                                    options.RetainDays = 2;
+                                    options.FolderPath = Path.Combine(
+                                        FileSystem.CacheDirectory,
+                                        "MetroLogs");
+                                });
+            builder.Services.AddSingleton(LogOperatorRetriever.Instance);
         }
 
         public static IServiceCollection RegisterMessageHandlers(this IServiceCollection services)
@@ -83,8 +109,8 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddTransientPopup<LibraryPopupMenu, LibraryPopupViewModel>()
                            .AddTransientPopup<RecentArtistPopupMenu, RecentArtistPopupViewModel>()
                            .AddTransientPopup<RecentAlbumPopupMenu, RecentPlaylistPopupViewModel>()
-                           .AddTransientPopup<TrackPopupMenu, TrackPopupViewModel>()
-            ;
+                           .AddTransientPopup<DevicesPopupMenu, DeviceListViewModel>()
+                           .AddTransientPopup<TrackPopupMenu, TrackPopupViewModel>();
         }
 
         public static IServiceCollection RegisterRepositories(this IServiceCollection services)
@@ -98,8 +124,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddTransient<ISpotifyDeviceRepository, SpotifyDeviceRepository>()
                            .AddTransient<ISpotifyPlaylistRepository, SpotifyPlaylistRepository>()
                            .AddTransient<ISpotifyTrackRepository, SpotifyTrackRepository>()
-                           .AddTransient<ITrackRepository, TrackRepository>()
-                           ;
+                           .AddTransient<ITrackRepository, TrackRepository>();
         }
 
         public static IServiceCollection RegisterServices(this IServiceCollection services)
@@ -116,8 +141,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
             return services.AddSingleton<ISpotifyActionManager, SpotifyActionManager>()
                            .AddSingleton<ISpotifyConnectionManager, SpotifyConnectionManager>()
                            .AddSingleton<ISpotifyPlayerController, SpotifyPlayerController>()
-                           .AddSingleton<ISpotyConnectionSession, SpotyConnectionSession>()
-                           ;
+                           .AddSingleton<ISpotyConnectionSession, SpotyConnectionSession>();
         }
 
         public static IServiceCollection RegisterTasks(this IServiceCollection services)
@@ -141,8 +165,7 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddTransient<ISetHatedTrackTask, SetHatedTrackTask>()
                            .AddTransient<ISyncToDeviceTask, SyncToDeviceTask>()
                            .AddTransient<ITrackListLoaderTask, TrackListLoaderTask>()
-                           .AddTransient<IUpdateLastAccessedTask, UpdateLastAccessedTask>()
-                           ;
+                           .AddTransient<IUpdateLastAccessedTask, UpdateLastAccessedTask>();
         }
 
         public static IServiceCollection RegisterViewModels(this IServiceCollection services)
@@ -163,13 +186,14 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddSingleton<ISearchAlbumsViewModel, SearchAlbumsViewModel>()
                            .AddSingleton<ISearchPlaylistsViewModel, SearchPlaylistsViewModel>()
                            .AddTransient<ITrackViewModel, TrackViewModel>()
-                           .AddTransient<ITrackListViewModel, TrackListViewModel>()
-                           ;
+                           .AddTransient<ITrackListViewModel, TrackListViewModel>();
         }
 
         public static IServiceCollection RegisterViews(this IServiceCollection services)
         {
             return services.AddSingleton<ArtistPage>()
+                           .AddSingleton<AlbumPage>()
+                           .AddSingleton<PlaylistPage>()
                            .AddSingleton<LibraryPage>();
         }
     }

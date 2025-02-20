@@ -5,7 +5,6 @@ using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
-
 public class ArtistViewModel(IServiceProvider serviceProvider)
            : PlaylistListViewModel(serviceProvider),
              IArtistViewModel

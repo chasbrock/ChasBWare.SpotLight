@@ -89,7 +89,7 @@ public class RecentAlbumsViewModel
         }
     }
 
-    private void OnFindItem(FindItemMessage message)
+    private Continue OnFindItem(FindItemMessage message)
     {
         if (message.Payload.PageType == PageType.Albums)
         {
@@ -98,19 +98,22 @@ public class RecentAlbumsViewModel
             {
                 viewModel.LastAccessed = DateTime.Now;
                 SelectedItem = viewModel;
-
-                return;
             }
-            var task = _serviceProvider.GetRequiredService<IFindPlaylistTask>();
-            task.Execute(this, message.Payload.Id, PlaylistType.Album);
+            else
+            {
+                var task = _serviceProvider.GetRequiredService<IFindPlaylistTask>();
+                task.Execute(this, message.Payload.Id, PlaylistType.Album);
+            }
+            return Continue.No;
         }
+        return Continue.Yes;
+
     }
 
-    private void OnSetActivePlaylist(ActiveAlbumChangedMessage message)
+    private Continue OnSetActivePlaylist(ActiveAlbumChangedMessage message)
     {
         SelectedItem = AddItemToList(message.Payload);
         RefreshView();
+        return Continue.Yes;
     }
-
-  
 }

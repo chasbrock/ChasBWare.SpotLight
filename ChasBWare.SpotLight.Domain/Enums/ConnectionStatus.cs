@@ -2,12 +2,12 @@
 {
     public enum ConnectionStatus
     {
+        NotInitialised,
         NotConnected,
         Unauthorised,
         Authorising,
         Authorised,
         Connected,
-        TokenExpired,
-        Faulted
+        TokenExpired
     }
 }

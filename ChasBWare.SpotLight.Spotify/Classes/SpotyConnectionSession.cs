@@ -27,7 +27,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
         /// <exception cref="InvalidDataException">thrown if access token not set</exception>
         public SpotifyClient GetClient()
         {
-            if (AccessToken != null)
+            if (!string.IsNullOrEmpty(AccessToken))
             {
                 _config = SpotifyClientConfig.CreateDefault(AccessToken);
             }
@@ -53,6 +53,12 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             SecureStorage.SetAsync(nameof(ISpotyConnectionSession.AccessToken), accessToken);
       
             return string.IsNullOrWhiteSpace(AccessToken) ? ConnectionStatus.Unauthorised : ConnectionStatus.Connected;
+        }
+
+        public void ClearAccessTokens() 
+        {
+            AccessToken = null;
+            RefreshToken = null;
         }
 
         public ConnectionStatus RestoreTokens()

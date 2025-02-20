@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace ChasBWare.SpotLight.Infrastructure.Repositories;
 
 public class ArtistRepository(IDbContext _dbContext,
-                              ILogger _logger)
+                              ILogger<IArtistRepository> _logger)
            : IArtistRepository
 {
     public int Add(Artist artist)

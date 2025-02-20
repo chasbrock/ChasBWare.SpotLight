@@ -80,7 +80,7 @@ public class RecentArtistsViewModel
         }
     }
 
-    private void OnFindItem(FindItemMessage message)
+    private Continue OnFindItem(FindItemMessage message)
     {
         if (message.Payload.PageType == PageType.Artists)
         {
@@ -89,15 +89,15 @@ public class RecentArtistsViewModel
             {
                 viewModel.LastAccessed = DateTime.Now;
                 SelectedItem = viewModel;
-                return;
-            }
+             }
 
             var task = _serviceProvider.GetRequiredService<IFindArtistTask>();
-            task.Execute(this, message.Payload.Id); 
-         }
-    }      
+            task.Execute(this, message.Payload.Id);
+        }
+        return Continue.Yes;
+    }
 
-    private void OnSetActiveArtist(ActiveArtistChangedMessage message)
+    private Continue OnSetActiveArtist(ActiveArtistChangedMessage message)
     {
         SelectedItem = AddItemToList(message.Payload, DateTime.Now);
         if (SelectedItem != null)
@@ -105,7 +105,7 @@ public class RecentArtistsViewModel
             LoadItem(SelectedItem);
         }
         RefreshView();
-    }
 
-  
+        return Continue.Yes;
+    }
 }

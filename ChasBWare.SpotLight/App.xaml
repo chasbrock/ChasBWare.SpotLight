@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:con="clr-namespace:ChasbWare.Spotlight.Converters"
+             xmlns:enm="clr-namespace:ChasBWare.SpotLight.Domain.Enums;assembly=ChasBWare.SpotLight.Domain" 
              xmlns:local="clr-namespace:ChasBWare.SpotLight"
              x:Class="ChasBWare.SpotLight.App">
     <Application.Resources>
@@ -148,18 +149,13 @@
             <tk:BoolToObjectConverter x:Key="IsInLibray" 
                             TrueObject="page_library.png"/>
 
-            <Visibility x:Key="Visible">Visible</Visibility>
-            <Visibility x:Key="Collapsed">Collapsed</Visibility>
-            <tk:BoolToObjectConverter x:Key="BoolToVis" 
-                                   TrueObject="{StaticResource Collapsed}" 
-                                   FalseObject="{StaticResource Visible}"/>
-
             <Color x:Key="EnabledTextColour">Black</Color>
             <Color x:Key="DisabledTextColour">DarkGray</Color>
             <tk:BoolToObjectConverter x:Key="EnabledText" 
                                 TrueObject="{StaticResource EnabledTextColour}" 
                                 FalseObject="{StaticResource DisabledTextColour}"/>
 
+            <con:PlaylistTypeToBoolConverter x:Key="PlaylistTypeToBool"/>
             <con:NullToBoolConverter x:Key="NullToBool"/>
 
         </ResourceDictionary>

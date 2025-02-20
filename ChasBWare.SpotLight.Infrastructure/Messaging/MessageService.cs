@@ -6,15 +6,15 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
 {
     public class MessageService<T> : IMessageService<T> 
     {
-        private readonly ILogger _logger;
-        private List<Action<T>> _callbacks = [];
+        private readonly ILogger<MessageService<T>> _logger;
+        private List<Func<T, Continue>> _callbacks = [];
 
-        public MessageService(ILogger logger)
+        public MessageService(ILogger<MessageService<T>> logger)
         {
             _logger = logger;
         }
 
-        public void Register(Action<T> callback)
+        public void Register(Func<T, Continue> callback)
         {
             if (!_callbacks.Contains(callback))
             {
@@ -23,27 +23,30 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
         }
 
 
-        public bool SendMessage(T message)
+        public Continue SendMessage(T message)
         {
             if (message == null)
             {
-                return false;
+                return Continue.Yes;
             }
 
             foreach (var callback in _callbacks)
             {
                 try
                 {
-                    callback.Invoke(message);
+                    if  (callback.Invoke(message) == Continue.No) 
+                    {
+                        return Continue.No;
+                    }
                 }
                 catch (Exception ex)
                 {
                     _callbacks.Remove(callback);
-                    _logger.LogError(ex, $"Removed handler from MessageService<{typeof(T)} to {callback?.Target?.GetType()}");
+                    _logger.LogError(ex, "Removed handler from MessageService<{serviceType} to {callbackType}", typeof(T), callback?.Target?.GetType());
                 }
             }
 
-            return true;
+            return Continue.Yes;
         }
     }
 }

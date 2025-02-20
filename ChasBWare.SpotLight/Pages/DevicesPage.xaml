@@ -34,16 +34,16 @@
     </ContentPage.Resources>
     <Grid RowDefinitions="*, Auto">
         <Grid RowDefinitions="Auto,*" ColumnDefinitions="Auto,Auto"
-              Grid.Row="0" >
-            <ImageButton Source="system_refresh.png" 
+              Grid.Row="0" Grid.Column="1">
+            <ImageButton Style="{StaticResource Key=OpenMore}"
                          HorizontalOptions="Start"
-                         Command="{Binding RefreshCommand}"
-                         Grid.Column="0"/>
+                         Command="{Binding OpenPopupCommand}"
+                         Grid.Column="1"/>
 
             <CollectionView ItemsSource="{Binding Devices}"
                             SelectionMode="Single"
                             SelectedItem="{Binding SelectedDevice}"
-                            Grid.Column="1" Grid.RowSpan="2" Margin="8">
+                            Grid.Column="0" Grid.RowSpan="2" Margin="8">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="vm:DeviceViewModel" >
                         <Border Style="{StaticResource RoundedBorder}" 
@@ -52,7 +52,7 @@
                                 <Image Source="{Binding DeviceType, Converter={StaticResource Key=DeviceImage}}"
                                        Grid.Column="0"/>
                                 <VerticalStackLayout Background="{Binding IsActive, Converter={StaticResource IsActiveBackground}}"
-                                                        Grid.Column="1" Margin="4">
+                                                     Grid.Column="1" Margin="4">
                                     <Label Text="{Binding Name}"
                                            FontSize="14" FontAttributes="Bold"
                                            VerticalTextAlignment="Center"

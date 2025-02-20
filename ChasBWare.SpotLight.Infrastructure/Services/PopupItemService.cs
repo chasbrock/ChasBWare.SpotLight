@@ -23,7 +23,6 @@ public class PopupItemService(IServiceProvider _serviceProvider)
     {
         switch (activity)
         {
-          
             case PopupActivity.Save:
                 var library = _serviceProvider.GetRequiredService<ILibraryViewModel>();
                 var save = !library.Exists(playlist.Id);
