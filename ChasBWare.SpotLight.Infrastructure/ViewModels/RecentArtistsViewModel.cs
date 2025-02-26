@@ -25,7 +25,7 @@ public class RecentArtistsViewModel
                                   ISearchArtistsViewModel searchViewModel,
                                   IPlayerControlViewModel playerControlViewModel,
                                   IMessageService<FindItemMessage> findItemMessageService,
-                                  IMessageService<ActiveArtistChangedMessage> activeArtistChangedMessageService)
+                                  IMessageService<ActiveItemChangedMessage> activeArtistChangedMessageService)
          : base(popupService, serviceProvider, playerControlViewModel, searchViewModel, SorterHelper.GetArtistSorters())
     {
         findItemMessageService.Register(OnFindItem);
@@ -97,12 +97,23 @@ public class RecentArtistsViewModel
         return Continue.Yes;
     }
 
-    private Continue OnSetActiveArtist(ActiveArtistChangedMessage message)
+    private Continue OnSetActiveArtist(ActiveItemChangedMessage message)
     {
-        SelectedItem = AddItemToList(message.Payload, DateTime.Now);
-        if (SelectedItem != null)
+        if (message.Payload.PageType == PageType.Artists)
         {
-            LoadItem(SelectedItem);
+            if (message.Payload.Model is Artist artist)
+            {
+
+                SelectedItem = AddItemToList(artist, DateTime.Now);
+                if (SelectedItem != null)
+                {
+                    LoadItem(SelectedItem);
+                }
+            }
+            else
+            {
+                SelectedItem = null;
+            }
         }
         RefreshView();
 

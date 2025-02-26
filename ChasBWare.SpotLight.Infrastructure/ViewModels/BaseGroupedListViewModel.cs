@@ -115,6 +115,14 @@ public abstract class BaseGroupedListViewModel<T>
         { 
             return;
         }
+        if (newItem != null)
+        {
+            var selectedGroup = GroupedItems.FirstOrDefault(g => g.Items.Contains(newItem));
+            if (selectedGroup != null)
+            {
+                selectedGroup.IsExpanded = true;
+            }
+        }
     }
 
 }

@@ -24,7 +24,7 @@ public class RecentPlaylistsViewModel
                                     IPlayerControlViewModel playerControlViewModel,
                                     ISearchPlaylistsViewModel searchViewModel,
                                     IMessageService<FindItemMessage> findItemMessageService,
-                                    IMessageService<ActivePlaylistChangedMessage> activeAlbumChangedMessageService,
+                                    IMessageService<ActiveItemChangedMessage> activeAlbumChangedMessageService,
                                     ILibraryViewModel library)
         : base(popupService, serviceProvider, playerControlViewModel, searchViewModel, SorterHelper.GetPlaylistSorters())
     {
@@ -97,10 +97,20 @@ public class RecentPlaylistsViewModel
         return Continue.Yes;
     }
 
-    private Continue OnSetActivePlaylist(ActivePlaylistChangedMessage message)
+    private Continue OnSetActivePlaylist(ActiveItemChangedMessage message)
     {
-        SelectedItem = AddItemToList(message.Payload);
-        RefreshView();
+        if (message.Payload.PageType == PageType.Playlists)
+        {
+            if (message.Payload.Model is Playlist playlist)
+            {
+                SelectedItem = AddItemToList(playlist);
+            }
+            else
+            {
+                SelectedItem = null;
+            }
+            RefreshView();
+        }
         return Continue.Yes;
     }
 }

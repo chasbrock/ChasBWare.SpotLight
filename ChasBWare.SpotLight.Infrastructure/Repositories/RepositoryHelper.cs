@@ -51,6 +51,15 @@ internal partial class RepositoryHelper
     /// get all playlist in library
     /// param: PlaylistType 
     /// </summary>
+    internal const string GetLibraryItemIds =
+@"select pl.Id
+    from Playlist pl
+    join LibraryItem li on li.Id = pl.Id";
+    
+    /// <summary>
+    /// get all playlist in library
+    /// param: PlaylistType 
+    /// </summary>
     internal const string GetLibraryItems =
 @"select pl.*
     from Playlist pl

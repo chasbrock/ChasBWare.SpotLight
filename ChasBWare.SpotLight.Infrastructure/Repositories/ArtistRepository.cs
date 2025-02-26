@@ -94,11 +94,11 @@ public class ArtistRepository(IDbContext _dbContext,
 
     public List<Playlist> LoadArtistAlbums(string artistId)
     {
-       var connection = _dbContext.GetConnection().Result;
+        var connection = _dbContext.GetConnection().Result;
         if (connection != null)
         {
             var sql = RepositoryHelper.GetArtistAlbums;
-            return connection.QueryAsync<Playlist>(sql, artistId).Result;
+            var playlists =  connection.QueryAsync<Playlist>(sql, artistId).Result;
         }
         _logger.LogError("Could not access db connection");
         return [];

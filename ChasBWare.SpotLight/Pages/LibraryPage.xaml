@@ -3,20 +3,126 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
              xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
+             xmlns:vu="clr-namespace:ChasBWare.SpotLight.Infrastructure.Utility;assembly=ChasBWare.SpotLight.Infrastructure"
+             xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="vm:LibraryViewModel"
              x:Class="ChasBWare.SpotLight.Pages.LibraryPage"
              Style="{StaticResource AppBackground}">
    
     <Grid RowDefinitions="*,Auto">
+        <!-- body --> 
         <Grid ColumnDefinitions="300,*" Grid.Row="0">
-            <v:PlaylistSelectorView BindingContext="{Binding}" 
-                                    VerticalOptions="Fill"
-                                    Grid.Column="0" />
-            <Grid IsVisible="{Binding SelectedItem, Converter={StaticResource NullToBool}}"
+
+            <!-- selector (left side of page)-->
+            <Grid RowDefinitions="Auto,*" ColumnDefinitions="*,Auto" 
+                  Grid.Column="0">
+                <Picker ItemsSource="{Binding GrouperNames}"
+                                SelectedItem="{Binding SelectedGrouperName}" 
+                                Style="{StaticResource GroupPicker}" 
+                                Grid.Row="0" Grid.Column="0"/>
+                <ImageButton Command="{Binding Path=OpenPopupCommand}"
+                             Style="{StaticResource OpenMore}" 
+                             Grid.Row="0" Grid.Column="1"/>
+
+                <!--list of playlists -->
+                <CollectionView ItemsSource="{Binding GroupedItems}"
+                      VerticalScrollBarVisibility="Always"
+                      SelectionMode="Single" 
+                      Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vu:PlaylistGroup">
+                            <Grid RowDefinitions="Auto,*" >
+                                <Label Text="{Binding Key}"
+                             Style="{StaticResource GroupHeader}" 
+                             Margin="0,1">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SetExpandedCommand}" 
+                                                          NumberOfTapsRequired="1"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
+
+                                <CollectionView ItemsSource="{Binding Items}"
+                                      SelectionMode="Single"
+                                      IsVisible="{Binding IsExpanded}"
+                                      Grid.Row="1" Margin="8,2">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:PlaylistViewModel">
+                                            <Grid RowDefinitions="Auto,Auto,4" >
+                                                <Label Text="{Binding Name}" Style="{StaticResource ListCaption}" Grid.Row="0" >
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding x:DataType='vm:LibraryViewModel', 
+                                                                                      Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}},
+                                                                                      Path=ItemSelectedCommand}"
+                                                                      CommandParameter="{Binding}" 
+                                                                      NumberOfTapsRequired="1"/>
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+                                                <Label Text="{Binding Owner}" Style="{StaticResource ListDescription}" Grid.Row="1"
+                                             IsVisible="{Binding x:DataType='vu:PlaylistGroup', 
+                                                                  Source={RelativeSource AncestorType={x:Type vu:PlaylistGroup}},
+                                                                  Path=ShowOwner}">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding x:DataType='vm:LibraryViewModel', 
+                                                                                      Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}},
+                                                                                      Path=ItemSelectedCommand}"
+                                                                      CommandParameter="{Binding}" 
+                                                                      NumberOfTapsRequired="1"/>
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </Grid>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </Grid>
+
+            <!-- search and selected playlist (right of screen) -->
+            <Grid RowDefinitions="Auto,*"
                   Grid.Column="1">
-                <v:PlaylistView BindingContext="{Binding SelectedItem}" />
+                <!--search bar for playlists -->
+                <tk:Expander IsExpanded="{Binding SearchViewModel.IsPopupOpen, Mode=TwoWay}" 
+                     Direction="Down" 
+                     Grid.Row="0">
+                    <tk:Expander.Header>
+
+                        <SearchBar SearchCommand="{Binding SearchViewModel.ExecuteSearchCommand}"
+                           Text="{Binding SearchViewModel.SearchText}"
+                           Placeholder="Search by name..." />
+                    </tk:Expander.Header>
+                    <CollectionView ItemsSource="{Binding SearchViewModel.FoundItems}"
+                                    SelectionMode="Single" 
+                                    SelectedItem="{Binding SearchViewModel.SelectedItem}"
+                                    Grid.Row="1">
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:PlaylistViewModel">
+                                <Grid RowDefinitions="22,14" Padding="4">
+                                    <Label Text="{Binding Name}" Style="{StaticResource ListCaption}"
+                                 Grid.Row="0" Grid.Column="1"/>
+                                    <Label Text="{Binding Owner}" Style="{StaticResource TrackOwner}"
+                                 Grid.Row="1" Grid.Column="1"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+
+                    </CollectionView>
+                </tk:Expander>
+
+                <!-- selector output-->
+                <Grid IsVisible="{Binding SelectedItem, Converter={StaticResource NullToBool}}"
+                      Grid.Row="1">
+                    <v:PlaylistView BindingContext="{Binding SelectedItem}" />
+                </Grid>
             </Grid>
         </Grid>
+
+
+        <!-- playlist controller -->
         <v:PlayerControlView BindingContext="{Binding PlayerControlViewModel}" Grid.Row="1" />
     </Grid>
     

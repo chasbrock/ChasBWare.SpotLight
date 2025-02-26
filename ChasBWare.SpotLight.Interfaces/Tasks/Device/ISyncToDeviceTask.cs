@@ -7,5 +7,4 @@ namespace ChasBWare.SpotLight.Definitions.Tasks.Device
     {
         void Execute(IPlayerControlViewModel viewModel);
     }
-
 }

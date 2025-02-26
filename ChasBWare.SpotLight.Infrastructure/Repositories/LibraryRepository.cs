@@ -59,6 +59,19 @@ public class LibraryRepository(IDbContext _dbContext,
         return null;
     }
 
+    public HashSet<string> GetPlaylistIds()
+    {
+        var connection = _dbContext.GetConnection().Result;
+        if (connection != null)
+        {
+            var sql = RepositoryHelper.GetLibraryItemIds;
+            return connection.QueryScalarsAsync<string>(sql).Result.ToHashSet();
+        }
+        _logger.LogError("Could not access db connection");
+
+        return [];
+    }
+
     public List<Playlist> GetPlaylists(PlaylistType playlistType)
     {
         var connection = _dbContext.GetConnection().Result;

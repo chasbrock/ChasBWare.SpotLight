@@ -1,4 +1,5 @@
 ﻿using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Infrastructure.ViewModels;
 
 namespace ChasBWare.SpotLight.Infrastructure.Utility
@@ -9,10 +10,18 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
              : base(key, items)
         {
             IsExpanded = false;
+            // do not show owner if this is a playlist and we are grouping on PlaylistType
+
+            if (key is PlaylistType)
+            {
+                ShowOwner = items[0].PlaylistType == PlaylistType.Album;
+            }
+            else
+            {
+                ShowOwner = true;
+            }
         }
 
-       
+        public bool ShowOwner { get;  }
     }
-
-
 }

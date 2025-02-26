@@ -1,4 +1,5 @@
-﻿using ChasBWare.SpotLight.Definitions.Utility;
+﻿using ChasBWare.SpotLight.Definitions.Tasks.Device;
+using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Install;
 using CommunityToolkit.Maui.Core;
 using Microsoft.Extensions.Logging;
@@ -41,6 +42,7 @@ namespace ChasBWare.SpotLight
 
         private async void CheckForInitialisation()
         {
+            // make sure secure storeage is pouplatd
             _logger.LogInformation("Starting CheckForInitialisation"); 
             Thread.Sleep(1000);
             try
@@ -54,6 +56,11 @@ namespace ChasBWare.SpotLight
                         var popupService = _serviceProvider.GetRequiredService<IPopupService>();
                         popupService.ShowPopupAsync<InstallViewModel>();
                     });
+                }
+                else
+                {
+                    var task = _serviceProvider.GetRequiredService<IReconnectToSpotifyTask>();
+                    task.Execute();
                 }
             }
             catch (Exception ex) 

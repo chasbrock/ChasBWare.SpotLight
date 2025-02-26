@@ -10,6 +10,7 @@ using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.DbContext;
+using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
@@ -80,15 +81,11 @@ namespace ChasBWare.SpotLight.DependencyInjection
 
         public static IServiceCollection RegisterMessageHandlers(this IServiceCollection services)
         {
-            return services.AddSingleton<IMessageService<ActiveArtistChangedMessage>, MessageService<ActiveArtistChangedMessage>>()
-                           .AddSingleton<IMessageService<ActiveAlbumChangedMessage>, MessageService<ActiveAlbumChangedMessage>>()
-                           .AddSingleton<IMessageService<ActiveDeviceChangedMessage>, MessageService<ActiveDeviceChangedMessage>>()
-                           .AddSingleton<IMessageService<ActivePlaylistChangedMessage>, MessageService<ActivePlaylistChangedMessage>>()
+            return services.AddSingleton<IMessageService<ActiveItemChangedMessage>, MessageService<ActiveItemChangedMessage>>()
                            .AddSingleton<IMessageService<CurrentTrackChangedMessage>, MessageService<CurrentTrackChangedMessage>>()
                            .AddSingleton<IMessageService<FindItemMessage>, MessageService<FindItemMessage>>()
                            .AddSingleton<IMessageService<PlayPlaylistMessage>, MessageService<PlayPlaylistMessage>>()
-                           .AddSingleton<IMessageService<ConnectionStatusChangedMessage>, MessageService<ConnectionStatusChangedMessage>>()
-                           ;
+                           .AddSingleton<IMessageService<ConnectionStatusChangedMessage>, MessageService<ConnectionStatusChangedMessage>>();
         }
 
         public static IServiceCollection RegisterNavigator(this IServiceCollection services)
@@ -153,15 +150,18 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddTransient<IFindArtistTask, FindArtistTask>()
                            .AddTransient<IFindPlaylistTask, FindPlaylistTask>()
                            .AddTransient<ILibraryLoaderTask, LibraryLoaderTask>()
+                           .AddTransient<ILibraryRefreshTask, LibraryRefreshTask>()
                            .AddTransient<ILoadAvailableDevicesTask, LoadAvailableDevicesTask>()
                            .AddTransient<ILoadRecentArtistTask, LoadRecentArtistTask>()
                            .AddTransient<ILoadRecentPlaylistTask, LoadRecentPlaylistTask>()
+                           .AddTransient<IReconnectToSpotifyTask, ReconnectToSpotifyTask>()
                            .AddTransient<IRemovePlaylistTask, RemoveRecentPlaylistTask>()
                            .AddTransient<IRemoveRecentArtistTask, RemoveRecentArtistTask>()
                            .AddTransient<ITransferToLibraryTask, TransferToLibraryTask>()
                            .AddTransient<ISearchForAlbumTask, SearchForAlbumTask>()
                            .AddTransient<ISearchForArtistTask, SearchForArtistTask>()
                            .AddTransient<ISearchForPlaylistTask, SearchForPlaylistTask>()
+                           .AddTransient<ISearchLibraryTask, SearchLibraryTask>()
                            .AddTransient<ISetHatedTrackTask, SetHatedTrackTask>()
                            .AddTransient<ISyncToDeviceTask, SyncToDeviceTask>()
                            .AddTransient<ITrackListLoaderTask, TrackListLoaderTask>()
@@ -178,13 +178,13 @@ namespace ChasBWare.SpotLight.DependencyInjection
                            .AddSingleton<IPlayerControlViewModel, PlayerControlViewModel>()
                            .AddTransient<IPlaylistListViewModel, PlaylistListViewModel>()
                            .AddTransient<IPlaylistViewModel, PlaylistViewModel>()
-                           .AddTransient<IQueueViewModel, QueueViewModel>()
                            .AddSingleton<IRecentAlbumsViewModel, RecentAlbumsViewModel>()
                            .AddSingleton<IRecentArtistsViewModel, RecentArtistsViewModel>()
                            .AddSingleton<IRecentPlaylistsViewModel, RecentPlaylistsViewModel>()
                            .AddSingleton<ISearchArtistsViewModel, SearchArtistsViewModel>()
                            .AddSingleton<ISearchAlbumsViewModel, SearchAlbumsViewModel>()
                            .AddSingleton<ISearchPlaylistsViewModel, SearchPlaylistsViewModel>()
+                           .AddSingleton<ISearchLibraryViewModel, SearchLibraryViewModel>()
                            .AddTransient<ITrackViewModel, TrackViewModel>()
                            .AddTransient<ITrackListViewModel, TrackListViewModel>();
         }

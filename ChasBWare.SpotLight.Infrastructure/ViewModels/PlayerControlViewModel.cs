@@ -7,6 +7,7 @@ using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Domain.Models;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Utility;
@@ -31,15 +32,15 @@ public class PlayerControlViewModel
     private double _progressPercent = 0;
     private TimeSpan _playedTime = TimeSpan.Zero;
     private TimeSpan _duration = TimeSpan.Zero;
-    private bool _firstCallToNavigate = true;
-
+  
     public PlayerControlViewModel(IServiceProvider serviceProvider,
                                   INavigator navigator,
                                   IDispatcher dispatcher,
                                   ITrackPlayerService trackPlayerService,
                                   ICurrentDeviceViewModel currentDevice,
                                   IMessageService<PlayPlaylistMessage> playTracklistMessageService,
-                                  IMessageService<ActiveDeviceChangedMessage> activeDeviceChangedMessageService,
+                                  IMessageService<ActiveItemChangedMessage> activeItemChangedMessageService,
+                             //     IMessageService<AddToQueueMessage> addToQueueMessageService,
                                   IMessageService<ConnectionStatusChangedMessage> connectionStatusService)
     {
         _serviceProvider = serviceProvider;   
@@ -59,9 +60,10 @@ public class PlayerControlViewModel
         OpenArtistCommand = new Command<string>(id => NavigateToArtist(id));
         OpenAlbumCommand = new Command<string>(id => NavigateToAlbum(id));
 
-        activeDeviceChangedMessageService.Register(SetCurrentDevice);
-        connectionStatusService.Register(ConnectionStatusChange);
-        playTracklistMessageService.Register(PlayTracklist);
+        activeItemChangedMessageService.Register(OnSetCurrentDevice);
+        connectionStatusService.Register(OnConnectionStatusChange);
+        playTracklistMessageService.Register(OnPlayTracklist);
+  //      addToQueueMessageService.Register(OnAddToQueue);
     }
 
     public ICommand BackCommand { get;  }
@@ -144,14 +146,14 @@ public class PlayerControlViewModel
         set => SetField(ref _albumId, value);
     }
 
-    private Continue PlayTracklist(PlayPlaylistMessage message)
+    private Continue OnPlayTracklist(PlayPlaylistMessage message)
     {
         TrackPlayerService.StartPlaylist(message.Payload.Playlist,
                                          message.Payload.Offset);
         return Continue.Yes;
     }
 
-    private Continue ConnectionStatusChange(ConnectionStatusChangedMessage message)
+    private Continue OnConnectionStatusChange(ConnectionStatusChangedMessage message)
     {
         _dispatcher.Dispatch(() =>
         {
@@ -169,11 +171,15 @@ public class PlayerControlViewModel
 
     }
 
-    private Continue SetCurrentDevice(ActiveDeviceChangedMessage message)
+    private Continue OnSetCurrentDevice(ActiveItemChangedMessage message)
     {
-        CurrentDevice.Device = message.Payload;
+        if (message.Payload.PageType == PageType.Devices)
+        {
+            CurrentDevice.Device = message.Payload.Model as DeviceModel ?? DeviceHelper.GetLocalDevice();
+        }
         return Continue.Yes;
     }
+
 
     private void SkipForward()
     {
@@ -208,15 +214,7 @@ public class PlayerControlViewModel
 
     private void NavigateToDevices()
     {
-        if (_firstCallToNavigate)
-        {
-            SyncToDevice();
-            _firstCallToNavigate = false;
-        }
-        else
-        {
-            _navigator.NavigateTo(PageType.Devices);
-        }
+       _navigator.NavigateTo(PageType.Devices);
     }
 
     private void NavigateToArtist(string id)

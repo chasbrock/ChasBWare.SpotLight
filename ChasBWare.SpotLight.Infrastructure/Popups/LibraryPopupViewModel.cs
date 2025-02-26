@@ -9,13 +9,15 @@ public partial class LibraryPopupViewModel
                    : PopupMenuViewModel
 {
     public LibraryPopupViewModel(IPopupService popupService,
-                                           IPopupItemService _popupItemService,
-                                           ILibraryViewModel _library)
+                                 IPopupItemService _popupItemService,
+                                 ILibraryViewModel _library)
          : base(popupService)
     {
         MenuGroups.Clear();
+
         _popupItemService.AddMenuItem(this, _library, PopupActivity.ExpandAll);
         _popupItemService.AddMenuItem(this, _library, PopupActivity.CollapseAll);
+        _popupItemService.AddMenuItem(this, _library, PopupActivity.Refresh);
 
         RecalcSize();
     }

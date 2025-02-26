@@ -10,23 +10,50 @@ namespace ChasBWare.SpotLight.Spotify.Repositories;
 public class SpotifyTrackRepository(ISpotifyActionManager _actionManager)
            : ISpotifyTrackRepository
 {
-    public List<Track> GetPlaylistTracks(string playlistId, PlaylistType playlistType)
+    public List<Track> GetPlaylistTracks(Playlist model)
     {
-        if (playlistType == PlaylistType.Playlist)
+        if (model.Id == null) 
         {
-            var fullTracks = _actionManager.GetPlaylistTracks(playlistId);
-            if (fullTracks != null)
-            {
-                return fullTracks.Select(ft => ft.CopyToTrack()).ToList();
-            }
+            return [];
         }
-        else
+
+        switch (model.PlaylistType)
         {
-            var simpleTracks = _actionManager.GetAlbumTracks(playlistId);
-            if (simpleTracks != null)
-            {
-                return simpleTracks.Select(ft => ft.CopyToTrack()).OrderBy(t=>t.TrackNumber).ToList();
-            }
+            case PlaylistType.Playlist:
+                {
+                    var fullTracks = _actionManager.GetPlaylistTracks(model.Id);
+                    if (fullTracks != null)
+                    {
+                        return fullTracks.Select(ft => ft.CopyToTrack()).ToList();
+                    }
+
+                    break;
+                }
+
+            case PlaylistType.Album:
+                {
+                    var simpleTracks = _actionManager.GetAlbumTracks(model.Id);
+                    if (simpleTracks != null)
+                    {
+                        return simpleTracks.Select(ft => ft.CopyToTrack()).OrderBy(t => t.TrackNumber).ToList();
+                    }
+
+                    break;
+                }
+
+            case PlaylistType.TopTracks:
+                {
+                    var keyValue = model.Owner.UnpackOwners().FirstOrDefault();
+                    if (keyValue != null)
+                    {
+                        var fullTracks = _actionManager.GetArtistTopTracks(keyValue.Value);
+                        if (fullTracks != null)
+                        {
+                            return fullTracks.Select(ft => ft.CopyToTrack()).OrderBy(t => t.TrackNumber).ToList();
+                        }
+                    }
+                    break;
+                }
         }
         return [];
     }

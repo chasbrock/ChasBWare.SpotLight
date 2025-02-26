@@ -1,81 +1,81 @@
 ﻿using System.Text;
+using ChasBWare.SpotLight.Domain.Entities;
 using SpotifyAPI.Web;
 
-namespace ChasBWare.SpotLight.Mappings.Mappers
+namespace ChasBWare.SpotLight.Mappings.Mappers;
+
+public static class MapperHelpers
 {
-    public static class MapperHelpers
+    public static DateTime ConvertReleaseDate(this string? releaseDate)
     {
-        public static DateTime ConvertReleaseDate(this string? releaseDate)
+        var year = 1900;
+        var month = 1;
+        var day = 1;
+
+        if (!string.IsNullOrWhiteSpace(releaseDate))
         {
-            var year = 1900;
-            var month = 1;
-            var day = 1;
-
-            if (!string.IsNullOrWhiteSpace(releaseDate))
+            var parts = releaseDate.Trim().Split('-');
+            if (parts.Length >= 1)
             {
-                var parts = releaseDate.Trim().Split('-');
-                if (parts.Length >= 1)
-                {
-                    year = int.Parse(parts[0]);
-                }
-
-                if (parts.Length >= 2)
-                {
-                    month = int.Parse(parts[1]);
-                }
-                
-                if (parts.Length >= 3)
-                {
-                    day = int.Parse(parts[2]);
-                }
+                year = int.Parse(parts[0]);
             }
 
-            return new DateTime(year, month, day);
-        }
-
-        public static string? GetMediumImage(this List<SpotifyAPI.Web.Image>? images)
-        {
-            if (images == null || images.Count == 0)
+            if (parts.Length >= 2)
             {
-                return null;
+                month = int.Parse(parts[1]);
             }
-
-            var sorted = images.OrderByDescending(i => i.Width).ToArray();
-            if (sorted.Length > 1)
+            
+            if (parts.Length >= 3)
             {
-                return sorted[1].Url;
+                day = int.Parse(parts[2]);
             }
-
-            return sorted[0].Url;
         }
 
-        public static string? GetSmallImage(this List<SpotifyAPI.Web.Image>? images)
+        return new DateTime(year, month, day);
+    }
+
+    public static string? GetMediumImage(this List<SpotifyAPI.Web.Image>? images)
+    {
+        if (images == null || images.Count == 0)
         {
-            if (images == null || images.Count == 0)
-            {
-                return null;
-            }
-
-            var smallest = images.OrderBy(i => i.Width).FirstOrDefault();
-
-            return smallest?.Url;
+            return null;
         }
 
-        public static string PackOwner(this List<SimpleArtist>? source)
+        var sorted = images.OrderByDescending(i => i.Width).ToArray();
+        if (sorted.Length > 1)
         {
-            if (source == null)
-            {
-                return string.Empty;
-            }
-
-            var result = new StringBuilder();
-            source.ForEach(sa => result.Append($"{sa.PackOwner()},"));
-            return result.ToString();
+            return sorted[1].Url;
         }
 
-        public static string PackOwner(this SimpleArtist source)
+        return sorted[0].Url;
+    }
+
+    public static string? GetSmallImage(this List<SpotifyAPI.Web.Image>? images)
+    {
+        if (images == null || images.Count == 0)
         {
-            return $"{source.Name}={source.Id}";
+            return null;
         }
+
+        var smallest = images.OrderBy(i => i.Width).FirstOrDefault();
+
+        return smallest?.Url;
+    }
+
+    public static string PackOwner(this List<SimpleArtist>? source)
+    {
+        if (source == null)
+        {
+            return string.Empty;
+        }
+
+        var result = new StringBuilder();
+        source.ForEach(sa => result.Append($"{sa.PackOwner()},"));
+        return result.ToString();
+    }
+
+    public static string PackOwner(this SimpleArtist source)
+    {
+        return $"{source.Name}={source.Id}";
     }
 }

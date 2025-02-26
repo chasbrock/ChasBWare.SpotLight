@@ -19,20 +19,20 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
         private readonly IMessageService<CurrentTrackChangedMessage> _currentTrackMessageService;
         private readonly IDispatcherTimer _timer;
         private readonly IHatedService _hatedService;
+        private readonly ISpotifyPlayerController _playerController;
 
         private DateTime? _playbackStarted = null;
         private PlayingTrack? _nowPlaying = null;
-        private IServiceProvider _serviceProvider;
-   
-        public TrackPlayerService(IServiceProvider serviceProvider,
-                                  IDispatcher dispatcher,
+     
+        public TrackPlayerService(IDispatcher dispatcher,
                                   IHatedService hatedService,
+                                  ISpotifyPlayerController playerController,
                                   IMessageService<CurrentTrackChangedMessage> currentTrackChangedMessage,
                                   IMessageService<ConnectionStatusChangedMessage> connectionStatusService)
         {
-            _serviceProvider = serviceProvider;
             _currentTrackMessageService = currentTrackChangedMessage;
             _hatedService = hatedService;
+            _playerController = playerController;
             connectionStatusService.Register(ConnectionStatusChange);
 
             _timer = dispatcher.CreateTimer();
@@ -44,10 +44,14 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
 
         public async void StartPlaylist(IPlaylistViewModel playlist, int trackNumber)
         {
-         	var playerController = _serviceProvider.GetService<ISpotifyPlayerController>();
-            if (playerController != null)
+            if (playlist.PlaylistType == PlaylistType.TopTracks)
             {
-                UpdateNowPlaying(await playerController.StartPlayback(playlist.Uri, trackNumber));
+                var tracks = playlist.TracksViewModel.Items.TakeLast(playlist.TracksViewModel.Items.Count - trackNumber);
+                UpdateNowPlaying(await _playerController.Enqueue(tracks));
+            }
+            else
+            {
+                UpdateNowPlaying(await _playerController.StartPlayback(playlist.Uri, trackNumber));
             }
         }
 
@@ -55,25 +59,16 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
         {
             _timer.Stop();
             PostPlayingTrackChange(TrackStatus.Paused);
-            
-            var playerController = _serviceProvider.GetService<ISpotifyPlayerController>();
-            if (playerController != null)
-            {
-                UpdateNowPlaying(await playerController.PausePlayback());
-            }
+            UpdateNowPlaying(await _playerController.PausePlayback());
         }
 
         public async void Resume()
         {
             // check to seee it anyone else has changed track / resumed playback
             var currentlyPlaying = await GetCurrentlyPlaying();
-            if (currentlyPlaying != null && currentlyPlaying.Id == _nowPlaying?.Id) 
+            if (currentlyPlaying != null && currentlyPlaying.Id == _nowPlaying?.Id)
             {
-                var playerController = _serviceProvider.GetService<ISpotifyPlayerController>();
-                if (playerController != null)
-                {
-                    currentlyPlaying = await playerController.ResumePlayback(_nowPlaying.Uri, (int)_nowPlaying.Progress.TotalMilliseconds);
-                }
+                currentlyPlaying = await _playerController.ResumePlayback(_nowPlaying.Uri, (int)_nowPlaying.Progress.TotalMilliseconds);
             }
 
             UpdateNowPlaying(currentlyPlaying);
@@ -81,23 +76,15 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
 
         public async void SkipForward()
         {
-            var playerController = _serviceProvider.GetService<ISpotifyPlayerController>();
-            if (playerController != null)
-            {
-                UpdateNowPlaying(await playerController.SkipNext());
-            }
+            UpdateNowPlaying(await _playerController.SkipNext());
         }
 
         public async void SkipBackward()
         {
-            var playerController = _serviceProvider.GetService<ISpotifyPlayerController>();
-            if (playerController != null)
+            var nowPlaying = await _playerController.SkipPrevious();
+            if (nowPlaying != null)
             {
-                var nowPlaying = await playerController.SkipPrevious();
-                if (nowPlaying != null)
-                {
-                    UpdateNowPlaying(nowPlaying);
-                }
+                UpdateNowPlaying(nowPlaying);
             }
         }
         
@@ -181,16 +168,10 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
                 _timer.Stop();
             }
         }
-            
+
         private async Task<PlayingTrack?> GetCurrentlyPlaying()
         {
-            var playerController = _serviceProvider.GetService<ISpotifyPlayerController>();
-            if (playerController != null)
-            {
-                return await playerController.GetCurrentPlayingTrack();
-
-            }
-            return null;
+            return await _playerController.GetCurrentPlayingTrack();
         }
 
         private void UpdateTrackProgress(PlayingTrack nowPlaying)
@@ -207,7 +188,5 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
                 _currentTrackMessageService.SendMessage(new CurrentTrackChangedMessage(_nowPlaying.Id, _nowPlaying.Album, status));
             }
         }
-
-    
     }
 }

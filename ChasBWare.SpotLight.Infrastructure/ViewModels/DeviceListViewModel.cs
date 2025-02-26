@@ -23,18 +23,18 @@ public partial class DeviceListViewModel
     private IDeviceViewModel? _selectedDevice;
     private IServiceProvider _serviceProvider;
     private INavigator _navigator;
-    private IMessageService<ActiveDeviceChangedMessage> _activeDeviceMessageService;
+    private IMessageService<ActiveItemChangedMessage> _activeDeviceMessageService;
     private Uri? _lastCaller;
 
     public DeviceListViewModel(IPopupService popupService,
                                IServiceProvider serviceProvider,
                                INavigator navigator,
                                IPlayerControlViewModel playerControlViewModel,
-                               IMessageService<ActiveDeviceChangedMessage> activeDeviceMessageService,
+                               IMessageService<ActiveItemChangedMessage> activeItemChangedMessageService,
                                IMessageService<ConnectionStatusChangedMessage> connectionStatusService)
     {
         _serviceProvider = serviceProvider;
-        _activeDeviceMessageService = activeDeviceMessageService;
+        _activeDeviceMessageService = activeItemChangedMessageService;
         _navigator = navigator;
         _navigator.RegisterOnNavigate(this);
 
@@ -84,8 +84,7 @@ public partial class DeviceListViewModel
                     task.Execute(_selectedDevice);
                 }
 
-                var selectedDevice = _selectedDevice ?? new DeviceViewModel();
-                _activeDeviceMessageService.SendMessage(new ActiveDeviceChangedMessage(selectedDevice.Model));
+                _activeDeviceMessageService.SendMessage(new ActiveItemChangedMessage(PageType.Devices,  _selectedDevice?.Model));
             }
         }
     }

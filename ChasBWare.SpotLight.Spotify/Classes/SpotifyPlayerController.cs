@@ -1,4 +1,5 @@
 ﻿using ChasBWare.SpotLight.Definitions.Services;
+using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Mappings.Mappers;
@@ -120,20 +121,18 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
         }
                
-        public async Task<Tuple<Track,List<Track>>?> GetQueue()
+        public async Task<List<Track>> GetQueue()
         {
             var client = _connectionManager.GetClient();
             try
             {
                 var queue = await client.Player.GetQueue();
-                var current = queue.CurrentlyPlaying.CopyToTrack();
-                var tracks = queue.Queue.Select(pi => pi.CopyToTrack()).ToList();
-                return new Tuple<Track, List<Track>>(current, tracks);
+               return queue.Queue.Select(pi => pi.CopyToTrack()).ToList();
             }
             catch (Exception ex)
             {
                 SpotifyErrorCatcher.ProcessException(_connectionManager, ex);
-                return null;
+                return [];
             }
         }
 
@@ -182,5 +181,23 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             }
         }
 
+        public async Task<PlayingTrack?> Enqueue(IEnumerable<ITrackViewModel> tracks)
+        {
+            var client = _connectionManager.GetClient();
+            try
+            {
+                foreach (var track in tracks)
+                {
+                    await client.Player.AddToQueue(new PlayerAddToQueueRequest(track.Model.Uri));
+                }
+                await client.Player.SkipNext();
+                return await GetCurrentPlayingTrack();
+            }
+            catch (Exception ex)
+            {
+                SpotifyErrorCatcher.ProcessException(_connectionManager, ex);
+                return null;
+            }
+        }
     }
 }

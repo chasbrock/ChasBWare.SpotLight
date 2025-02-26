@@ -74,11 +74,15 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
 
     public bool SetPlaylistSaveStatus(string playlistId, PlaylistType playlistType, bool save)
     {
-        if (playlistType == PlaylistType.Album)
+        switch (playlistType)
         {
-            return _actionManager.SetAlbumSaveStatus(playlistId, save);
+            case PlaylistType.Album:
+                return _actionManager.SetAlbumSaveStatus(playlistId, save);
+            case PlaylistType.Playlist:
+                return _actionManager.SetPlaylistSaveStatus(playlistId, save);
+            default:
+                return true;
         }
-        return _actionManager.SetPlaylistSaveStatus(playlistId, save);
     }
 
 

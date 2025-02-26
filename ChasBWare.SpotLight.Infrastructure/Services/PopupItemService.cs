@@ -130,7 +130,7 @@ public class PopupItemService(IServiceProvider _serviceProvider)
         {
             case PopupActivity.ExpandAll:
                 popup.AddItem(activity,
-                              caption: $"Expand All",
+                              caption: "Expand All",
                               action: (t) =>
                               {
                                   library.ExpandAll();
@@ -140,13 +140,26 @@ public class PopupItemService(IServiceProvider _serviceProvider)
 
             case PopupActivity.CollapseAll:
                 popup.AddItem(activity,
-                              caption: $"Collapse All",
+                              caption: "Collapse All",
                               action: (t) =>
                               {
                                   library.CollapseAll();
                                   popup.Close();
                               });
                 break;
+
+            case PopupActivity.Refresh:
+                popup.AddItem(PopupGroup.Library,
+                              activity,
+                              caption: "Refresh library",
+                              action: (t) =>
+                              {
+                                  var task = _serviceProvider.GetRequiredService<ILibraryRefreshTask>();
+                                  task.Execute(library);
+                                  popup.Close();
+                              });
+                break;
+                              
         }
     }
 }

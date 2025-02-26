@@ -15,7 +15,7 @@ namespace ChasBWare.SpotLight.Domain.Entities
         public string? Image { get; set; }
         public PlaylistType PlaylistType { get; set; }
         public DateTime ReleaseDate { get; set; }
-        public string Uri { get; set; } = string.Empty;
+        public string? Uri { get; set; }
         public DateTime LastAccessed { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Windows.Input;
+using ChasBWare.SpotLight.Definitions.Tasks.Device;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 using ChasBWare.SpotLight.Infrastructure.Utility;
@@ -14,15 +15,18 @@ namespace ChasBWare.SpotLight.Install;
 public partial class InstallViewModel : Notifyable
 {
     public const string Initialised = "Initialised";
-
+  
+    private readonly IServiceProvider _serviceProvider;
     private readonly IAlertService _alertService;
     private readonly IPopupService _popupService;
 
     private string _key = "";
 
-    public InstallViewModel(IAlertService alertService,
+    public InstallViewModel(IServiceProvider serviceProvider, 
+                            IAlertService alertService,
                             IPopupService popupService)
     {
+        _serviceProvider = serviceProvider; 
         _alertService = alertService;
         _popupService = popupService;
 
@@ -53,6 +57,7 @@ public partial class InstallViewModel : Notifyable
                 throw new SystemException("No initialisation data found");
             }
 
+            // use key to decode secure data
             RSA rsa = RSA.Create();
             rsa.ImportRSAPrivateKey(Convert.FromBase64String(Key), out _);
             foreach (var item in items)
@@ -63,7 +68,11 @@ public partial class InstallViewModel : Notifyable
             }
 
             await SecureStorage.Default.SetAsync(Initialised, true.ToString());
-            
+
+            // reconnect spotify
+            var task = _serviceProvider.GetRequiredService<IReconnectToSpotifyTask>();
+            task.Execute();
+
             _popupService.ClosePopup(this);
         }
         catch (CryptographicException crex)

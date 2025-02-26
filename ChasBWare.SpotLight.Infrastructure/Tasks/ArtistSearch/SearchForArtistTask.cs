@@ -34,3 +34,4 @@ public class SearchForArtistTask(IDispatcher _dispatcher,
         });
     }
 }
+

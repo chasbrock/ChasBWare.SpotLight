@@ -48,9 +48,9 @@ public static class PlaylistMapper
         };
     }
 
-    public static Playlist? CopyToPlaylist(this FullAlbum source)
+    public static Playlist CopyToPlaylist(this FullAlbum source)
     {
-       
+
         return new Playlist
         {
             Id = source.Id,
@@ -80,5 +80,7 @@ public static class PlaylistMapper
             LastAccessed = DateTime.Now
         };
     }
+
+ 
 
 }

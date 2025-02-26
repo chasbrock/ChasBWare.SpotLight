@@ -9,6 +9,8 @@ namespace ChasBWare.SpotLight.Spotify.Classes;
 public class SpotifyActionManager(ISpotifyConnectionManager _spotifyConnectionManager)
            : ISpotifyActionManager
 {
+    public string? CountryCode { get; private set;}
+
     public FullAlbum? FindAlbum(string albumId)
     {
         return SpotifyErrorCatcher.Execute<FullAlbum>(_spotifyConnectionManager,
@@ -34,17 +36,6 @@ public class SpotifyActionManager(ISpotifyConnectionManager _spotifyConnectionMa
             {
                 return client.Playlists.Get(playlistId).Result;
             });
-    }
-
-
-    public List<FullTrack>? GetArtistTopTracks(string artistId, string userCountry)
-    {
-        return SpotifyErrorCatcher.Execute<List<FullTrack>>(_spotifyConnectionManager,
-         client =>
-         {
-             var topTracks = client.Artists.GetTopTracks(artistId, new ArtistsTopTracksRequest(userCountry)).Result;
-             return topTracks.Tracks;
-         });
     }
 
     public List<SimpleTrack>? GetAlbumTracks(string albumId)
@@ -94,6 +85,16 @@ public class SpotifyActionManager(ISpotifyConnectionManager _spotifyConnectionMa
             })?.Result;
     }
 
+    public List<FullTrack>? GetArtistTopTracks(string artistId)
+    {
+        return SpotifyErrorCatcher.Execute<List<FullTrack>>(_spotifyConnectionManager,
+            client =>
+            {
+                var userCountry = GetUserCountrCode(client);
+                var topTracks = client.Artists.GetTopTracks(artistId, new ArtistsTopTracksRequest(userCountry)).Result;
+                return topTracks.Tracks;
+            });
+    }
 
     public List<SpotifyDevice>? GetAvailableDevices()
     {
@@ -176,7 +177,7 @@ public class SpotifyActionManager(ISpotifyConnectionManager _spotifyConnectionMa
                 return client.UserProfile.Current().Result;
             });
     }
-
+    
     public List<SimpleAlbum>? SearchForAlbums(string searchText)
     {
         return SpotifyErrorCatcher.Execute<List<SimpleAlbum>>(_spotifyConnectionManager,
@@ -223,6 +224,24 @@ public class SpotifyActionManager(ISpotifyConnectionManager _spotifyConnectionMa
             });
     }
 
+    public bool SetAlbumSaveStatus(string id, bool save)
+    {
+        return SpotifyErrorCatcher.Execute<bool>(_spotifyConnectionManager,
+             client =>
+             {
+                 if (save)
+                 {
+                     var request = new LibrarySaveAlbumsRequest([id]);
+                     return client.Library.SaveAlbums(request).Result;
+                 }
+                 else
+                 {
+                     var request = new LibraryRemoveAlbumsRequest([id]);
+                     return client.Library.RemoveAlbums(request).Result;
+                 }
+             });
+    }
+
     public bool SetCurrentDeviceVolume(int volumePercent)
     {
         return SpotifyErrorCatcher.Execute<bool>(_spotifyConnectionManager,
@@ -243,24 +262,6 @@ public class SpotifyActionManager(ISpotifyConnectionManager _spotifyConnectionMa
             });
     }
 
-    public bool SetAlbumSaveStatus(string id, bool save)
-    {
-        return SpotifyErrorCatcher.Execute<bool>(_spotifyConnectionManager,
-             client =>
-             {
-                 if (save)
-                 {
-                     var request = new LibrarySaveAlbumsRequest([id]);
-                     return client.Library.SaveAlbums(request).Result;
-                 }
-                 else
-                 {
-                     var request = new LibraryRemoveAlbumsRequest([id]);
-                     return client.Library.RemoveAlbums(request).Result;
-                 }
-             });
-    }
-
     public bool SetPlaylistSaveStatus(string id, bool save)
     {
         return SpotifyErrorCatcher.Execute<bool>(_spotifyConnectionManager,
@@ -275,5 +276,15 @@ public class SpotifyActionManager(ISpotifyConnectionManager _spotifyConnectionMa
                      return client.Follow.UnfollowPlaylist(id).Result;
                  }
              });
+    }
+
+    private string GetUserCountrCode(SpotifyClient client)
+    {
+        if (CountryCode == null)
+        {
+            var user = client.UserProfile.Current().Result;
+            CountryCode = user.Country;
+        }
+        return CountryCode;
     }
 }

@@ -50,8 +50,8 @@
                                             </Label.GestureRecognizers>
                                         </Label>
                                         <Label Text="{Binding Owner}" Style="{StaticResource ListDescription}" Grid.Row="1"
-                                               IsVisible="{Binding x:DataType='vm:LibraryViewModel', 
-                                                                    Source={RelativeSource AncestorType={x:Type vm:LibraryViewModel}},
+                                               IsVisible="{Binding x:DataType='vu:PlaylistGroup', 
+                                                                    Source={RelativeSource AncestorType={x:Type vu:PlaylistGroup}},
                                                                     Path=ShowOwner}">
                                             <Label.GestureRecognizers>
                                                 <TapGestureRecognizer Command="{Binding x:DataType='vm:LibraryViewModel', 

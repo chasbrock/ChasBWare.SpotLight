@@ -1,4 +1,5 @@
-﻿using ChasBWare.SpotLight.Definitions.Messaging;
+﻿using ChasBWare.SpotLight.Definitions.Enums;
+using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Services;
 using ChasBWare.SpotLight.Definitions.Tasks.Device;
@@ -9,7 +10,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Tasks.Device;
 
 public class ChangeActiveDeviceTask(IDispatcher _dispatcher,
                                     ISpotifyDeviceRepository  _spotifyDeviceRepository,
-                                    IMessageService<ActiveDeviceChangedMessage> _activeDeviceMessageService)
+                                    IMessageService<ActiveItemChangedMessage> _activeItemChangedMessageService)
           : IChangeActiveDeviceTask
 {
     public void Execute(IDeviceViewModel selectedDevice)
@@ -24,7 +25,7 @@ public class ChangeActiveDeviceTask(IDispatcher _dispatcher,
             _dispatcher.Dispatch(() =>
             {
                 selectedDevice.Model.IsActive = true;
-                _activeDeviceMessageService.SendMessage(new ActiveDeviceChangedMessage(selectedDevice.Model));
+                _activeItemChangedMessageService.SendMessage(new ActiveItemChangedMessage(PageType.Devices, selectedDevice.Model));
             });
         }
     }

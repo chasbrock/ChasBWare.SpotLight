@@ -9,6 +9,8 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
     /// </summary>
     public interface ISpotifyActionManager
     {
+        string? CountryCode { get; }
+
         /// <summary>
         /// find album details from id
         /// </summary>
@@ -29,13 +31,7 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// <param name="playlistId"></param>
         /// <returns></returns>
         FullPlaylist? FindPlaylist(string playlistId);
-
-        /// <summary>
-        /// gets all albums for artist
-        /// </summary>
-        /// <returns></returns>
-        List<FullTrack>? GetArtistTopTracks(string artistId, string userCountry);
- 
+          
         /// <summary>
         /// async load tracks for album list
         /// </summary>
@@ -47,6 +43,12 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// </summary>
         /// <returns></returns>
         List<SimpleAlbum>? GetArtistAlbums(string artistId);
+
+        /// <summary>
+        /// gets all albums for artist
+        /// </summary>
+        /// <returns></returns>
+        List<FullTrack>? GetArtistTopTracks(string artistId);
 
         /// <summary>
         /// get list of available devices
@@ -102,6 +104,13 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// <returns></returns>
         List<FullPlaylist>? SearchForPlaylists(string searchText);
 
+        /// <summary>
+        /// adds or removes album for user's spotify profile
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="save"></param>
+        /// <returns></returns>
+        bool SetAlbumSaveStatus(string id, bool save);
 
         /// <summary>
         /// set volum of currently playing device
@@ -116,7 +125,14 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// <param name="deviceId"></param>
         /// <returns>true if success</returns>
         bool SetDeviceAsActive(string deviceId);
-        bool SetAlbumSaveStatus(string id, bool save);
+
+        /// <summary>
+        /// adds or removes playlist for user's spotify profile
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="save"></param>
+        /// <returns></returns>
         bool SetPlaylistSaveStatus(string id, bool save);
+        
     }
 }

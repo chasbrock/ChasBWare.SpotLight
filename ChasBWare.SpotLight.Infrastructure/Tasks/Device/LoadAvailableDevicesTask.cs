@@ -1,4 +1,5 @@
-﻿using ChasBWare.SpotLight.Definitions.Messaging;
+﻿using ChasBWare.SpotLight.Definitions.Enums;
+using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks.Device;
 using ChasBWare.SpotLight.Definitions.ViewModels;
@@ -14,7 +15,7 @@ public class LoadAvailableDevicesTask(IServiceProvider _serviceporovider,
                                       IDispatcher _dispatcher,
                                       ILogger<LoadAvailableDevicesTask> _logger,
                                       ISpotifyDeviceRepository _deviceRepository,
-                                      IMessageService<ActiveDeviceChangedMessage> _activeDeviceMessageService)
+                                      IMessageService<ActiveItemChangedMessage> _activeItemChangedMessageService)
            : ILoadAvailableDevicesTask
 {
     public void Execute(IDeviceListViewModel viewModel)
@@ -53,7 +54,7 @@ public class LoadAvailableDevicesTask(IServiceProvider _serviceporovider,
                 //signal that we have found an active device
                 if (activeDevice != null)
                 {
-                    _activeDeviceMessageService.SendMessage(new ActiveDeviceChangedMessage(activeDevice.Model));
+                    _activeItemChangedMessageService.SendMessage(new ActiveItemChangedMessage(PageType.Devices, activeDevice.Model));
                 }
             }
             catch (Exception ex)

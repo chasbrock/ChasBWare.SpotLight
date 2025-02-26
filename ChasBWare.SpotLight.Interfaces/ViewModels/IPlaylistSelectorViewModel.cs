@@ -2,6 +2,6 @@
 {
     public interface IPlaylistSelectorViewModel : IGroupedListViewModel<IPlaylistViewModel>
     {
-        void ExecuteLibrayCommand(IPlaylistViewModel? selectedItem);
+     
     }
 }

@@ -12,7 +12,7 @@ public class PlaylistTypeToBoolConverter : IValueConverter
             return false;
         }
 
-        return ((PlaylistType)value)  != PlaylistType.Playlist;
+        return ((PlaylistType)value) == PlaylistType.Album;
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

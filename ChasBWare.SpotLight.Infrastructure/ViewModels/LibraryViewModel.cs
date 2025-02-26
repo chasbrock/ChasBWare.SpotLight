@@ -6,6 +6,7 @@ using ChasBWare.SpotLight.Definitions.Tasks.ArtistSearch;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
+using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Infrastructure.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
@@ -18,19 +19,21 @@ public partial class LibraryViewModel
                    : BaseGroupedListViewModel<IPlaylistViewModel>,
                      ILibraryViewModel
 {
-    private bool _showOwner;
-
     public LibraryViewModel(IServiceProvider serviceProvider,
                             IPopupService popupService,       
                             IPlayerControlViewModel playerControlViewModel,
+                            ISearchLibraryViewModel searchViewModel,
                             IMessageService<FindItemMessage> findItemMessageService,
+                            IMessageService<ActiveItemChangedMessage> activeItemChangedMessageService,
                             IMessageService<CurrentTrackChangedMessage> currentTrackChangedMessage)
          : base(serviceProvider, GrouperHelper.GetPlaylistGroupers())
     {
-         PlayerControlViewModel = playerControlViewModel;
+        PlayerControlViewModel = playerControlViewModel;
+        SearchViewModel = searchViewModel;
 
         OpenPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<LibraryPopupViewModel>());
 
+        activeItemChangedMessageService.Register(OnActiveItemChanged);
         findItemMessageService.Register(OnFindItem);
         currentTrackChangedMessage.Register(OnTrackChangedMessage);
 
@@ -38,24 +41,9 @@ public partial class LibraryViewModel
     }
 
     public IPlayerControlViewModel PlayerControlViewModel { get; }
+    public ISearchLibraryViewModel SearchViewModel { get; }
     public ICommand OpenPopupCommand { get; }
-    
-    
-    public void ExecuteLibrayCommand(IPlaylistViewModel? selectedItem)
-    {
-        if (selectedItem != null)
-        {
-            // var playlistService = _serviceProvider.GetService<IPlaylistService>();
-            // playlistService.RemoveSavedItem(selectedItem.Model);
-            Items.Remove(selectedItem);
-        }
-    }
-        
-    public bool ShowOwner
-    {
-        get => _showOwner;
-        set => SetField(ref _showOwner, value);
-    }
+  
    
     public bool Exists(string? playlistId)
     {
@@ -66,11 +54,11 @@ public partial class LibraryViewModel
     public override void RefreshView()
     {
         base.RefreshView();
-        ShowOwner = SelectedGrouper.Name != nameof(IPlaylistViewModel.Owners);
     }
 
     protected override void SelectedItemChanged(IPlaylistViewModel? oldItem, IPlaylistViewModel? newItem)
     {
+        base.SelectedItemChanged(oldItem, newItem);
         if (oldItem != null)
         {
             oldItem.IsSelected = false;
@@ -128,5 +116,20 @@ public partial class LibraryViewModel
         return Continue.Yes;
     }
 
+    private Continue OnActiveItemChanged(ActiveItemChangedMessage message) 
+    {
+        if (message.Payload.PageType == PageType.Library)
+        {
+            if (message.Payload.Model is Playlist playlist)
+            {
+                SelectedItem = Items.FirstOrDefault(pl => pl.Id == playlist.Id);
+            }
+            else
+            {
+                SelectedItem = null;
+            }
+        }
+        return Continue.Yes;
+    }
 
 }

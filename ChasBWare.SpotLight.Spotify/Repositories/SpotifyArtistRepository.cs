@@ -28,12 +28,19 @@ public class SpotifyArtistRepository(IServiceProvider _serviceProvider,
         return artists;
     }
 
-    public List<Playlist> LoadArtistAlbums(string artistId)
+    public List<Playlist> LoadArtistAlbums(Artist artist)
     {
-        var savedAlbums =  _actionManager.GetArtistAlbums(artistId);
+        if (artist.Id == null) 
+        {
+            return [];
+        }
+
+        var savedAlbums =  _actionManager.GetArtistAlbums(artist.Id);
         if (savedAlbums != null) 
         {
-            return savedAlbums.Select(sa => sa.CopyToPlaylist()).ToList();
+            List<Playlist> playlists = savedAlbums.Select(sa => sa.CopyToPlaylist()).ToList();
+            playlists.Add(artist.CopyToTopTracksPlaylist());
+            return playlists;
         }
 
         return [];

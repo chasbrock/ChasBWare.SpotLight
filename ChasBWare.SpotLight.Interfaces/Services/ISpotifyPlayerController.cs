@@ -1,9 +1,17 @@
-﻿using ChasBWare.SpotLight.Domain.Entities;
+﻿using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
+using ChasBWare.SpotLight.Domain.Entities;
 
 namespace ChasBWare.SpotLight.Definitions.Services
 {
     public interface ISpotifyPlayerController
     {
+        /// <summary>
+        /// cleare queue, then add tracks, and start playling
+        /// </summary>
+        /// <param name="tracks"></param>
+        /// <returns></returns>
+        Task<PlayingTrack?> Enqueue(IEnumerable<ITrackViewModel> tracks);
+
         /// <summary>
         /// retreave the currently playing track from spotify
         /// </summary>
@@ -14,7 +22,7 @@ namespace ChasBWare.SpotLight.Definitions.Services
         /// get the spotify queue
         /// </summary>
         /// <returns></returns>
-        Task<Tuple<Track, List<Track>>?> GetQueue();
+        Task<List<Track>> GetQueue();
 
         /// <summary>
         /// pause currently playing track
@@ -56,6 +64,5 @@ namespace ChasBWare.SpotLight.Definitions.Services
         /// </summary>
         /// <returns>the track id that is actually playing</returns>
         Task<PlayingTrack?> SkipPrevious();
-
     }
 }

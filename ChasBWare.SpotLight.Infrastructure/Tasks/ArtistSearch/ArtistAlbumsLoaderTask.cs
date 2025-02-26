@@ -23,10 +23,9 @@ public class ArtistAlbumsLoaderTask(IServiceProvider _serviceProvider,
         var albums = _artistRepo.LoadArtistAlbums(viewModel.Id);
         if (albums.Count == 0)
         {
-            albums = _spotifyArtistRepo.LoadArtistAlbums(viewModel.Id);
+            albums = _spotifyArtistRepo.LoadArtistAlbums(viewModel.Model);
             _artistRepo.StoreArtistAndAlbums(viewModel.Model, albums);
         }
-
         _dispatcher.Dispatch(() =>
         {
             viewModel.Items.Clear();

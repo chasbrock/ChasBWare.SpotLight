@@ -74,31 +74,4 @@ public static class Misc
         }
         return builder.ToString();
     }
-
-    public static List<KeyValue> UnpackOwners(this string source)
-    {
-        List<KeyValue> list = [];
-        foreach (var part in source.Split(','))
-        {
-            if (string.IsNullOrEmpty(source))
-            {
-                continue;
-            }
-
-            var sub = part.Split('=');
-            if (sub.Length == 1 && sub[0] != null)
-            {
-                list.Add(new KeyValue { Key = sub[0], Value = string.Empty });
-                continue;
-            }
-
-            if (sub.Length == 2 && sub[0] != null && sub[1] != null)
-            {
-                list.Add(new KeyValue { Key = sub[0], Value = sub[1] });
-                continue;
-            }
-        }
-        return list;
-    }
-
 }

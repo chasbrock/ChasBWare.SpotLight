@@ -2,24 +2,22 @@
 using ChasBWare.SpotLight.Domain.Models;
 using SpotifyAPI.Web;
 
+namespace ChasBWare.SpotLight.Mappings.Mappers;
 
-namespace ChasBWare.SpotLight.Mappings.Mappers
+public static class DeviceMapper
 {
-    public static class DeviceMapper
+    public static DeviceModel CopyToDevice(this SpotifyAPI.Web.Device source)
     {
-        public static DeviceModel CopyToDevice(this SpotifyAPI.Web.Device source)
+        return new DeviceModel
         {
-            return new DeviceModel
-            {
-                Id = source.Id,
-                Name = source.Name,
-                DeviceType = source.Type.ToDeviceType(),
-                RawDeviceType = source.Type,
-                IsActive = source.IsActive,
-                IsMuted = source.VolumePercent == null,
-                SupportsVolume = source.SupportsVolume,
-                VolumePercent = source.VolumePercent ?? 0
-            };
-        }
+            Id = source.Id,
+            Name = source.Name,
+            DeviceType = source.Type.ToDeviceType(),
+            RawDeviceType = source.Type,
+            IsActive = source.IsActive,
+            IsMuted = source.VolumePercent == null,
+            SupportsVolume = source.SupportsVolume,
+            VolumePercent = source.VolumePercent ?? 0
+        };
     }
 }

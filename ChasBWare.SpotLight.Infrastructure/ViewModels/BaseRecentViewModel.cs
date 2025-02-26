@@ -17,9 +17,9 @@ public abstract class BaseRecentViewModel<T>
 
     public BaseRecentViewModel(IPopupService popupService,
                                IServiceProvider serviceProvider,
-                                IPlayerControlViewModel playerControlViewModel,
-                                ISearchViewModel<T> searchViewModel,
-                                IPropertyComparer<T>[] sorters)
+                               IPlayerControlViewModel playerControlViewModel,
+                               ISearchViewModel<T> searchViewModel,
+                               IPropertyComparer<T>[] sorters)
         : base(serviceProvider, sorters)
     {
         _popupService = popupService;

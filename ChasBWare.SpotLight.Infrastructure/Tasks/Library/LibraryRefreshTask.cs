@@ -6,45 +6,42 @@ using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.Library;
 
-public class LibraryLoaderTask(IServiceProvider _serviceProvider,
+public class LibraryRefreshTask(IServiceProvider _serviceProvider,
                                IDispatcher _dispatcher,
                                ILibraryRepository _libraryRepo,
                                ISpotifyPlaylistRepository _spotifyPlaylistRepo)
-           : ILibraryLoaderTask
+           : ILibraryRefreshTask
 {
     public void Execute(ILibraryViewModel viewModel)
     {
-        if (viewModel.LoadStatus != LoadState.NotLoaded)
+        if (viewModel.LoadStatus != LoadState.Loaded)
         {
             return;
         }
         Task.Run(() => RunTask(viewModel));
     }
 
+
     private void RunTask(ILibraryViewModel viewModel)
     {
-        _dispatcher.Dispatch(() =>
-        {
-            viewModel.LoadStatus = LoadState.Loading;
-            viewModel.Items.Clear();
-        });
+        viewModel.LoadStatus = LoadState.Loading;
+        var ids = _libraryRepo.GetPlaylistIds();
 
         foreach (var playlistType in Enum.GetValues<PlaylistType>())
         {
-            var playlists = _libraryRepo.GetPlaylists(playlistType);
-            if (playlists.Count == 0)
+            var playlists = _spotifyPlaylistRepo.GetPlaylists(playlistType)
+                                           .Where(pl => pl.Id != null && !ids.Contains(pl.Id))
+                                           .ToList();
+            if (playlists.Count > 0)
             {
-                playlists = _spotifyPlaylistRepo.GetPlaylists(playlistType);
                 _libraryRepo.AddPlaylists(playlists);
+                AddPlaylistsToModel(viewModel, playlists);
             }
-            AddPlaylistsToModel(viewModel, playlists);
         }
-
         _dispatcher.Dispatch(() =>
         {
             viewModel.LoadStatus = LoadState.Loaded;
         });
-
     }
 
     private void AddPlaylistsToModel(ILibraryViewModel viewModel, List<Playlist> items)

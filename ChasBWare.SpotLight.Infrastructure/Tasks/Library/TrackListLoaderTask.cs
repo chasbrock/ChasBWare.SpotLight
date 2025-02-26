@@ -30,7 +30,7 @@ public class TrackListLoaderTask(IServiceProvider _serviceProvider,
         var tracks = _trackRepository.GetPlaylistTracks(viewModel.Id);
         if (tracks.Count == 0)
         {
-            tracks = _spotifyTrackRepository.GetPlaylistTracks(viewModel.Id, viewModel.PlaylistType);
+            tracks = _spotifyTrackRepository.GetPlaylistTracks(viewModel.Model);
             _trackRepository.AddTracksToPlaylist(viewModel.Id, tracks);
         }
 

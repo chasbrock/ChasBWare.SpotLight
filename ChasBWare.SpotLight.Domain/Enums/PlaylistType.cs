@@ -3,6 +3,7 @@
     public enum PlaylistType
     {
         Album,
-        Playlist
+        Playlist,
+        TopTracks
     }
 }
