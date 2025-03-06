@@ -1,17 +1,11 @@
-﻿using System.Windows.Input;
-using ChasBWare.SpotLight.Definitions.Enums;
-using ChasBWare.SpotLight.Definitions.Messaging;
-using ChasBWare.SpotLight.Definitions.Repositories;
-using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
-using ChasBWare.SpotLight.Definitions.Tasks.ArtistSearch;
+﻿using ChasBWare.SpotLight.Definitions.Tasks.ArtistSearch;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
-using ChasBWare.SpotLight.Infrastructure.Messaging;
+using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
-using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
@@ -80,28 +74,28 @@ public class RecentArtistsViewModel
         }
     }
 
-    private Continue OnFindItem(FindItemMessage message)
+    private void OnFindItem(FindItemMessage message)
     {
-        if (message.Payload.PageType == PageType.Artists)
+        if (message.PageType == PageType.Artists)
         {
-            var viewModel = Items.FirstOrDefault(a => a.Id == message.Payload.Id);
+            var viewModel = Items.FirstOrDefault(a => a.Id == message.Id);
             if (viewModel != null)
             {
                 viewModel.LastAccessed = DateTime.Now;
                 SelectedItem = viewModel;
+                return;
              }
 
             var task = _serviceProvider.GetRequiredService<IFindArtistTask>();
-            task.Execute(this, message.Payload.Id);
+            task.Execute(this, message.Id);
         }
-        return Continue.Yes;
     }
 
-    private Continue OnSetActiveArtist(ActiveItemChangedMessage message)
+    private void OnSetActiveArtist(ActiveItemChangedMessage message)
     {
-        if (message.Payload.PageType == PageType.Artists)
+        if (message.PageType == PageType.Artists)
         {
-            if (message.Payload.Model is Artist artist)
+            if (message.Model is Artist artist)
             {
 
                 SelectedItem = AddItemToList(artist, DateTime.Now);
@@ -116,7 +110,5 @@ public class RecentArtistsViewModel
             }
         }
         RefreshView();
-
-        return Continue.Yes;
     }
 }

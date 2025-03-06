@@ -9,7 +9,15 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
     /// </summary>
     public interface ISpotifyActionManager
     {
+        /// <summary>
+        /// what market are we in 
+        /// </summary>
         string? CountryCode { get; }
+
+        /// <summary>
+        /// returns the status of our connection to spotify
+        /// </summary>
+        ConnectionStatus Status { get; }
 
         /// <summary>
         /// find album details from id

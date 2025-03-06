@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 
 namespace ChasBWare.SpotLight.Definitions.ViewModels
@@ -22,5 +23,6 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
         ITrackPlayerService TrackPlayerService { get; }
         ICommand OpenArtistCommand { get; }
         ICommand OpenAlbumCommand { get; }
+        ConnectionStatus ConnectionStatus { get; }
     }
 }

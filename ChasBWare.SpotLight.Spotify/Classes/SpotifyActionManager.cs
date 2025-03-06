@@ -11,6 +11,8 @@ public class SpotifyActionManager(ISpotifyConnectionManager _spotifyConnectionMa
 {
     public string? CountryCode { get; private set;}
 
+    public ConnectionStatus Status { get => _spotifyConnectionManager.Status; }
+
     public FullAlbum? FindAlbum(string albumId)
     {
         return SpotifyErrorCatcher.Execute<FullAlbum>(_spotifyConnectionManager,
@@ -112,10 +114,6 @@ public class SpotifyActionManager(ISpotifyConnectionManager _spotifyConnectionMa
             client =>
             {
                 var context = client.Player.GetCurrentPlayback().Result;
-                if (context == null)
-                {
-                    _spotifyConnectionManager.SetStatus(ConnectionStatus.NotConnected);
-                }
                 return context;
             });
     }

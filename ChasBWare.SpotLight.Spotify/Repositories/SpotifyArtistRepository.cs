@@ -11,9 +11,46 @@ public class SpotifyArtistRepository(IServiceProvider _serviceProvider,
                                      ISpotifyActionManager _actionManager) 
            : ISpotifyArtistRepository
 {
+    public Artist? FindArtist(string artistId)
+    {
+        if (_actionManager.Status != ConnectionStatus.Connected)
+        {
+            return null;
+        }
+
+        var found = _actionManager.FindArtist(artistId);
+        if (found != null)
+        {
+            return found.CopyToArtist();
+        }
+        return null;
+    }
+
+    public List<Playlist> LoadArtistAlbums(string artistId)
+    {
+        if (_actionManager.Status != ConnectionStatus.Connected)
+        {
+            return [];
+        }
+
+        var savedAlbums =  _actionManager.GetArtistAlbums(artistId);
+        if (savedAlbums != null) 
+        {
+            List<Playlist> playlists = savedAlbums.Select(sa => sa.CopyToPlaylist()).ToList();
+            return playlists;
+        }
+
+        return [];
+    }
+    
     public List<IArtistViewModel> SearchForArtists(string searchText)
     {
-        var fullArtists =  _actionManager.SearchForArtists(searchText);
+        if (_actionManager.Status != ConnectionStatus.Connected)
+        {
+            return [];
+        }
+
+        var fullArtists = _actionManager.SearchForArtists(searchText);
 
         List<IArtistViewModel> artists = [];
         if (fullArtists != null)
@@ -26,33 +63,5 @@ public class SpotifyArtistRepository(IServiceProvider _serviceProvider,
             }
         }
         return artists;
-    }
-
-    public List<Playlist> LoadArtistAlbums(Artist artist)
-    {
-        if (artist.Id == null) 
-        {
-            return [];
-        }
-
-        var savedAlbums =  _actionManager.GetArtistAlbums(artist.Id);
-        if (savedAlbums != null) 
-        {
-            List<Playlist> playlists = savedAlbums.Select(sa => sa.CopyToPlaylist()).ToList();
-            playlists.Add(artist.CopyToTopTracksPlaylist());
-            return playlists;
-        }
-
-        return [];
-    }
-
-    public Artist? FindArtist(string artistId)
-    {
-        var found = _actionManager.FindArtist(artistId);
-        if (found != null)
-        {
-            return found.CopyToArtist();
-        }
-        return null;
     }
 }

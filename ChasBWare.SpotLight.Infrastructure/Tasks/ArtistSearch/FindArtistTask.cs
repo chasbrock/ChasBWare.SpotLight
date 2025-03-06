@@ -44,6 +44,7 @@ public class FindArtistTask(IServiceProvider _serviceProvider,
 
         _dispatcher.Dispatch(() =>
         {
+            viewModel.SearchViewModel.Items.Clear();   
             viewModel.Items.Add(artistViewModel);
             viewModel.RefreshView();
             viewModel.SelectedItem = artistViewModel;

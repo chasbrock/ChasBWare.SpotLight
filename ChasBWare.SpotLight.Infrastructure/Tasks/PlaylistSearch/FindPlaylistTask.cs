@@ -1,16 +1,18 @@
-﻿using ChasBWare.SpotLight.Definitions.Repositories;
+﻿using System.Reflection;
+using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks.ArtistSearch;
 using ChasBWare.SpotLight.Definitions.Tasks.PlaylistSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.PlaylistSearch;
 
-public class FindPlaylistTask(IServiceProvider _serviceProvider,
-                            IDispatcher _dispatcher,
-                            ISpotifyPlaylistRepository _spotifyRepo,
-                            ILibraryRepository _libraryRepo)
+public class FindPlaylistTask(IPlaylistViewModelProvider _playlistProvider,
+                              IDispatcher _dispatcher,
+                              ISpotifyPlaylistRepository _spotifyRepo,
+                              ILibraryRepository _libraryRepo)
            : IFindPlaylistTask
 {
    
@@ -27,24 +29,23 @@ public class FindPlaylistTask(IServiceProvider _serviceProvider,
         }
 
         var playlistViewModel = viewModel.Items.FirstOrDefault(a => a.Model.Id == playlistId);
-        Playlist? playlists = playlistViewModel?.Model;
-        if (playlists == null)
+        Playlist? playlist = playlistViewModel?.Model;
+        if (playlist == null)
         {
-            playlists = _libraryRepo.FindPlaylist(playlistId);
-            if (playlists == null)
+            playlist = _libraryRepo.FindPlaylist(playlistId);
+            if (playlist == null)
             {
-                playlists = _spotifyRepo.FindPlaylist(playlistId, playlistType);
+                playlist = _spotifyRepo.FindPlaylist(playlistId, playlistType);
             }
         }
 
-        if (playlists == null)
+        if (playlist == null)
         {
             return;
         }
 
-        playlistViewModel = _serviceProvider.GetRequiredService<IPlaylistViewModel>();
-        playlistViewModel.Model = playlists;
-
+        playlistViewModel = _playlistProvider.CreatePlaylist(playlist);
+       
         _dispatcher.Dispatch(() =>
         {
             viewModel.Items.Add(playlistViewModel);

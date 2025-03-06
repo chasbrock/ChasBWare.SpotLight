@@ -21,13 +21,11 @@ public partial class TrackPopupViewModel(IPopupService popupService,
         if (track != null)
         {
             _popupItemService.AddMenuItem(this, track, PopupActivity.Play);
-            _popupItemService.AddMenuItem(this, track, PopupActivity.AddToQueue);
         }
 
         if (playlist != null)
         { 
             _popupItemService.AddMenuItem(this, playlist, PopupActivity.Play);
-            _popupItemService.AddMenuItem(this, playlist, PopupActivity.AddToQueue);
             _popupItemService.AddMenuItem(this, playlist, PopupActivity.Save);
         }
 

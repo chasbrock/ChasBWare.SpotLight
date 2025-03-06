@@ -1,15 +1,12 @@
-﻿using System.Diagnostics;
-using System.Windows.Input;
-using ChasBWare.SpotLight.Definitions.Enums;
-using ChasBWare.SpotLight.Definitions.Messaging;
+﻿using System.Windows.Input;
 using ChasBWare.SpotLight.Definitions.Tasks.Device;
 using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Domain.Models;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
-using ChasBWare.SpotLight.Infrastructure.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Utility;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
@@ -40,8 +37,8 @@ public class PlayerControlViewModel
                                   ICurrentDeviceViewModel currentDevice,
                                   IMessageService<PlayPlaylistMessage> playTracklistMessageService,
                                   IMessageService<ActiveItemChangedMessage> activeItemChangedMessageService,
-                             //     IMessageService<AddToQueueMessage> addToQueueMessageService,
-                                  IMessageService<ConnectionStatusChangedMessage> connectionStatusService)
+                                  IMessageService<ConnectionStatusChangedMessage> connectionStatusService,
+                                  IMessageService<AppActivationChanged> appActivationMessageService)
     {
         _serviceProvider = serviceProvider;   
         _navigator = navigator;
@@ -63,9 +60,10 @@ public class PlayerControlViewModel
         activeItemChangedMessageService.Register(OnSetCurrentDevice);
         connectionStatusService.Register(OnConnectionStatusChange);
         playTracklistMessageService.Register(OnPlayTracklist);
-  //      addToQueueMessageService.Register(OnAddToQueue);
+        appActivationMessageService.Register(OnAppActivationStateChanged);
     }
 
+   
     public ICommand BackCommand { get;  }
     public ICommand PlayCommand { get; }
     public ICommand PauseCommand { get;  }
@@ -80,6 +78,8 @@ public class PlayerControlViewModel
     public ITrackPlayerService TrackPlayerService { get; }
 
     public bool IsSyncing { get; set; }
+
+    public ConnectionStatus ConnectionStatus { get; private set; } = ConnectionStatus.NotInitialised;
 
     public string TrackName
     {
@@ -146,40 +146,43 @@ public class PlayerControlViewModel
         set => SetField(ref _albumId, value);
     }
 
-    private Continue OnPlayTracklist(PlayPlaylistMessage message)
+    private void OnPlayTracklist(PlayPlaylistMessage message)
     {
-        TrackPlayerService.StartPlaylist(message.Payload.Playlist,
-                                         message.Payload.Offset);
-        return Continue.Yes;
+        TrackPlayerService.StartPlaylist(message.Playlist,
+                                         message.Offset);
     }
 
-    private Continue OnConnectionStatusChange(ConnectionStatusChangedMessage message)
+    private void OnConnectionStatusChange(ConnectionStatusChangedMessage message)
     {
+        ConnectionStatus = message.ConnectionStatus;
         _dispatcher.Dispatch(() =>
         {
-            switch (message.Payload.ConnectionStatus)
+            if (ConnectionStatus == ConnectionStatus.Connected)
             {
-                case ConnectionStatus.Connected:
-                    SyncToDevice();
-                    return;
-                case ConnectionStatus.NotConnected:
-                    CurrentDevice.IsActive = false;
-                    break;
+                SyncToDevice();
+            }
+            else 
+            {
+               CurrentDevice.IsActive = false;
             }
         });
-        return Continue.Yes;
-
     }
 
-    private Continue OnSetCurrentDevice(ActiveItemChangedMessage message)
+    private void OnSetCurrentDevice(ActiveItemChangedMessage message)
     {
-        if (message.Payload.PageType == PageType.Devices)
+        if (message.PageType == PageType.Devices)
         {
-            CurrentDevice.Device = message.Payload.Model as DeviceModel ?? DeviceHelper.GetLocalDevice();
+            CurrentDevice.Device = message.Model as DeviceModel ?? DeviceHelper.GetLocalDevice();
         }
-        return Continue.Yes;
     }
 
+    private void OnAppActivationStateChanged(AppActivationChanged message)
+    {
+        if (message.IsActive && ConnectionStatus == ConnectionStatus.Connected) 
+        {
+            SyncToDevice();
+        }
+    }
 
     private void SkipForward()
     {
@@ -236,12 +239,17 @@ public class PlayerControlViewModel
         {
             return;
         }
+
         var messageService = _serviceProvider.GetRequiredService<IMessageService<FindItemMessage>>();
-        if (messageService.SendMessage(new FindItemMessage(PageType.Library, id)) == Continue.Yes)
+        if (messageService.SendMessage(new FindItemMessage(PageType.Library, id)))
+        {
+            _navigator.NavigateTo(PageType.Library);
+        }
+        else
         {
             messageService.SendMessage(new FindItemMessage(PageType.Albums, id));
-         }
-        _navigator.NavigateTo(PageType.Albums);
+            _navigator.NavigateTo(PageType.Albums);
+        }
     }
 
     private void ShowProgress(object? sender, PlayingTrack playingTrack)

@@ -7,7 +7,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
     /// <summary>
     /// class to hold session based info for spotify
     /// </summary>
-    public class SpotyConnectionSession : ISpotyConnectionSession
+    public class SpotifyConnectionSession : ISpotyConnectionSession
     {
         private const int defaultPort = 8888;
         private  SpotifyClientConfig _config  = SpotifyClientConfig.CreateDefault();

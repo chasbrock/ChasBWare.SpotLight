@@ -40,7 +40,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
                                                    i=> i.Owner,
                                                    SortDirection.Ascending,
                                                    new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)),
-                                                   (k,v) => new PlaylistGroup(k,v)),
+                                                   (k,v) => new PlaylistGroup(k,v, true)),
 
                     new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name),
                                                    i=> i.Name.AlphaGroup(),

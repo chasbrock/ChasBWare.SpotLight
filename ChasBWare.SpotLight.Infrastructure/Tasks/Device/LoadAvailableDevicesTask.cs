@@ -1,21 +1,18 @@
-﻿using ChasBWare.SpotLight.Definitions.Enums;
-using ChasBWare.SpotLight.Definitions.Messaging;
-using ChasBWare.SpotLight.Definitions.Repositories;
+﻿using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks.Device;
 using ChasBWare.SpotLight.Definitions.ViewModels;
-using ChasBWare.SpotLight.Infrastructure.Messaging;
+using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Utility;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Controls;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.Device;
 
 
-public class LoadAvailableDevicesTask(IServiceProvider _serviceporovider, 
+public class LoadAvailableDevicesTask(IServiceProvider _serviceProvider, 
                                       IDispatcher _dispatcher,
                                       ILogger<LoadAvailableDevicesTask> _logger,
-                                      ISpotifyDeviceRepository _deviceRepository,
-                                      IMessageService<ActiveItemChangedMessage> _activeItemChangedMessageService)
+                                      ISpotifyDeviceRepository _deviceRepository)
            : ILoadAvailableDevicesTask
 {
     public void Execute(IDeviceListViewModel viewModel)
@@ -32,11 +29,10 @@ public class LoadAvailableDevicesTask(IServiceProvider _serviceporovider,
             try
             {
                 viewModel.Devices.Clear();
-                IDeviceViewModel? activeDevice = null;
-
+         
                 if (devices.Count == 0)
                 {
-                    var deviceViewModel = _serviceporovider.GetRequiredService<IDeviceViewModel>();
+                    var deviceViewModel = _serviceProvider.GetRequiredService<IDeviceViewModel>();
                     deviceViewModel.Model = DeviceHelper.GetLocalDevice();
                     viewModel.Devices.Add(deviceViewModel);
                     return;
@@ -45,21 +41,13 @@ public class LoadAvailableDevicesTask(IServiceProvider _serviceporovider,
                 foreach (var device in devices)
                 {
                     viewModel.Devices.Add(device);
-                    if (device.IsActive && activeDevice == null)
-                    {
-                        activeDevice = device;
-                    }
                 }
+                viewModel.SelectedDevice = devices.FirstOrDefault(d => d.IsActive);
 
-                //signal that we have found an active device
-                if (activeDevice != null)
-                {
-                    _activeItemChangedMessageService.SendMessage(new ActiveItemChangedMessage(PageType.Devices, activeDevice.Model));
-                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "faield to update ui");
+                _logger.LogError(ex, "failed to update ui");
             }
         });
     }

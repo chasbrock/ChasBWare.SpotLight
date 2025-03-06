@@ -1,10 +1,8 @@
-﻿using ChasBWare.SpotLight.Definitions.Enums;
-using ChasBWare.SpotLight.Definitions.Messaging;
-using ChasBWare.SpotLight.Definitions.Repositories;
-using ChasBWare.SpotLight.Definitions.Services;
+﻿using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks.Device;
 using ChasBWare.SpotLight.Definitions.ViewModels;
-using ChasBWare.SpotLight.Infrastructure.Messaging;
+using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Domain.Messaging;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.Device;
 
@@ -24,7 +22,7 @@ public class ChangeActiveDeviceTask(IDispatcher _dispatcher,
         {
             _dispatcher.Dispatch(() =>
             {
-                selectedDevice.Model.IsActive = true;
+                selectedDevice.IsActive = true;
                 _activeItemChangedMessageService.SendMessage(new ActiveItemChangedMessage(PageType.Devices, selectedDevice.Model));
             });
         }

@@ -10,7 +10,7 @@
   
     <Grid RowDefinitions="*,Auto" >
       
-      <!--body -->
+      <!-- body -->
        <Grid ColumnDefinitions="300,*" Grid.Row="0">
 
             <!-- selector -->

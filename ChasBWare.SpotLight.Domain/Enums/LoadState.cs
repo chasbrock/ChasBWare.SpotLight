@@ -1,9 +1,8 @@
-﻿namespace ChasBWare.SpotLight.Domain.Enums
+﻿namespace ChasBWare.SpotLight.Domain.Enums;
+
+public enum LoadState
 {
-    public enum LoadState
-    {
-        NotLoaded,
-        Loading,
-        Loaded
-    }
+    NotLoaded,
+    Loading,
+    Loaded
 }

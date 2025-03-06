@@ -1,5 +1,4 @@
-﻿using ChasBWare.SpotLight.Definitions.ViewModels;
-using ChasBWare.SpotLight.Domain.Entities;
+﻿using ChasBWare.SpotLight.Domain.Entities;
 
 namespace ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 
@@ -11,7 +10,7 @@ public interface ITrackPlayerService
     void Resume();
     void SkipForward();
     void SkipBackward();
-    void StartPlaylist(IPlaylistViewModel playlist, int trackNumber);
+    void StartPlaylist(Playlist playlist, int trackNumber);
     void UpdateNowPlaying(PlayingTrack nowPlaying);
     void AddTrackToQueue(string trackId);
     void AddPlaylistToQueue(string id);

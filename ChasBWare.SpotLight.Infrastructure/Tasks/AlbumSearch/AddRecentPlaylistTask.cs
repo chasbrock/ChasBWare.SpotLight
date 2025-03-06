@@ -2,13 +2,14 @@
 using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
+using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
+using ChasBWare.SpotLight.Infrastructure.Services;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.AlbumSearch;
 
-public class AddRecentPlaylistTask(IServiceProvider _serviceProvider,
+public class AddRecentPlaylistTask(IPlaylistViewModelProvider _playlistProvider,
                                    IDispatcher _dispatcher,
-                                   ISearchItemRepository _searchRepo,
-                                   ILibraryViewModel _library)
+                                   ISearchItemRepository _searchRepo)
             : IAddRecentPlaylistTask
 {
     public void Execute(IRecentViewModel<IPlaylistViewModel> viewModel, Playlist model)
@@ -22,10 +23,7 @@ public class AddRecentPlaylistTask(IServiceProvider _serviceProvider,
         {
             _dispatcher.Dispatch(() =>
             {
-                var item = _serviceProvider.GetRequiredService<IPlaylistViewModel>();
-                item.Model = model;
-                item.InLibrary = _library.Exists(model.Id);
-                viewModel.Items.Add(item);
+                viewModel.Items.Add(_playlistProvider.CreatePlaylist(model));
                 viewModel.RefreshView();
             });
         }

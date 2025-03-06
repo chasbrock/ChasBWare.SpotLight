@@ -19,6 +19,7 @@ public abstract class BaseSearchViewModel<T>(IServiceProvider serviceProvider)
     public ICommand ExecuteSearchCommand => new Command(()=>ExecuteSearch());
 
     public ObservableCollection<T> FoundItems { get; } = [];
+
     public bool IsPopupOpen
     {
         get => _isPopupOpen;

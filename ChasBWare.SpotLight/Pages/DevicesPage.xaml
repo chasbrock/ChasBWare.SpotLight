@@ -35,11 +35,7 @@
     <Grid RowDefinitions="*, Auto">
         <Grid RowDefinitions="Auto,*" ColumnDefinitions="Auto,Auto"
               Grid.Row="0" Grid.Column="1">
-            <ImageButton Style="{StaticResource Key=OpenMore}"
-                         HorizontalOptions="Start"
-                         Command="{Binding OpenPopupCommand}"
-                         Grid.Column="1"/>
-
+     
             <CollectionView ItemsSource="{Binding Devices}"
                             SelectionMode="Single"
                             SelectedItem="{Binding SelectedDevice}"
@@ -49,16 +45,23 @@
                         <Border Style="{StaticResource RoundedBorder}" 
                                 Margin="4" Padding="4"  >
                             <Grid ColumnDefinitions="Auto,*">
-                                <Image Source="{Binding DeviceType, Converter={StaticResource Key=DeviceImage}}"
-                                       Grid.Column="0"/>
+                                <ImageButton Source="{Binding DeviceType, Converter={StaticResource Key=DeviceImage}}"
+                                             Command="{Binding x:DataType='vm:DeviceListViewModel', 
+                                                      Source={RelativeSource AncestorType={x:Type vm:DeviceListViewModel}},
+                                                      Path=ActivateDeviceCommand}"
+                                             CommandParameter="{Binding}"
+                                             Grid.Column="0"/>
                                 <VerticalStackLayout Background="{Binding IsActive, Converter={StaticResource IsActiveBackground}}"
                                                      Grid.Column="1" Margin="4">
-                                    <Label Text="{Binding Name}"
-                                           FontSize="14" FontAttributes="Bold"
-                                           VerticalTextAlignment="Center"
-                                           Background="{Binding IsActive, Converter={StaticResource IsActiveBackground}}" 
-                                           TextColor="{Binding IsActive, Converter={StaticResource IsActiveForeground}}"
-                                           Margin="8,0" Padding="8"/>
+                                    <Button Text="{Binding Name}"
+                                            Command="{Binding x:DataType='vm:DeviceListViewModel', 
+                                                     Source={RelativeSource AncestorType={x:Type vm:DeviceListViewModel}},
+                                                     Path=ActivateDeviceCommand}"
+                                            CommandParameter="{Binding}" 
+                                            FontSize="14" FontAttributes="Bold"
+                                            Background="{Binding IsActive, Converter={StaticResource IsActiveBackground}}" 
+                                            TextColor="{Binding IsActive, Converter={StaticResource IsActiveForeground}}"
+                                            Margin="8,0" Padding="8"/>
                                     <Label Text="{Binding RawDeviceType}"
                                             FontSize="10" FontAttributes="Italic" 
                                             HorizontalOptions="Center"
@@ -72,6 +75,12 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+
+            <ImageButton Style="{StaticResource Key=OpenMore}"
+                    HorizontalOptions="Start"
+                    Command="{Binding OpenPopupCommand}"
+                    Grid.Column="1"/>
+
         </Grid>
             <v:PlayerControlView BindingContext="{Binding PlayerControlViewModel}"
                            Grid.Row="1"/>

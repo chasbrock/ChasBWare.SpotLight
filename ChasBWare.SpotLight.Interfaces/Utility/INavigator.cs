@@ -1,4 +1,4 @@
-﻿using ChasBWare.SpotLight.Definitions.Enums;
+﻿using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasBWare.SpotLight.Definitions.Utility
 {

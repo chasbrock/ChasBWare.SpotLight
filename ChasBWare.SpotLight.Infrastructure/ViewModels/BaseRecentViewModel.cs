@@ -1,7 +1,6 @@
-﻿using ChasBWare.SpotLight.Definitions.Enums;
-using ChasBWare.SpotLight.Definitions.Utility;
+﻿using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
-using CommunityToolkit.Maui;
+using ChasBWare.SpotLight.Domain.Enums;
 using CommunityToolkit.Maui.Core;
 using System.Windows.Input;
 

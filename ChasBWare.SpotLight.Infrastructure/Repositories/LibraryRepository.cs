@@ -97,6 +97,22 @@ public class LibraryRepository(IDbContext _dbContext,
         return false;
     }
 
+    public bool RemovePlaylists(IEnumerable<string> playlistIds)
+    {
+        var connection = _dbContext.GetConnection().Result;
+        if (connection != null)
+        {
+            var paramText = string.Join(',', playlistIds);
+            foreach (var sql in RepositoryHelper.DeleteLibraryItems)
+            {
+               _= connection.ExecuteAsync(sql, paramText).Result;
+            }
+            return true;
+        }
+        _logger.LogError("Could not access db connection");
+        return false;
+    }
+
     public bool TransferPlaylistToLibrary(Playlist playlist, bool save)
     {
         var connection = _dbContext.GetConnection().Result;

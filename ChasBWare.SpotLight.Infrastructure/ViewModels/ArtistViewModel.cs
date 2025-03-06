@@ -25,7 +25,6 @@ public class ArtistViewModel(IServiceProvider serviceProvider)
     public string? Image
     {
         get => Model.Image;
-        set => SetField(Model, value);
     }
 
     public string Name
@@ -59,10 +58,4 @@ public class ArtistViewModel(IServiceProvider serviceProvider)
             }
         }
     }
-
-    public override string ToString()
-    {
-        return Name;
-    }
-  
 }

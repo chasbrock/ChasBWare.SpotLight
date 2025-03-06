@@ -1,13 +1,9 @@
-﻿using ChasBWare.SpotLight.Definitions.Enums;
-using ChasBWare.SpotLight.Definitions.Messaging;
-using ChasBWare.SpotLight.Definitions.Utility;
-using ChasBWare.SpotLight.Definitions.ViewModels;
+﻿using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
-using ChasBWare.SpotLight.Infrastructure.Messaging;
+using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Utility;
-using System.Reflection;
 using System.Windows.Input;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
@@ -87,7 +83,7 @@ public partial class TrackViewModel
         if (Playlist != null)
         {
             var offset = Playlist.TracksViewModel.Items.ToList().FindIndex(tm => tm.Id == Id);
-            _messageService.SendMessage(new PlayPlaylistMessage(Playlist, offset));
+            _messageService.SendMessage(new PlayPlaylistMessage(Playlist.Model, offset));
         }
     }
 
@@ -95,6 +91,5 @@ public partial class TrackViewModel
     {
         return Model.Name;
     }
-
 
 }

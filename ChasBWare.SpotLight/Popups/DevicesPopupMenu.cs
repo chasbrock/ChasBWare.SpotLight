@@ -5,7 +5,7 @@ namespace ChasBWare.SpotLight.Popups;
 
 public partial class DevicesPopupMenu : Popup
 {
-	public DevicesPopupMenu(RecentArtistPopupViewModel viewModel)
+	public DevicesPopupMenu(DevicePopupViewModel viewModel)
 	{
         CanBeDismissedByTappingOutsideOfPopup = true;
         BindingContext = viewModel;

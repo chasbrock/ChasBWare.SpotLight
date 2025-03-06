@@ -26,11 +26,11 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                 }
             }
             // not sure what error is so just disconnect
-            connectionManager.SetStatus(ConnectionStatus.NotConnected, "SpotifyErrorCatcher ran through");
+          //  connectionManager.Status = ConnectionStatus.NotConnected;
             return default;
         }
 
-        public static  bool ProcessException(ISpotifyConnectionManager spotifyConnectionManager, Exception ex) 
+        public static bool ProcessException(ISpotifyConnectionManager spotifyConnectionManager, Exception ex) 
         {
             var apiEx = ex as APIException;
             if (apiEx == null && ex.InnerException is APIException)
@@ -43,17 +43,16 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                 switch (apiEx.Message)
                 {
                     case "The access token expired":
-                        spotifyConnectionManager.SetStatus(ConnectionStatus.TokenExpired);
+                        spotifyConnectionManager.Status = ConnectionStatus.TokenExpired;
                         return true;
                     case "Player command failed: No active device found":
-                        spotifyConnectionManager.SetStatus(ConnectionStatus.NotConnected);
                         return false;
                     default:
-                        spotifyConnectionManager.SetStatus(ConnectionStatus.NotConnected, apiEx.Message);
+                        spotifyConnectionManager.Status = ConnectionStatus.NotConnected;
                         return false;
                 }
             }
-            spotifyConnectionManager.SetStatus(ConnectionStatus.NotConnected, ex.Message);
+            spotifyConnectionManager.Status = ConnectionStatus.NotConnected;
             return false;
         }
       

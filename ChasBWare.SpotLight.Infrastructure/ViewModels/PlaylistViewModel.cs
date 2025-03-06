@@ -1,16 +1,13 @@
 ﻿using System.Windows.Input;
-using ChasBWare.SpotLight.Definitions.Enums;
-using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
-using ChasBWare.SpotLight.Infrastructure.Messaging;
+using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
-using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
@@ -23,6 +20,7 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
 
     private bool _isExpanded = false;
     private bool _isSelected = false;
+    private bool _inLibrary = false;
     private Playlist _model = new() { Id = "" };
    
     public PlaylistViewModel(IServiceProvider serviceProvider,
@@ -99,7 +97,7 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
     private void PlayTrackList()
     {
         IsExpanded = true;
-        _messageService.SendMessage(new PlayPlaylistMessage(this, 0));
+        _messageService.SendMessage(new PlayPlaylistMessage(this.Model, 0));
     }
 
     private void LoadTracks()
@@ -136,7 +134,7 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
 
     public string Uri
     {
-        get => Model.Uri;
+        get => Model.Uri ?? string.Empty;
     }
 
     public DateTime LastAccessed
@@ -145,7 +143,11 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
         set => SetField(Model, value); 
     }
 
-    public bool InLibrary { get; set; }
+    public bool InLibrary 
+    { 
+        get => _inLibrary; 
+        set => SetField(ref _inLibrary, value);
+    }
 
     private void NavigateToArtist(string id)
     {

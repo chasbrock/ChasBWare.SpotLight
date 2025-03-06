@@ -1,9 +1,7 @@
-﻿namespace ChasBWare.SpotLight.Domain.Enums
+﻿namespace ChasBWare.SpotLight.Domain.Enums;
+
+public enum PlaylistType
 {
-    public enum PlaylistType
-    {
-        Album,
-        Playlist,
-        TopTracks
-    }
+    Album,
+    Playlist
 }

@@ -1,8 +1,7 @@
-﻿using ChasBWare.SpotLight.Definitions.Enums;
-using ChasBWare.SpotLight.Definitions.Messaging;
-using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
+﻿using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
-using ChasBWare.SpotLight.Infrastructure.Messaging;
+using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Domain.Messaging;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
@@ -23,11 +22,8 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                 return;
             }
 
-            var searchTask = _serviceProvider.GetService<ISearchForAlbumTask>();
-            if (searchTask != null)
-            {
-                searchTask.Execute(this);
-            }
+            var searchTask = _serviceProvider.GetRequiredService<ISearchForAlbumTask>();
+            searchTask.Execute(this);
         }
     }
 }

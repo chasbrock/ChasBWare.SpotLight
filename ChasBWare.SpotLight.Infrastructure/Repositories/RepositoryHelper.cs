@@ -30,7 +30,7 @@ internal partial class RepositoryHelper
     /// </summary>
     internal const string DeleteOrphanPlaylists =
  @"delete from playlist
-    where if in (
+    where id in (
        select pl.id 
          from playlist pl
          left join ArtistPlaylist apl on pl.id= apl.PlaylistId
@@ -45,7 +45,16 @@ internal partial class RepositoryHelper
     /// param: PlaylistType 
     /// </summary>
     internal const string DeleteLibraryItem =
-@"delete from LibraryPlaylist where Id = ?";
+@"delete from LibraryItem where Id = ?";
+
+    /// <summary>
+    /// delete list of ids from library
+    /// </summary>
+    internal static string[] DeleteLibraryItems = [
+@"delete from LibraryItem where Id in (?)",
+DeleteOrphanPlaylists,
+DeleteOrphanPlaylistTracks,
+DeleteOrphanTracks];
 
     /// <summary>
     /// get all playlist in library

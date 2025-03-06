@@ -1,12 +1,10 @@
-﻿using ChasBWare.SpotLight.Definitions.Enums;
-using ChasBWare.SpotLight.Definitions.Messaging;
-using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
+﻿using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.Tasks.PlaylistSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
-using ChasBWare.SpotLight.Infrastructure.Messaging;
+using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
 using CommunityToolkit.Maui.Core;
@@ -77,11 +75,11 @@ public class RecentPlaylistsViewModel
         return viewModel;
     }
 
-    private Continue OnFindItem(FindItemMessage message)
+    private void OnFindItem(FindItemMessage message)
     {
-        if (message.Payload.PageType == PageType.Playlists)
+        if (message.PageType == PageType.Playlists)
         {
-            var viewModel = Items.FirstOrDefault(a => a.Id == message.Payload.Id);
+            var viewModel = Items.FirstOrDefault(a => a.Id == message.Id);
             if (viewModel != null)
             {
                 viewModel.LastAccessed = DateTime.Now;
@@ -90,18 +88,17 @@ public class RecentPlaylistsViewModel
             else
             {
                 var task = _serviceProvider.GetRequiredService<IFindPlaylistTask>();
-                task.Execute(this, message.Payload.Id, PlaylistType.Playlist);
+                task.Execute(this, message.Id, PlaylistType.Playlist);
             }
-            return Continue.No;
+            message.Completed = true;
         }
-        return Continue.Yes;
     }
 
-    private Continue OnSetActivePlaylist(ActiveItemChangedMessage message)
+    private void OnSetActivePlaylist(ActiveItemChangedMessage message)
     {
-        if (message.Payload.PageType == PageType.Playlists)
+        if (message.PageType == PageType.Playlists)
         {
-            if (message.Payload.Model is Playlist playlist)
+            if (message.Model is Playlist playlist)
             {
                 SelectedItem = AddItemToList(playlist);
             }
@@ -111,6 +108,5 @@ public class RecentPlaylistsViewModel
             }
             RefreshView();
         }
-        return Continue.Yes;
     }
 }

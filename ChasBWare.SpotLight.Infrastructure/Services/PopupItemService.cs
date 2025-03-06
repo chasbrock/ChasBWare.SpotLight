@@ -2,13 +2,12 @@
 using System.Diagnostics;
 using System.Runtime.Intrinsics.Arm;
 using ChasBWare.SpotLight.Definitions.Enums;
-using ChasBWare.SpotLight.Definitions.Messaging;
+using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
-using ChasBWare.SpotLight.Infrastructure.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
@@ -52,20 +51,7 @@ public class PopupItemService(IServiceProvider _serviceProvider)
                               action: (t) =>
                               {
                                   var messageService = _serviceProvider.GetRequiredService<IMessageService<PlayPlaylistMessage>>();
-                                  messageService.SendMessage(new PlayPlaylistMessage(playlist, 0));
-                                  popup.Close();
-                              });
-                break;
-
-            case PopupActivity.AddToQueue:
-                popup.AddItem(PopupGroup.Playlist,
-                              activity,
-                              caption: $"Queue '{playlist.Name}'",
-                              toolTip: $"Add current {playlist.PlaylistType} to the Queue",
-                              action: (t) =>
-                              {
-                                  var messageService = _serviceProvider.GetRequiredService<IMessageService<AddToQueueMessage>>();
-                                  messageService.SendMessage(new AddToQueueMessage(playlist));
+                                  messageService.SendMessage(new PlayPlaylistMessage(playlist.Model, 0));
                                   popup.Close();
                               });
                 break;
@@ -90,22 +76,9 @@ public class PopupItemService(IServiceProvider _serviceProvider)
                                   {
                                       var offset = track.Playlist.TracksViewModel.Items.ToList().FindIndex(tm => tm.Id == track.Id);
                                       var messageService = _serviceProvider.GetRequiredService<IMessageService<PlayPlaylistMessage>>();
-                                      messageService.SendMessage(new PlayPlaylistMessage(track.Playlist, offset));
+                                      messageService.SendMessage(new PlayPlaylistMessage(track.Playlist.Model, offset));
                                   }
                                   popup.Close();
-                              });
-                break;
-
-            case PopupActivity.AddToQueue:
-                popup.AddItem(PopupGroup.Track,
-                              activity,
-                              caption: $"Queue '{track.Name}'",
-                              toolTip: $"Add current track to queue",
-                              action: (t) =>
-                              {
-                                   var messageService = _serviceProvider.GetRequiredService<IMessageService<AddToQueueMessage>>();
-                                   messageService.SendMessage(new AddToQueueMessage(track));
-                                   popup.Close();
                               });
                 break;
 
@@ -154,8 +127,8 @@ public class PopupItemService(IServiceProvider _serviceProvider)
                               caption: "Refresh library",
                               action: (t) =>
                               {
-                                  var task = _serviceProvider.GetRequiredService<ILibraryRefreshTask>();
-                                  task.Execute(library);
+                                  var task = _serviceProvider.GetRequiredService<ILibraryLoaderTask>();
+                                  task.Refresh(library);
                                   popup.Close();
                               });
                 break;

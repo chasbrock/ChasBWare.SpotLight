@@ -11,6 +11,7 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
         HashSet<string> GetPlaylistIds();
         List<Playlist> GetPlaylists(PlaylistType playlistType);
         bool RemovePlaylist(string playlistId);
+        bool RemovePlaylists(IEnumerable<string> playlistIds);
         bool TransferPlaylistToLibrary(Playlist playlist, bool save);
         void UpdateLastAccessed(Playlist playlist);
     }

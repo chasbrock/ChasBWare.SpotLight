@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using ChasBWare.SpotLight.Definitions.Messaging;
-using ChasBWare.SpotLight.Definitions.Services;
+﻿using ChasBWare.SpotLight.Definitions.Services;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
-using ChasBWare.SpotLight.Domain.Models;
+using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
-using ChasBWare.SpotLight.Infrastructure.Messaging;
-using ChasBWare.SpotLight.Infrastructure.Utility;
 
 namespace ChasBWare.SpotLight.Infrastructure.Services
 {
@@ -33,7 +28,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
             _currentTrackMessageService = currentTrackChangedMessage;
             _hatedService = hatedService;
             _playerController = playerController;
-            connectionStatusService.Register(ConnectionStatusChange);
+            connectionStatusService.Register(OnConnectionStatusChange);
 
             _timer = dispatcher.CreateTimer();
             _timer.Interval = TimeSpan.FromMilliseconds(TimerIntervalMs);
@@ -42,14 +37,9 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
 
         public event EventHandler<PlayingTrack>? OnTrackProgress;
 
-        public async void StartPlaylist(IPlaylistViewModel playlist, int trackNumber)
+        public async void StartPlaylist(Playlist playlist, int trackNumber)
         {
-            if (playlist.PlaylistType == PlaylistType.TopTracks)
-            {
-                var tracks = playlist.TracksViewModel.Items.TakeLast(playlist.TracksViewModel.Items.Count - trackNumber);
-                UpdateNowPlaying(await _playerController.Enqueue(tracks));
-            }
-            else
+            if (!string.IsNullOrWhiteSpace(playlist.Uri))
             {
                 UpdateNowPlaying(await _playerController.StartPlayback(playlist.Uri, trackNumber));
             }
@@ -136,15 +126,14 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
             // todo
         }
 
-        private Continue ConnectionStatusChange(ConnectionStatusChangedMessage message)
+        private void OnConnectionStatusChange(ConnectionStatusChangedMessage message)
         {
-            if (message.Payload.ConnectionStatus != ConnectionStatus.Connected) 
+            if (message.ConnectionStatus != ConnectionStatus.Connected) 
             {
                 _timer.Stop();
                 // if we disconnect we cannot resy
                 _playbackStarted = null;
             }
-            return Continue.Yes;
         }
 
         private async void OnTimerTick(object? sender, EventArgs e)

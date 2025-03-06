@@ -8,7 +8,6 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
         CurrentContext? GetCurrentContext();
         List<IDeviceViewModel> GetAvailableDevices();
         void SetDeviceVolume(int volumePercent);
-
         bool SetDeviceAsActive(string deviceId);
     }
 }

@@ -1,17 +1,12 @@
-﻿using System.Windows.Input;
-using ChasBWare.SpotLight.Definitions.Enums;
-using ChasBWare.SpotLight.Definitions.Messaging;
-using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
-using ChasBWare.SpotLight.Definitions.Tasks.ArtistSearch;
+﻿using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.Tasks.PlaylistSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
-using ChasBWare.SpotLight.Infrastructure.Messaging;
+using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
-using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
@@ -89,11 +84,11 @@ public class RecentAlbumsViewModel
         }
     }
 
-    private Continue OnFindItem(FindItemMessage message)
+    private void OnFindItem(FindItemMessage message)
     {
-        if (message.Payload.PageType == PageType.Albums)
+        if (message.PageType == PageType.Albums)
         {
-            var viewModel = Items.FirstOrDefault(a => a.Id == message.Payload.Id);
+            var viewModel = Items.FirstOrDefault(a => a.Id == message.Id);
             if (viewModel != null)
             {
                 viewModel.LastAccessed = DateTime.Now;
@@ -102,19 +97,17 @@ public class RecentAlbumsViewModel
             else
             {
                 var task = _serviceProvider.GetRequiredService<IFindPlaylistTask>();
-                task.Execute(this, message.Payload.Id, PlaylistType.Album);
+                task.Execute(this, message.Id, PlaylistType.Album);
             }
-            return Continue.No;
+            message.Completed = true; 
         }
-        return Continue.Yes;
-
     }
 
-    private Continue OnSetActivePlaylist(ActiveItemChangedMessage message)
+    private void OnSetActivePlaylist(ActiveItemChangedMessage message)
     {
-        if (message.Payload.PageType == PageType.Albums)
+        if (message.PageType == PageType.Albums)
         {
-            if (message.Payload.Model is Playlist playlist)
+            if (message.Model is Playlist playlist)
             {
                 SelectedItem = AddItemToList(playlist);
             }
@@ -124,6 +117,5 @@ public class RecentAlbumsViewModel
             }
             RefreshView();
         }
-        return Continue.Yes;
     }
 }

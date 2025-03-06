@@ -6,16 +6,9 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces;
 public interface ISpotifyConnectionManager
 {
     /// <summary>
-    /// update status, message can be used to alert user of error condition
+    /// gets or sets status of connection manager
     /// </summary>
-    /// <param name="status"></param>
-    /// <param name="message">optional message</param>
-    void SetStatus(ConnectionStatus status, string? message = null);
-
-    /// <summary>
-    /// gets status of connection manager
-    /// </summary>
-    ConnectionStatus Status { get;}
+    ConnectionStatus Status { get; set; }
 
     /// <summary>
     /// ensure that client is authorised before returning client

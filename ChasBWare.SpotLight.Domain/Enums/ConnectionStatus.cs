@@ -1,13 +1,11 @@
-﻿namespace ChasBWare.SpotLight.Domain.Enums
+﻿namespace ChasBWare.SpotLight.Domain.Enums;
+
+public enum ConnectionStatus
 {
-    public enum ConnectionStatus
-    {
-        NotInitialised,
-        NotConnected,
-        Unauthorised,
-        Authorising,
-        Authorised,
-        Connected,
-        TokenExpired
-    }
+    NotInitialised,
+    NotConnected,
+    Unauthorised,
+    Authorising,
+    Connected,
+    TokenExpired
 }

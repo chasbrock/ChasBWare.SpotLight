@@ -24,6 +24,7 @@ public class AddRecentArtistTask(IServiceProvider _serviceProvider,
                 var item = _serviceProvider.GetRequiredService<IArtistViewModel>();
                 item.Model = model;
                 viewModel.Items.Add(item);
+                viewModel.SelectedItem = item;
                 viewModel.RefreshView();
             });
         }

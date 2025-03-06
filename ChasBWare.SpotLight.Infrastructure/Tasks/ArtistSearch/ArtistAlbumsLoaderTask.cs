@@ -1,12 +1,14 @@
-﻿using ChasBWare.SpotLight.Definitions.Repositories;
+﻿using System.Reflection;
+using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks.ArtistSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.ArtistSearch;
 
-public class ArtistAlbumsLoaderTask(IServiceProvider _serviceProvider,
+public class ArtistAlbumsLoaderTask(IPlaylistViewModelProvider _playlistProvider,
                                     IDispatcher _dispatcher,
                                     ISpotifyArtistRepository _spotifyArtistRepo,
                                     IArtistRepository _artistRepo)
@@ -23,7 +25,7 @@ public class ArtistAlbumsLoaderTask(IServiceProvider _serviceProvider,
         var albums = _artistRepo.LoadArtistAlbums(viewModel.Id);
         if (albums.Count == 0)
         {
-            albums = _spotifyArtistRepo.LoadArtistAlbums(viewModel.Model);
+            albums = _spotifyArtistRepo.LoadArtistAlbums(viewModel.Id);
             _artistRepo.StoreArtistAndAlbums(viewModel.Model, albums);
         }
         _dispatcher.Dispatch(() =>
@@ -31,10 +33,7 @@ public class ArtistAlbumsLoaderTask(IServiceProvider _serviceProvider,
             viewModel.Items.Clear();
             foreach (var album in albums)
             {
-                var item = _serviceProvider.GetRequiredService<IPlaylistViewModel>();
-                item.Model = album;
-                item.IsExpanded = false;
-                viewModel.Items.Add(item);
+                viewModel.Items.Add(_playlistProvider.CreatePlaylist(album));
             }
             viewModel.LoadStatus = LoadState.Loaded;
         });

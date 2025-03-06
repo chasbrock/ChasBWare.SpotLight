@@ -1,12 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using ChasBWare.SpotLight.Definitions.Enums;
-using ChasBWare.SpotLight.Definitions.Messaging;
 using ChasBWare.SpotLight.Definitions.Tasks.Device;
 using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
-using ChasBWare.SpotLight.Infrastructure.Messaging;
+using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
 using ChasBWare.SpotLight.Infrastructure.ViewModels;
@@ -39,28 +39,30 @@ public partial class DeviceListViewModel
         _navigator.RegisterOnNavigate(this);
 
         PlayerControlViewModel = playerControlViewModel;
-        OpenPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<DevicePopupViewModel>());
-
-        connectionStatusService.Register(m => Refresh());
+        OpenPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<DevicePopupViewModel>(onPresenting: vm => vm.SetItem(this)));
+        ActivateDeviceCommand = new Command<IDeviceViewModel>(OnActivateDeviceCommand);
+        connectionStatusService.Register(OnConnectionStatusChanged);
 
         Refresh();
     }
-
     public PageType PageType { get; } = PageType.Devices;
     public IPlayerControlViewModel PlayerControlViewModel { get; }
     public ICommand OpenPopupCommand { get; }
+    public ICommand ActivateDeviceCommand { get; }
 
     public void OnNavigationRecieved(Uri? callerPath) 
     {
         _lastCaller = callerPath;
-        Refresh();
+        if (PlayerControlViewModel.ConnectionStatus == ConnectionStatus.Connected)
+        {
+            Refresh();
+        }
     }
 
-    public Continue Refresh() 
+    public void Refresh()
     {
         var task = _serviceProvider.GetRequiredService<ILoadAvailableDevicesTask>();
         task.Execute(this);
-        return Continue.Yes;
     }
 
     public ObservableCollection<IDeviceViewModel> Devices { get; } = [];
@@ -68,24 +70,37 @@ public partial class DeviceListViewModel
     public IDeviceViewModel? SelectedDevice
     {
         get => _selectedDevice;
-        set
+        set => SetField(ref _selectedDevice, value);
+    }
+
+    private void OnActivateDeviceCommand(IDeviceViewModel device)
+    {
+        // if the device is already active simply send notificication
+        if (device.IsActive)
         {
-            if (SetField(ref _selectedDevice, value))
-            {
-                if (_lastCaller != null)
-                {
-                    _navigator.NavigateTo(_lastCaller);
-                    _lastCaller = null;
-                }
+            _activeDeviceMessageService.SendMessage(new ActiveItemChangedMessage(PageType.Devices, _selectedDevice?.Model));
+        }
+        else 
+        {
+            var task = _serviceProvider.GetRequiredService<IChangeActiveDeviceTask>();
+            task.Execute(device);
+        }
 
-                if (_selectedDevice != null && ! _selectedDevice.IsActive)
-                {
-                    var task = _serviceProvider.GetRequiredService<IChangeActiveDeviceTask>();
-                    task.Execute(_selectedDevice);
-                }
+        // return to last active page if we did not change page manually
+        if (_lastCaller != null)
+        {
+            _navigator.NavigateTo(_lastCaller);
+            _lastCaller = null;
+        }
 
-                _activeDeviceMessageService.SendMessage(new ActiveItemChangedMessage(PageType.Devices,  _selectedDevice?.Model));
-            }
+    }
+
+    private void OnConnectionStatusChanged(ConnectionStatusChangedMessage message)
+    {
+        if (message.ConnectionStatus == ConnectionStatus.Connected)
+        {
+             Refresh();
         }
     }
+
 }

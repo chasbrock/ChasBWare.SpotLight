@@ -1,16 +1,16 @@
 ﻿using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 using ChasBWare.SpotLight.Infrastructure.Tasks.Base;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.AlbumSearch;
 
-public class SearchForPlaylistTask(IServiceProvider serviceProvider,
+public class SearchForPlaylistTask(IPlaylistViewModelProvider playlistProvider, 
                                    IDispatcher dispatcher,
-                                   ILibraryViewModel library,
                                    ISpotifyPlaylistRepository _playlistRepository)
-           : BasePlaylistLoaderTask(serviceProvider, dispatcher, library),
-              ISearchForPlaylistTask
+           : BasePlaylistLoaderTask(playlistProvider, dispatcher),
+             ISearchForPlaylistTask
 {
     public void Execute(ISearchPlaylistsViewModel viewModel)
     {
@@ -25,10 +25,10 @@ public class SearchForPlaylistTask(IServiceProvider serviceProvider,
         }
 
         var items = _playlistRepository.SearchForPlaylists(viewModel.SearchText);
-        AddItems(viewModel, items);
         _dispatcher.Dispatch(() =>
         {
-             viewModel.IsPopupOpen = viewModel.Items.Count > 0;
+            AddItems(viewModel, items);
+            viewModel.IsPopupOpen = viewModel.Items.Count > 0;
         });
     }
 }

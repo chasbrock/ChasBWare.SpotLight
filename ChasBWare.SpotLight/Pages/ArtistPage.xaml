@@ -59,12 +59,12 @@
                                     <Border Margin="8,4">
                                         <Grid RowDefinitions="128,Auto" ColumnDefinitions="128" Margin="2" >
                                             <Image Source="{Binding Image}" 
-                                            VerticalOptions="Center" HorizontalOptions="Center" 
-                                            Margin="4" Grid.Row="0"/>
+                                                   VerticalOptions="Center" HorizontalOptions="Center" 
+                                                   Margin="4" Grid.Row="0"/>
                                             <Label Text="{Binding Name}" 
-                                            LineBreakMode="WordWrap" MaxLines="5" 
-                                                HorizontalOptions="Fill" FontAttributes="Bold" 
-                                                Grid.Row="1"/>
+                                                   LineBreakMode="WordWrap" MaxLines="5" 
+                                                   HorizontalOptions="Fill" FontAttributes="Bold" 
+                                                   Grid.Row="1"/>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>

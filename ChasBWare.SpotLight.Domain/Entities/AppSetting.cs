@@ -1,13 +1,12 @@
 ﻿using SQLite;
 
-namespace ChasBWare.SpotLight.Domain.Entities
+namespace ChasBWare.SpotLight.Domain.Entities;
+
+public class AppSetting
 {
-    public class AppSetting
-    {
-        [PrimaryKey, NotNull]
-        public string? Name { get; set; }
-       
-        [NotNull]
-        public string? Value { get; set; }
-    }
+    [PrimaryKey, NotNull]
+    public string? Name { get; set; }
+
+    [NotNull]
+    public string? Value { get; set; }
 }

@@ -7,7 +7,7 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
         string Id { get; }
         string Name { get; }
         Artist Model { get; set; }
-        string? Image { get; set; }
+        string? Image { get;  }
         DateTime LastAccessed { get; set; }
     }
 }

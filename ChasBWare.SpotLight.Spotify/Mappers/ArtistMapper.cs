@@ -14,21 +14,4 @@ public static class ArtistMapper
             Name = source.Name ?? string.Empty,
             Image = (source?.Images).GetMediumImage() };
     }
-
-    public static Playlist CopyToTopTracksPlaylist(this Artist artist)
-    {
-        var playlist = new Playlist
-        {
-            Id = $"TT{artist.Id}",
-            Description = $"{artist.Name} Top Tracks",
-            Image = artist.Image,
-            LastAccessed = DateTime.Now,
-            Name = $"{artist.Name} Top Tracks",
-            Owner = artist.PackOwner(),
-            PlaylistType = PlaylistType.TopTracks,
-            ReleaseDate = DateTime.Today,
-            Uri = null
-        };
-        return playlist;
-    }
 }

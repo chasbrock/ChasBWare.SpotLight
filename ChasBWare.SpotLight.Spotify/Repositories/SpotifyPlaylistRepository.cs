@@ -14,6 +14,11 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
 
     public Playlist? FindPlaylist(string playlistId, PlaylistType playlistType)
     {
+        if (_actionManager.Status != ConnectionStatus.Connected) 
+        {
+            return null;
+        }
+
         if (playlistType == PlaylistType.Album)
         {
             var fullAlbum = _actionManager.FindAlbum(playlistId);
@@ -35,6 +40,11 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
     
     public List<Playlist> SearchForAlbums(string searchText)
     {
+        if (_actionManager.Status != ConnectionStatus.Connected)
+        {
+            return [];
+        }
+
         var simpleAlbums = _actionManager.SearchForAlbums(searchText);
         if (simpleAlbums != null)
         {
@@ -45,6 +55,11 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
 
     public List<Playlist> SearchForPlaylists(string searchText)
     {
+        if (_actionManager.Status != ConnectionStatus.Connected)
+        {
+            return [];
+        }
+
         var fullPlaylists = _actionManager.SearchForPlaylists(searchText);
         List<Playlist> items = [];
         if (fullPlaylists != null)
@@ -64,6 +79,11 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
 
     public List<Playlist> GetPlaylists(PlaylistType playlistType)
     {
+        if (_actionManager.Status != ConnectionStatus.Connected)
+        {
+            return [];
+        }
+
         return playlistType switch
         {
             PlaylistType.Album => GetCurrentUsersAlbums(),
@@ -74,6 +94,11 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
 
     public bool SetPlaylistSaveStatus(string playlistId, PlaylistType playlistType, bool save)
     {
+        if (_actionManager.Status != ConnectionStatus.Connected)
+        {
+            return false;
+        }
+
         switch (playlistType)
         {
             case PlaylistType.Album:
@@ -85,9 +110,13 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
         }
     }
 
-
-    private List<Playlist> GetCurrentUsersAlbums()
+        private List<Playlist> GetCurrentUsersAlbums()
     {
+        if (_actionManager.Status != ConnectionStatus.Connected)
+        {
+            return [];
+        }
+
         List<Playlist> playlists = [];
         var savedAlbums =  _actionManager.GetCurrentUsersAlbums();
         if (savedAlbums != null)
@@ -110,6 +139,11 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
 
     private List<Playlist> GetCurrentUsersPlaylists()
     {
+        if (_actionManager.Status != ConnectionStatus.Connected)
+        {
+            return [];
+        }
+
         List<Playlist> playlists = [];
         var fullPlaylists =  _actionManager.GetCurrentUsersPlaylists();
         if (fullPlaylists != null)

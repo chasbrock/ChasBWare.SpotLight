@@ -12,7 +12,7 @@ public partial class DevicePopupViewModel(IPopupService popupService,
                                           IServiceProvider _serviceProvider)
                     : PopupMenuViewModel(popupService)
 {
-    public void SetItem(IDeviceListViewModel viewModel, IPlaylistViewModel? item)
+    public void SetItem(IDeviceListViewModel viewModel)
     {
         MenuGroups.Clear();
 

@@ -4,6 +4,8 @@ namespace ChasBWare.SpotLight.Definitions.Tasks.Library
 {
     public interface ILibraryLoaderTask
     {
-        void Execute(ILibraryViewModel viewModel);
+        void Load(ILibraryViewModel viewModel);
+        void Refresh(ILibraryViewModel viewModel);
     }
 }
+
