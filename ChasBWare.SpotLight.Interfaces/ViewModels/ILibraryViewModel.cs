@@ -1,10 +1,12 @@
 ﻿using ChasBWare.SpotLight.Domain.Entities;
 
-namespace ChasBWare.SpotLight.Definitions.ViewModels
+namespace ChasBWare.SpotLight.Definitions.ViewModels;
+
+public interface ILibraryViewModel 
+               : IPlaylistSelectorViewModel
 {
-    public interface ILibraryViewModel : IPlaylistSelectorViewModel
-    {
-        bool Exists(string? playlistId);
-        void AddItems(IEnumerable<Playlist> items);
-    }
+    IPlayerControlViewModel PlayerControlViewModel { get; }
+
+    bool Exists(string? playlistId);
+    void AddItems(IEnumerable<Playlist> items);
 }

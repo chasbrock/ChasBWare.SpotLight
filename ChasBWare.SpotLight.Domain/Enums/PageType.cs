@@ -6,5 +6,6 @@ public enum PageType
     Artists,
     Albums,
     Playlists,
+    Users,
     Devices
 }

@@ -40,7 +40,7 @@ public class SpotifyDeviceRepository(IServiceProvider _serviceProvider,
 
     public List<IDeviceViewModel> GetAvailableDevices()
     {
-        if (_actionManager.Status != ConnectionStatus.Connected)
+        if (!_actionManager.Status.IsActiveState())
         {
             return [];
         }
@@ -66,7 +66,7 @@ public class SpotifyDeviceRepository(IServiceProvider _serviceProvider,
 
     public void SetDeviceVolume(int volumePercent)
     {
-        if (_actionManager.Status != ConnectionStatus.Connected)
+        if (!_actionManager.Status.IsActiveState())
         {
             return;
         }
@@ -75,7 +75,7 @@ public class SpotifyDeviceRepository(IServiceProvider _serviceProvider,
 
     public bool SetDeviceAsActive(string deviceId)
     {
-        if (_actionManager.Status != ConnectionStatus.Connected)
+        if (!_actionManager.Status.IsActiveState())
         {
             return false;
         }

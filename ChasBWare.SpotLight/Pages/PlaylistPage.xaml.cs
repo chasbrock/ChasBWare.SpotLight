@@ -8,5 +8,11 @@ public partial class PlaylistPage : ContentPage
 	{
 		InitializeComponent();
         BindingContext = viewModel;
+        Appearing += OnAppearing;
+    }
+
+    private void OnAppearing(object? sender, EventArgs e)
+    {
+        ((IRecentPlaylistsViewModel)BindingContext).PlayerControlViewModel.NotifyAll();
     }
 }

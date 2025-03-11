@@ -40,6 +40,15 @@ public class SpotifyActionManager(ISpotifyConnectionManager _spotifyConnectionMa
             });
     }
 
+    public PublicUser? FindUser(string userId)
+    {
+        return SpotifyErrorCatcher.Execute<PublicUser?>(_spotifyConnectionManager,
+            client =>
+            {
+                return client.UserProfile.Get(userId).Result;
+            });
+    }
+
     public List<SimpleTrack>? GetAlbumTracks(string albumId)
     {
         return SpotifyErrorCatcher.Execute<Task<List<SimpleTrack>>>(_spotifyConnectionManager,
@@ -175,7 +184,26 @@ public class SpotifyActionManager(ISpotifyConnectionManager _spotifyConnectionMa
                 return client.UserProfile.Current().Result;
             });
     }
-    
+
+    public IEnumerable<FullPlaylist>? GetUserPlaylists(string userId)
+    {
+        return SpotifyErrorCatcher.Execute<Task<IEnumerable<FullPlaylist>>>(_spotifyConnectionManager,
+            async client =>
+            {
+                var fullPlaylists = new List<FullPlaylist>();
+                var page = client.Playlists.GetUsers(userId).Result;
+
+                await foreach (var playlist in client.Paginate(page))
+                {
+                    if (playlist != null)
+                    {
+                        fullPlaylists.Add(playlist);
+                    }
+                }
+                return fullPlaylists;
+            })?.Result;
+    }
+
     public List<SimpleAlbum>? SearchForAlbums(string searchText)
     {
         return SpotifyErrorCatcher.Execute<List<SimpleAlbum>>(_spotifyConnectionManager,
@@ -221,7 +249,7 @@ public class SpotifyActionManager(ISpotifyConnectionManager _spotifyConnectionMa
                 return fullPlaylists;
             });
     }
-
+  
     public bool SetAlbumSaveStatus(string id, bool save)
     {
         return SpotifyErrorCatcher.Execute<bool>(_spotifyConnectionManager,

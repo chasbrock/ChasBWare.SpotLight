@@ -36,10 +36,11 @@ public class TransferToLibraryTask (IDispatcher _dispatcher,
                     else
                     {
                         _library.Items.Remove(viewModel);
+                        _library.SelectedItem = null;
                     }
                     _library.RefreshView();
                 });
             } 
-            }
+        }
     }
 }

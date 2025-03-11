@@ -8,6 +8,11 @@ public partial class ArtistPage : ContentPage
 	{
 		InitializeComponent();
 		BindingContext = viewModel;
-	}
+        Appearing += OnAppearing;
+    }
 
+    private void OnAppearing(object? sender, EventArgs e)
+    {
+        ((IRecentArtistsViewModel)BindingContext).PlayerControlViewModel.NotifyAll();
+    }
 }

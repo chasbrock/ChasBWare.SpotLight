@@ -39,7 +39,14 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// <param name="playlistId"></param>
         /// <returns></returns>
         FullPlaylist? FindPlaylist(string playlistId);
-          
+
+        /// <summary>
+        /// get details of user account
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        PublicUser? FindUser(string userId);
+
         /// <summary>
         /// async load tracks for album list
         /// </summary>
@@ -95,6 +102,12 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         PrivateUser? GetUserDetails();
 
         /// <summary>
+        /// async load playlist list for given user
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<FullPlaylist>? GetUserPlaylists(string userId);
+
+        /// <summary>
         /// async find all albums for name
         /// </summary>
         /// <returns></returns>
@@ -111,7 +124,7 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// </summary>
         /// <returns></returns>
         List<FullPlaylist>? SearchForPlaylists(string searchText);
-
+      
         /// <summary>
         /// adds or removes album for user's spotify profile
         /// </summary>

@@ -6,5 +6,6 @@ namespace ChasBWare.SpotLight.Definitions.Tasks.Library
     { 
         void Execute(Playlist playlist);
         void Execute(Artist artist);
+        void Execute(User user);
     }
 }

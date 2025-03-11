@@ -1,13 +1,15 @@
 ﻿using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Infrastructure.Utility;
 
-namespace ChasBWare.SpotLight.Definitions.ViewModels
+namespace ChasBWare.SpotLight.Definitions.ViewModels;
+
+public interface IListViewModel<T>
+               : INotifyable
+where T: class
 {
-    public interface IListViewModel<T> where T: class
-    {
-        List<T> Items { get; }
-        T? SelectedItem { get; set; }
-        LoadState LoadStatus { get; set; }
+    List<T> Items { get; }
+    T? SelectedItem { get; set; }
+    LoadState LoadStatus { get; set; }
 
-        void RefreshView();
-    }
+    void RefreshView();
 }

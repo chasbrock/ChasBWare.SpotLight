@@ -11,9 +11,9 @@ public class SearchArtistsViewModel(IServiceProvider serviceProvider,
              ISearchArtistsViewModel
 {
 
-    public override void OpenInViewer(IArtistViewModel viewModel)
+    public override void OpenInViewer(IArtistViewModel? viewModel)
     {
-        _messageService.SendMessage(new ActiveItemChangedMessage(PageType.Artists, viewModel.Model));
+        _messageService.SendMessage(new ActiveItemChangedMessage(PageType.Artists, viewModel?.Model));
     }
 
     protected override void ExecuteSearch()

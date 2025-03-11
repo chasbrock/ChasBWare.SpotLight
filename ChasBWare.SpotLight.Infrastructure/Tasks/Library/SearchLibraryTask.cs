@@ -8,8 +8,27 @@ public class SearchLibraryTask(ILibraryViewModel _library )
 {
     public void Execute(ISearchLibraryViewModel viewModel)
     {
+        viewModel.OpenInViewer(null);
         viewModel.FoundItems.Clear();
-        foreach (var playlist in _library.Items.Where(i => i.Name.Contains(viewModel.SearchText, StringComparison.OrdinalIgnoreCase)))
+
+        List<IPlaylistViewModel> found;
+
+        switch (viewModel.SelectedSearchType) 
+        {
+            case LibrarySearchTypes.Name:
+                found = _library.Items.Where(i => i.Name.Contains(viewModel.SearchText, StringComparison.OrdinalIgnoreCase)).ToList();
+                break;
+        
+                case LibrarySearchTypes.Owner:
+                found = _library.Items.Where(pl => pl.Owners.Any(o => o.Key.Contains(viewModel.SearchText, StringComparison.OrdinalIgnoreCase))).ToList();
+                break;
+
+            default: 
+                return;
+        }
+
+
+        foreach (var playlist in found)
         {
             viewModel.FoundItems.Add(playlist);
         }

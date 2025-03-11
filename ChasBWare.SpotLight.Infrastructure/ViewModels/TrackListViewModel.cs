@@ -62,9 +62,10 @@ public class TrackListViewModel : Notifyable, ITrackListViewModel
             return;
         }
 
+        //this will always be an artist becuse it is linked to
+        //track rather than playlist
         var messageService = _serviceProvider.GetRequiredService<IMessageService<FindItemMessage>>();
         messageService.SendMessage(new FindItemMessage(PageType.Artists, id));
-
         _navigator.NavigateTo(PageType.Artists);
     }
 

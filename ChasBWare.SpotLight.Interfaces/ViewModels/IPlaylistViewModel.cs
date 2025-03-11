@@ -13,7 +13,7 @@ public interface IPlaylistViewModel
     string Name { get; }
     string Description { get; }
     List<KeyValue> Owners { get; }
-    string Owner { get; }
+    KeyValue? Owner { get; }
     PlaylistType PlaylistType { get; }
     string Uri { get; }
     string? Image { get;  }
@@ -28,4 +28,6 @@ public interface IPlaylistViewModel
     ICommand PlayTracklistCommand { get; }
     bool InLibrary { get; set; }
     bool IsSelected { get; set; }
+
+    void ShowPlayingTrack(string? trackId, TrackStatus status);
 }

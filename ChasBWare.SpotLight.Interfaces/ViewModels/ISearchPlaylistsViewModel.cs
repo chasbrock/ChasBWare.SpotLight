@@ -1,6 +1,6 @@
-﻿namespace ChasBWare.SpotLight.Definitions.ViewModels
+﻿namespace ChasBWare.SpotLight.Definitions.ViewModels;
+
+public interface ISearchPlaylistsViewModel 
+               : ISearchViewModel<IPlaylistViewModel>
 {
-    public interface ISearchPlaylistsViewModel : ISearchViewModel<IPlaylistViewModel>
-    {
-    }
 }

@@ -50,7 +50,7 @@ public abstract class BaseSearchViewModel<T>(IServiceProvider serviceProvider)
     }
 
     protected abstract void ExecuteSearch();
-    public abstract void OpenInViewer(T viewModel);
+    public abstract void OpenInViewer(T? viewModel);
 
     public override void RefreshView()
     {

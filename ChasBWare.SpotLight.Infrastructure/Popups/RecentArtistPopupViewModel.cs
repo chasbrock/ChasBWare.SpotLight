@@ -41,5 +41,3 @@ public partial class RecentArtistPopupViewModel(IPopupService popupService,
 
    
 }
-    
-

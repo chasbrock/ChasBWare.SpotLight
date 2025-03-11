@@ -18,10 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChasBWare.Spotlight.Tests", "ChasBWare.Spotlight.Tests\ChasBWare.Spotlight.Tests.csproj", "{E2C2D113-1861-1097-EB35-A7FEE5B0D689}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChasBWare.Spotlight.Test.Infrastructure", "ChasBWare.Spotlight.Test.Infrastructure\ChasBWare.Spotlight.Test.Infrastructure.csproj", "{ED8F5547-9F06-45EF-A7EC-3E8E6A64B25D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,14 +46,6 @@ Global
 		{17740F5A-1ADB-456B-AB51-0C4106818F66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17740F5A-1ADB-456B-AB51-0C4106818F66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17740F5A-1ADB-456B-AB51-0C4106818F66}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E2C2D113-1861-1097-EB35-A7FEE5B0D689}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E2C2D113-1861-1097-EB35-A7FEE5B0D689}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E2C2D113-1861-1097-EB35-A7FEE5B0D689}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E2C2D113-1861-1097-EB35-A7FEE5B0D689}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ED8F5547-9F06-45EF-A7EC-3E8E6A64B25D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ED8F5547-9F06-45EF-A7EC-3E8E6A64B25D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ED8F5547-9F06-45EF-A7EC-3E8E6A64B25D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ED8F5547-9F06-45EF-A7EC-3E8E6A64B25D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

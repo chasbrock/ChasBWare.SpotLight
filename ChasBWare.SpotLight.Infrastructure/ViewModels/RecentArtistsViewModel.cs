@@ -1,6 +1,7 @@
 ﻿using ChasBWare.SpotLight.Definitions.Tasks.ArtistSearch;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Domain.Messaging;
@@ -19,11 +20,13 @@ public class RecentArtistsViewModel
                                   ISearchArtistsViewModel searchViewModel,
                                   IPlayerControlViewModel playerControlViewModel,
                                   IMessageService<FindItemMessage> findItemMessageService,
-                                  IMessageService<ActiveItemChangedMessage> activeArtistChangedMessageService)
+                                  IMessageService<ActiveItemChangedMessage> activeItemChangedMessageService,
+                                  IMessageService<CurrentTrackChangedMessage> currentTrackChangedMessage)
          : base(popupService, serviceProvider, playerControlViewModel, searchViewModel, SorterHelper.GetArtistSorters())
     {
         findItemMessageService.Register(OnFindItem);
-        activeArtistChangedMessageService.Register(OnSetActiveArtist);
+        activeItemChangedMessageService.Register(OnSetActiveArtist);
+        currentTrackChangedMessage.Register(OnTrackChangedMessage);
     }
 
     public override PageType PageType => PageType.Artists;
@@ -39,6 +42,7 @@ public class RecentArtistsViewModel
         if (newItem != null)
         {
             LoadItem(newItem);
+            newItem.SelectedItem?.ShowPlayingTrack(PlayerControlViewModel.CurrentTrackId, PlayerControlViewModel.TrackStatus);
         }
     }
 
@@ -110,5 +114,10 @@ public class RecentArtistsViewModel
             }
         }
         RefreshView();
+    }
+
+    private void OnTrackChangedMessage(CurrentTrackChangedMessage message)
+    {
+        SelectedItem?.SelectedItem?.ShowPlayingTrack(message.TrackId, message.State);
     }
 }

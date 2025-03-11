@@ -13,7 +13,7 @@ public class SpotifyArtistRepository(IServiceProvider _serviceProvider,
 {
     public Artist? FindArtist(string artistId)
     {
-        if (_actionManager.Status != ConnectionStatus.Connected)
+        if (!_actionManager.Status.IsActiveState())
         {
             return null;
         }
@@ -28,7 +28,7 @@ public class SpotifyArtistRepository(IServiceProvider _serviceProvider,
 
     public List<Playlist> LoadArtistAlbums(string artistId)
     {
-        if (_actionManager.Status != ConnectionStatus.Connected)
+        if (!_actionManager.Status.IsActiveState())
         {
             return [];
         }
@@ -45,7 +45,7 @@ public class SpotifyArtistRepository(IServiceProvider _serviceProvider,
     
     public List<IArtistViewModel> SearchForArtists(string searchText)
     {
-        if (_actionManager.Status != ConnectionStatus.Connected)
+        if (!_actionManager.Status.IsActiveState())
         {
             return [];
         }

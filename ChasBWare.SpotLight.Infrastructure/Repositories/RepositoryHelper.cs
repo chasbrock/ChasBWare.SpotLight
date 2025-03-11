@@ -33,12 +33,12 @@ internal partial class RepositoryHelper
     where id in (
        select pl.id 
          from playlist pl
-         left join ArtistPlaylist apl on pl.id= apl.PlaylistId
+         left join OwnedPlaylist opl on pl.id= opl.PlaylistId
          left join LibraryItem li on pl.id = li.id
          left join SearchItem si on pl.Id = si.Itemid
         where li.id is null
           and si.id is null
-          and apl.id is null)";
+          and opl.id is null)";
 
     /// <summary>
     /// get all playlist in library
@@ -93,10 +93,18 @@ DeleteOrphanTracks];
     join SearchItem si on si.ItemId = pl.Id
    where pl.PlaylistType = ?";
 
-   /// <summary>
-   /// collection of scripts to remove a single
-   /// playlist from search history
-   /// </summary>
+       /// <summary>
+    /// get all users in searchitems
+    /// </summary>
+    internal const string GetSearchUsers =
+@"select u.*
+    from User u
+    join SearchItem si on si.ItemId = u.Id";
+
+    /// <summary>
+    /// collection of scripts to remove a single
+    /// playlist from search history
+    /// </summary>
     internal static string[] DeleteRecentPlaylist =[
 @"delete from SearchItem where ItemId = ?",
 @"delete from playlist
@@ -110,7 +118,7 @@ DeleteOrphanTracks];
     /// delete all info for recent artists
     /// </summary>
     internal static string[] DeleteAllRecentArtists = [
-@"delete from ArtistPlaylist",
+@"delete from OwnedPlaylist where OwnerId in (select id from Artist)",
 @"delete from Artist",
 DeleteOrphanPlaylists,
 DeleteOrphanPlaylistTracks,
@@ -121,8 +129,30 @@ DeleteOrphanTracks];
     /// param: ArtistId
     /// </summary>
     internal static string[] DeleteRecentArtist = [
-@"delete from ArtistPlaylist where artistId = ?",
-@"delete from Artist where artistId = ?",
+@"delete from OwnedPlaylist where OwnerId = ?",
+@"delete from Artist where id = ?",
+DeleteOrphanPlaylists,
+DeleteOrphanPlaylistTracks,
+DeleteOrphanTracks];
+
+
+    /// <summary>
+    /// delete all info for recent users
+    /// </summary>
+    internal static string[] DeleteAllRecentUsers = [
+@"delete from OwnedPlaylist where OwnerId in (select id from User)",
+@"delete from User",
+DeleteOrphanPlaylists,
+DeleteOrphanPlaylistTracks,
+DeleteOrphanTracks];
+
+    /// <summary>
+    /// delete all info for recent user
+    /// param: UserId
+    /// </summary>
+    internal static string[] DeleteRecentUser = [
+@"delete from OwnedPlaylist where OwnerId = ?",
+@"delete from User where id = ?",
 DeleteOrphanPlaylists,
 DeleteOrphanPlaylistTracks,
 DeleteOrphanTracks];
@@ -149,9 +179,20 @@ DeleteOrphanTracks];
     internal const string GetArtistAlbums =
 @"select pl.*
     from Playlist pl 
-    join ArtistPlaylist apl on pl.Id = apl.PlaylistId
+    join OwnedPlaylist opl on pl.Id = opl.PlaylistId
     left join SearchItem si on si.ItemId = pl.Id
-   where apl.ArtistId = ?";
+   where opl.OwnerId = ?";
+
+    /// <summary>
+    /// get all playlist for artist 
+    /// param: Artistid 
+    /// </summary>
+    internal const string GetUserAlbums =
+@"select pl.*
+    from Playlist pl 
+    join OwnedPlaylist opl on pl.Id = opl.PlaylistId
+    left join SearchItem si on si.ItemId = pl.Id
+   where opl.OwnerId = ?";
 
     /// <summary>
     /// select all tracks for playlist

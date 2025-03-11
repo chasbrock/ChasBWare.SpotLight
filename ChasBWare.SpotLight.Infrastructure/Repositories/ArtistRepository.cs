@@ -66,13 +66,13 @@ public class ArtistRepository(IDbContext _dbContext,
                         connection.InsertAsync(album);
                     }
 
-                    var existingLink = connection.Table<ArtistPlaylist>()
-                                                 .FirstOrDefaultAsync(ap => ap.ArtistId == artist.Id &&
+                    var existingLink = connection.Table<OwnedPlaylist>()
+                                                 .FirstOrDefaultAsync(ap => ap.OwnerId == artist.Id &&
                                                                             ap.PlaylistId == album.Id)
                                                  .Result;
                     if (existingLink == null)
                     {
-                        connection.InsertAsync(new ArtistPlaylist { ArtistId = artist.Id, PlaylistId = album.Id });
+                        connection.InsertAsync(new OwnedPlaylist { OwnerId = artist.Id, PlaylistId = album.Id });
                     }
                 }
         }

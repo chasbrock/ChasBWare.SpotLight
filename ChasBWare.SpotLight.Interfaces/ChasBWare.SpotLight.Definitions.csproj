@@ -15,8 +15,4 @@
     <ProjectReference Include="..\ChasBWare.SpotLight.Domain\ChasBWare.SpotLight.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Tasks\Queue\" />
-  </ItemGroup>
-
 </Project>

@@ -9,6 +9,8 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
                      where T: class
     {
         ISearchViewModel<T> SearchViewModel { get; }
+        IPlayerControlViewModel PlayerControlViewModel { get; }
+
         void Initialise();
     }
 }

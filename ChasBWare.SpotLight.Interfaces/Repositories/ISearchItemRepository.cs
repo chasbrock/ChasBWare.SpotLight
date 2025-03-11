@@ -6,13 +6,17 @@ namespace ChasBWare.SpotLight.Definitions.Repositories
 {
     public interface ISearchItemRepository
     {
+        bool AddArtist(Artist artist);
+        bool AddPlaylist(Playlist playlist);
+        bool AddUser(User user);
         List<Playlist> GetPlaylists(PlaylistType playlistType);
         List<Artist> GetArtists();
-        bool AddArtist(Artist artist);
+        List<User> GetUsers();
         bool RemoveArtists();
         bool RemoveArtist(string id);
         bool RemovePlaylist(string id);
         bool RemovePlaylists(PlaylistType playlistType);
-        bool AddPlaylist(Playlist playlist);
+        bool RemoveUser(string id);
+        bool RemoveUsers();
     }
 }

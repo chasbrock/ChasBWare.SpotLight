@@ -1,15 +1,17 @@
 ﻿using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
+using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Enums;
+using ChasBWare.SpotLight.Domain.Messaging;
 using CommunityToolkit.Maui.Core;
 using System.Windows.Input;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
-public abstract class BaseRecentViewModel<T> 
-                    : BaseSortedListViewModel<T>, 
-                      IRecentViewModel<T> 
-                      where T: class
+public abstract class BaseRecentViewModel<T>
+                    : BaseSortedListViewModel<T>,
+                      IRecentViewModel<T>
+                      where T : class
 {
     private bool _initialised;
     protected readonly IPopupService _popupService;
@@ -51,5 +53,5 @@ public abstract class BaseRecentViewModel<T>
 
     protected abstract void LoadItems();
     protected abstract void OpenPopup();
-  
+    
 }

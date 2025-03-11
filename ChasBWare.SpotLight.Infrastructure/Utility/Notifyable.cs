@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace ChasBWare.SpotLight.Infrastructure.Utility
 {
-    public partial class Notifyable : INotifyPropertyChanged
+    public partial class Notifyable : INotifyPropertyChanged, INotifyable
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -45,7 +45,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
         /// <param name="value">the value to be set</param>
         /// <param name="propertyName">name of property being set</param>
         /// <returns></returns>
-        protected bool SetField<T>(object dataObject, T value, [CallerMemberName] string? propertyName = null)
+        public bool SetField<T>(object dataObject, T value, [CallerMemberName] string? propertyName = null)
         {
             if (propertyName == null || dataObject == null)
             {

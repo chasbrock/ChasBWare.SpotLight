@@ -36,14 +36,14 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
 
         internal static IGrouper<IPlaylistViewModel>[] GetPlaylistGroupers()
         {
-            return [new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.Owners),
-                                                   i=> i.Owner,
+            return [new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.Owner),
+                                                   i => i.Owner?.Key ?? "",
                                                    SortDirection.Ascending,
                                                    new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)),
                                                    (k,v) => new PlaylistGroup(k,v, true)),
 
                     new Grouper<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name),
-                                                   i=> i.Name.AlphaGroup(),
+                                                   i => i.Name.AlphaGroup(),
                                                    SortDirection.Ascending,
                                                    new PropertyComparer<IPlaylistViewModel>(nameof(IPlaylistViewModel.Name)),
                                                    (k,v) => new PlaylistGroup(k,v)),

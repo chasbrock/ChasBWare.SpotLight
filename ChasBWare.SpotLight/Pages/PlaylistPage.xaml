@@ -35,7 +35,7 @@
                                            Grid.Row="0" Grid.RowSpan="2"  Grid.Column="0"/>
                                 <Label Text="{Binding Name}" Style="{StaticResource ListCaption}"
                                            Grid.Row="0" Grid.Column="1"/>
-                                <Label Text="{Binding Owner}" Style="{StaticResource TrackOwner}"
+                                <Label Text="{Binding Owner.Key}" Style="{StaticResource TrackOwner}"
                                            Grid.Row="1" Grid.Column="1"/>
                             </Grid>
                         </DataTemplate>
@@ -70,7 +70,7 @@
                                                LineBreakMode="WordWrap" MaxLines="5" 
                                                HorizontalOptions="Fill" FontAttributes="Bold" 
                                                Grid.Row="1"/>
-                                        <Label Text="{Binding Owner}" 
+                                        <Label Text="{Binding Owner.Key}" 
                                                LineBreakMode="WordWrap" MaxLines="5" 
                                                HorizontalOptions="Fill" FontAttributes="Italic" 
                                                Grid.Row="2"/>

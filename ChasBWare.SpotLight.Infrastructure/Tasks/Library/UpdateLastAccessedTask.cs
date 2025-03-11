@@ -24,4 +24,13 @@ public class UpdateLastAccessedTask(IServiceProvider _serviceProvider)
             repo.UpdateLastAccessed(artist);
         });
     }
+
+    public void Execute(User user)
+    {
+        Task.Run(() =>
+        {
+            var repo = _serviceProvider.GetRequiredService<IUserRepository>();
+            repo.UpdateLastAccessed(user);
+        });
+    }
 }

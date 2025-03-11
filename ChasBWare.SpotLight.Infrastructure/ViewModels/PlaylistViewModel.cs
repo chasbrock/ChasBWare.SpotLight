@@ -117,9 +117,9 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
 
     public List<KeyValue> Owners { get; private set; } = [];
     
-    public string Owner
+    public KeyValue? Owner
     {
-        get => Owners.FirstOrDefault()!.Key ?? string.Empty;
+        get => Owners.FirstOrDefault();
     }
 
     public PlaylistType PlaylistType
@@ -157,9 +157,28 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
         }
 
         var messageService = _serviceProvider.GetRequiredService<IMessageService<FindItemMessage>>();
-        messageService.SendMessage(new FindItemMessage(PageType.Artists, id));
+        if (PlaylistType == PlaylistType.Album)
+        {
+            messageService.SendMessage(new FindItemMessage(PageType.Artists, id));
+            _navigator.NavigateTo(PageType.Artists);
+        }
+        else
+        {
+            messageService.SendMessage(new FindItemMessage(PageType.Users, id));
+            _navigator.NavigateTo(PageType.Users);
+        }
+    }
 
-        _navigator.NavigateTo(PageType.Artists);
+    public void ShowPlayingTrack(string? trackId, TrackStatus status) 
+    {
+        if (trackId != null && TracksViewModel.LoadStatus == LoadState.Loaded) 
+        {
+            var track = TracksViewModel.Items.FirstOrDefault(t => t.Id == trackId);
+            if (track != null)
+            {
+                track.Status = status;
+            }
+        }
     }
 
     public override string ToString()

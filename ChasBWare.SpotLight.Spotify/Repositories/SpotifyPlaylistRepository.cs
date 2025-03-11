@@ -14,7 +14,7 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
 
     public Playlist? FindPlaylist(string playlistId, PlaylistType playlistType)
     {
-        if (_actionManager.Status != ConnectionStatus.Connected) 
+        if (!_actionManager.Status.IsActiveState()) 
         {
             return null;
         }
@@ -40,7 +40,7 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
     
     public List<Playlist> SearchForAlbums(string searchText)
     {
-        if (_actionManager.Status != ConnectionStatus.Connected)
+        if (!_actionManager.Status.IsActiveState())
         {
             return [];
         }
@@ -55,7 +55,7 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
 
     public List<Playlist> SearchForPlaylists(string searchText)
     {
-        if (_actionManager.Status != ConnectionStatus.Connected)
+        if (!_actionManager.Status.IsActiveState())
         {
             return [];
         }
@@ -79,7 +79,7 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
 
     public List<Playlist> GetPlaylists(PlaylistType playlistType)
     {
-        if (_actionManager.Status != ConnectionStatus.Connected)
+        if (!_actionManager.Status.IsActiveState())
         {
             return [];
         }
@@ -94,7 +94,7 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
 
     public bool SetPlaylistSaveStatus(string playlistId, PlaylistType playlistType, bool save)
     {
-        if (_actionManager.Status != ConnectionStatus.Connected)
+        if (!_actionManager.Status.IsActiveState())
         {
             return false;
         }
@@ -110,9 +110,9 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
         }
     }
 
-        private List<Playlist> GetCurrentUsersAlbums()
+    private List<Playlist> GetCurrentUsersAlbums()
     {
-        if (_actionManager.Status != ConnectionStatus.Connected)
+        if (!_actionManager.Status.IsActiveState())
         {
             return [];
         }
@@ -139,7 +139,7 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
 
     private List<Playlist> GetCurrentUsersPlaylists()
     {
-        if (_actionManager.Status != ConnectionStatus.Connected)
+        if (!_actionManager.Status.IsActiveState())
         {
             return [];
         }

@@ -35,9 +35,15 @@ public partial class App : Application
 
             Task.Run(() => CheckForInitialisation());
 
-            var window = new Window(appShell);
+            // resize screen so it matches my tablet
+            var window = new Window(appShell)
+            {
+                Width = 1000,
+                Height = 700,
+                X = 0,
+                Y = 0
+            };
             window.Activated += OnWindowActivated;
-            window.Deactivated += OnWindowDeactivated;
             return window;
         }
         catch (Exception ex) 
@@ -49,12 +55,7 @@ public partial class App : Application
 
     private void OnWindowActivated(object? sender, EventArgs e)
     {
-  //      _appActivationChanged.SendMessage(new AppActivationChanged(true));
-    }
-
-    private void OnWindowDeactivated(object? sender, EventArgs e)
-    {
- //       _appActivationChanged.SendMessage(new AppActivationChanged(false));
+        _appActivationChanged.SendMessage(new AppActivationChanged(true));
     }
 
     private async void CheckForInitialisation()

@@ -12,6 +12,4 @@ public interface ITrackPlayerService
     void SkipBackward();
     void StartPlaylist(Playlist playlist, int trackNumber);
     void UpdateNowPlaying(PlayingTrack nowPlaying);
-    void AddTrackToQueue(string trackId);
-    void AddPlaylistToQueue(string id);
 }

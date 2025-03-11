@@ -63,6 +63,32 @@ public class SearchItemRepository(IDbContext _dbContext,
         return false;
     }
 
+    public bool AddUser(User user)
+    {
+        var connection = _dbContext.GetConnection().Result;
+        if (connection != null)
+        {
+            user.LastAccessed = DateTime.Now;
+            if (connection.Table<User>().FirstOrDefaultAsync(a => a.Id == user.Id).Result == null)
+            {
+                connection.InsertAsync(user);
+            }
+            else
+            {
+                connection.UpdateAsync(user);
+            }
+            if (connection.Table<SearchItem>().FirstOrDefaultAsync(si => si.ItemId == user.Id).Result == null)
+            {
+                connection.InsertAsync(new SearchItem { ItemId = user.Id });
+            }
+            return true;
+        }
+        _logger.LogError("Could not access db connection");
+
+        return false;
+    }
+
+
     public List<Artist> GetArtists()
     {
         var connection = _dbContext.GetConnection().Result;
@@ -75,8 +101,7 @@ public class SearchItemRepository(IDbContext _dbContext,
 
         return [];
     }
-
-
+      
     public List<Playlist> GetPlaylists(PlaylistType playlistType)
     {
        var connection = _dbContext.GetConnection().Result;
@@ -90,7 +115,18 @@ public class SearchItemRepository(IDbContext _dbContext,
         return [];
     }
 
+    public List<User> GetUsers()
+    {
+        var connection = _dbContext.GetConnection().Result;
+        if (connection != null)
+        {
+            var sql = RepositoryHelper.GetSearchUsers;
+            return connection.QueryAsync<User>(sql).Result;
+        }
+        _logger.LogError("Could not access db connection");
 
+        return [];
+    }
 
     public bool RemoveArtists()
     {
@@ -168,6 +204,55 @@ public class SearchItemRepository(IDbContext _dbContext,
             return true;
         }
         _logger.LogError("Could not access db connection");
+        return false;
+    }
+
+    public bool RemoveUsers()
+    {
+        var connection = _dbContext.GetConnection().Result;
+        if (connection != null)
+        {
+            try
+            {
+                foreach (var sql in RepositoryHelper.DeleteAllRecentUsers)
+                {
+                    connection.ExecuteAsync(sql);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Remove all recent users");
+                return false;
+            }
+        }
+        _logger.LogError("Could not access db connection");
+
+        return false;
+    }
+
+
+    public bool RemoveUser(string id)
+    {
+        var connection = _dbContext.GetConnection().Result;
+        if (connection != null)
+        {
+            try
+            {
+                foreach (var sql in RepositoryHelper.DeleteRecentUser)
+                {
+                    connection.ExecuteAsync(sql);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Remove all recent users");
+                return false;
+            }
+        }
+        _logger.LogError("Could not access db connection");
+
         return false;
     }
 }

@@ -26,7 +26,6 @@ public class Navigator : INavigator
                 _clients.TryAdd(navigationClient.PageType, navigationClient);
             }
         }
-
     }
           
     public void NavigateTo(PageType pageType)

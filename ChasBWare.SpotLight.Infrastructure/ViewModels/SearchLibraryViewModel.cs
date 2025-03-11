@@ -10,9 +10,20 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
               : BaseSearchViewModel<IPlaylistViewModel>(serviceProvider),
                 ISearchLibraryViewModel
     {
-        public override void OpenInViewer(IPlaylistViewModel item)
+          private LibrarySearchTypes _selectedSearchType = LibrarySearchTypes.Name;
+
+
+        public override void OpenInViewer(IPlaylistViewModel? item)
         {
-            _messageService.SendMessage(new ActiveItemChangedMessage(PageType.Library, item.Model));
+            _messageService.SendMessage(new ActiveItemChangedMessage(PageType.Library, item?.Model));
+        }
+
+        public List<LibrarySearchTypes> SearchTypes { get; } = Enum.GetValues<LibrarySearchTypes>().ToList();
+
+        public LibrarySearchTypes SelectedSearchType
+        {
+            get => _selectedSearchType;
+            set => SetField(ref _selectedSearchType, value);
         }
 
         protected override void ExecuteSearch()

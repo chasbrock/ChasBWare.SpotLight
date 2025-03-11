@@ -19,7 +19,6 @@ public class PlayerControlViewModel
     private readonly INavigator _navigator;
     private readonly IDispatcher _dispatcher;
 
-    private string? _currentTrackId;
     private bool _isPlaying = false;
     private string _trackName = "";
     private string _image = "";
@@ -81,6 +80,13 @@ public class PlayerControlViewModel
 
     public ConnectionStatus ConnectionStatus { get; private set; } = ConnectionStatus.NotInitialised;
 
+    public string? CurrentTrackId { get; private set; }
+    
+    public TrackStatus TrackStatus
+    {
+        get => CurrentTrackId == null ? TrackStatus.NotPlaying : IsPlaying ? TrackStatus.Playing : TrackStatus.Paused;
+    }
+
     public string TrackName
     {
         get => _trackName;
@@ -109,7 +115,7 @@ public class PlayerControlViewModel
                 Notify(nameof(IsPaused));
             }
         }
-	    }
+	}
 
     public bool IsPaused
     {
@@ -157,7 +163,7 @@ public class PlayerControlViewModel
         ConnectionStatus = message.ConnectionStatus;
         _dispatcher.Dispatch(() =>
         {
-            if (ConnectionStatus == ConnectionStatus.Connected)
+            if (ConnectionStatus.IsActiveState())
             {
                 SyncToDevice();
             }
@@ -178,7 +184,7 @@ public class PlayerControlViewModel
 
     private void OnAppActivationStateChanged(AppActivationChanged message)
     {
-        if (message.IsActive && ConnectionStatus == ConnectionStatus.Connected) 
+        if (message.IsActive && ConnectionStatus.IsActiveState()) 
         {
             SyncToDevice();
         }
@@ -254,9 +260,9 @@ public class PlayerControlViewModel
 
     private void ShowProgress(object? sender, PlayingTrack playingTrack)
     {
-        if (_currentTrackId != playingTrack.Id) 
+        if (CurrentTrackId != playingTrack.Id) 
         {
-            _currentTrackId = playingTrack.Id;
+            CurrentTrackId = playingTrack.Id;
             TrackName = playingTrack.Name;
             Artists = string.Join(',', playingTrack.Artists.Select(a => a.Key));
             ArtistList = playingTrack.Artists;

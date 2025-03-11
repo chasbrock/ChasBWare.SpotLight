@@ -105,11 +105,7 @@ public partial class LibraryViewModel
         // try to find the track
         foreach (var playList in Items.Where(pl => pl.TracksViewModel.LoadStatus == LoadState.Loaded))
         {
-            var track = playList.TracksViewModel.Items.FirstOrDefault(t => t.Id == message.TrackId);
-            if (track != null)
-            {
-                track.Status = message.State;
-            }
+            playList.ShowPlayingTrack(message.TrackId, message.State);
         }
     }
 

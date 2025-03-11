@@ -74,6 +74,16 @@ public static class MapperHelpers
         return result.ToString();
     }
 
+    public static string PackOwner(this PublicUser? source)
+    {
+        if (source == null)
+        {
+            return string.Empty;
+        }
+
+        return $"{source.DisplayName}={source.Id}";
+    }
+
     public static string PackOwner(this SimpleArtist source)
     {
         return $"{source.Name}={source.Id}";

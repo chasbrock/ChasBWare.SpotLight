@@ -115,20 +115,10 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
 
             UpdateTrackProgress(nowPlaying);
         }
-
-        public void AddTrackToQueue(string trackId)
-        {
-            // TODO
-        }
-
-        public void AddPlaylistToQueue(string playListId)
-        {
-            // todo
-        }
-
+            
         private void OnConnectionStatusChange(ConnectionStatusChangedMessage message)
         {
-            if (message.ConnectionStatus != ConnectionStatus.Connected) 
+            if (message.ConnectionStatus.IsActiveState()) 
             {
                 _timer.Stop();
                 // if we disconnect we cannot resy

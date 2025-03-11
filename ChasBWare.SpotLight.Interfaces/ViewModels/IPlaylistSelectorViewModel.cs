@@ -1,7 +1,7 @@
-﻿namespace ChasBWare.SpotLight.Definitions.ViewModels
+﻿namespace ChasBWare.SpotLight.Definitions.ViewModels;
+
+public interface IPlaylistSelectorViewModel 
+               : IGroupedListViewModel<IPlaylistViewModel>
 {
-    public interface IPlaylistSelectorViewModel : IGroupedListViewModel<IPlaylistViewModel>
-    {
-     
-    }
+ 
 }

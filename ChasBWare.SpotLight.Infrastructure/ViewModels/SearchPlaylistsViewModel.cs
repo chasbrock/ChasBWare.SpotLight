@@ -10,9 +10,9 @@ public class SearchPlaylistsViewModel(IServiceProvider serviceProvider,
           : BaseSearchViewModel<IPlaylistViewModel>((serviceProvider)),
             ISearchPlaylistsViewModel
 {
-    public override void OpenInViewer(IPlaylistViewModel viewModel)
+    public override void OpenInViewer(IPlaylistViewModel? viewModel)
     {
-        _messageService.SendMessage(new ActiveItemChangedMessage(PageType.Playlists, viewModel.Model));
+        _messageService.SendMessage(new ActiveItemChangedMessage(PageType.Playlists, viewModel?.Model));
     }
 
     protected override void ExecuteSearch()

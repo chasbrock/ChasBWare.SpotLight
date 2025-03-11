@@ -23,12 +23,14 @@ public class RecentPlaylistsViewModel
                                     ISearchPlaylistsViewModel searchViewModel,
                                     IMessageService<FindItemMessage> findItemMessageService,
                                     IMessageService<ActiveItemChangedMessage> activeAlbumChangedMessageService,
+                                    IMessageService<CurrentTrackChangedMessage> currentTrackChangedMessage,
                                     ILibraryViewModel library)
         : base(popupService, serviceProvider, playerControlViewModel, searchViewModel, SorterHelper.GetPlaylistSorters())
     {
         _library = library;
         findItemMessageService.Register(OnFindItem);
         activeAlbumChangedMessageService.Register(OnSetActivePlaylist);
+        currentTrackChangedMessage.Register(OnTrackChangedMessage);
     }
 
     public override PageType PageType => PageType.Playlists;
@@ -50,6 +52,7 @@ public class RecentPlaylistsViewModel
         {
             newItem.IsSelected = true;
             newItem.IsExpanded = true;
+            newItem.ShowPlayingTrack(PlayerControlViewModel.CurrentTrackId, PlayerControlViewModel.TrackStatus);
         }
     }
 
@@ -108,5 +111,10 @@ public class RecentPlaylistsViewModel
             }
             RefreshView();
         }
+    }
+
+    private void OnTrackChangedMessage(CurrentTrackChangedMessage message)
+    {
+        SelectedItem?.ShowPlayingTrack(message.TrackId, message.State);
     }
 }

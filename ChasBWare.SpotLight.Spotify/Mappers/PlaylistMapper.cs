@@ -19,7 +19,7 @@ public static class PlaylistMapper
             Id = source.Id,
             Description = source.Description!.Trim() ?? string.Empty,
             Name = source.Name!.Trim() ?? string.Empty,
-            Owner = source.Owner!.DisplayName ?? string.Empty,
+            Owner = source.Owner.PackOwner(),
             PlaylistType = PlaylistType.Playlist,
             Uri = source.Uri ?? string.Empty,
             Image = source.Images.GetMediumImage(),

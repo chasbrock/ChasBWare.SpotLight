@@ -8,5 +8,11 @@ public partial class AlbumPage : ContentPage
 	{
 		InitializeComponent();
 		BindingContext = viewModel;
+        Appearing += OnAppearing;
+    }
+
+    private void OnAppearing(object? sender, EventArgs e)
+    {
+        ((IRecentAlbumsViewModel)BindingContext).PlayerControlViewModel.NotifyAll();
     }
 }

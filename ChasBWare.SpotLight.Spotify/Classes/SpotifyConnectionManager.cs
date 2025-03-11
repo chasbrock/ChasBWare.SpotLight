@@ -96,6 +96,7 @@ public class SpotifyConnectionManager
         }
         try
         {
+            Status = ConnectionStatus.Authorising;
             var request = new AuthorizationCodeRefreshRequest(_session.ClientId, _session.ClientSecret, _session.RefreshToken);
             var reply = new OAuthClient().RequestToken(request).Result;
             Status = _session.UpdateToken(reply.AccessToken);

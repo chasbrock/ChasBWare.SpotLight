@@ -7,3 +7,4 @@ public interface IArtistAlbumsLoaderTask
     void Execute(IArtistViewModel viewModel);
 }
 
+

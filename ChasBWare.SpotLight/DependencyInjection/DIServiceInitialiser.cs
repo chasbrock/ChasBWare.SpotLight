@@ -5,6 +5,7 @@ using ChasBWare.SpotLight.Definitions.Tasks.ArtistSearch;
 using ChasBWare.SpotLight.Definitions.Tasks.Device;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.Tasks.PlaylistSearch;
+using ChasBWare.SpotLight.Definitions.Tasks.Users;
 using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
@@ -20,6 +21,7 @@ using ChasBWare.SpotLight.Infrastructure.Tasks.ArtistSearch;
 using ChasBWare.SpotLight.Infrastructure.Tasks.Device;
 using ChasBWare.SpotLight.Infrastructure.Tasks.Library;
 using ChasBWare.SpotLight.Infrastructure.Tasks.PlaylistSearch;
+using ChasBWare.SpotLight.Infrastructure.Tasks.Users;
 using ChasBWare.SpotLight.Infrastructure.ViewModels;
 using ChasBWare.SpotLight.Install;
 using ChasBWare.SpotLight.Pages;
@@ -106,6 +108,7 @@ internal static partial class DIServiceInitialiser
                        .AddTransientPopup<LibraryPopupMenu, LibraryPopupViewModel>()
                        .AddTransientPopup<RecentArtistPopupMenu, RecentArtistPopupViewModel>()
                        .AddTransientPopup<RecentAlbumPopupMenu, RecentPlaylistPopupViewModel>()
+                       .AddTransientPopup<RecentUserPopupMenu, RecentUserPopupViewModel>()
                        .AddTransientPopup<DevicesPopupMenu, DevicePopupViewModel>()
                        .AddTransientPopup<TrackPopupMenu, TrackPopupViewModel>();
     }
@@ -121,7 +124,9 @@ internal static partial class DIServiceInitialiser
                        .AddTransient<ISpotifyDeviceRepository, SpotifyDeviceRepository>()
                        .AddTransient<ISpotifyPlaylistRepository, SpotifyPlaylistRepository>()
                        .AddTransient<ISpotifyTrackRepository, SpotifyTrackRepository>()
-                       .AddTransient<ITrackRepository, TrackRepository>();
+                       .AddTransient<ISpotifyUserRepository, SpotifyUserRepository>()
+                       .AddTransient<ITrackRepository, TrackRepository>()
+                       .AddTransient<IUserRepository, UserRepository>();
     }
 
     public static IServiceCollection RegisterServices(this IServiceCollection services)
@@ -146,21 +151,27 @@ internal static partial class DIServiceInitialiser
     {
         return services.AddTransient<IAddRecentPlaylistTask, AddRecentPlaylistTask>()
                        .AddTransient<IAddRecentArtistTask, AddRecentArtistTask>()
+                       .AddTransient<IAddRecentUserTask, AddRecentUserTask>()
                        .AddTransient<IArtistAlbumsLoaderTask, ArtistAlbumsLoaderTask>()
+                       .AddTransient<IUserAlbumsLoaderTask, UserAlbumsLoaderTask>()
                        .AddTransient<IChangeActiveDeviceTask, ChangeActiveDeviceTask>()
                        .AddTransient<IFindArtistTask, FindArtistTask>()
                        .AddTransient<IFindPlaylistTask, FindPlaylistTask>()
+                       .AddTransient<IFindUserTask, FindUserTask>()
                        .AddTransient<ILibraryLoaderTask, LibraryLoaderTask>()
                        .AddTransient<ILoadAvailableDevicesTask, LoadAvailableDevicesTask>()
                        .AddTransient<ILoadRecentArtistTask, LoadRecentArtistTask>()
                        .AddTransient<ILoadRecentPlaylistTask, LoadRecentPlaylistTask>()
+                       .AddTransient<ILoadRecentUserTask, LoadRecentUserTask>()
                        .AddTransient<IReconnectToSpotifyTask, ReconnectToSpotifyTask>()
                        .AddTransient<IRemovePlaylistTask, RemoveRecentPlaylistTask>()
                        .AddTransient<IRemoveRecentArtistTask, RemoveRecentArtistTask>()
+                       .AddTransient<IRemoveRecentUserTask, RemoveRecentUserTask>()
                        .AddTransient<ITransferToLibraryTask, TransferToLibraryTask>()
                        .AddTransient<ISearchForAlbumTask, SearchForAlbumTask>()
                        .AddTransient<ISearchForArtistTask, SearchForArtistTask>()
                        .AddTransient<ISearchForPlaylistTask, SearchForPlaylistTask>()
+                       .AddTransient<ISearchForUserTask, SearchForUserTask>()
                        .AddTransient<ISearchLibraryTask, SearchLibraryTask>()
                        .AddTransient<ISetHatedTrackTask, SetHatedTrackTask>()
                        .AddTransient<ISyncToDeviceTask, SyncToDeviceTask>()
@@ -181,12 +192,15 @@ internal static partial class DIServiceInitialiser
                        .AddSingleton<IRecentAlbumsViewModel, RecentAlbumsViewModel>()
                        .AddSingleton<IRecentArtistsViewModel, RecentArtistsViewModel>()
                        .AddSingleton<IRecentPlaylistsViewModel, RecentPlaylistsViewModel>()
-                       .AddSingleton<ISearchArtistsViewModel, SearchArtistsViewModel>()
+                       .AddSingleton<IRecentUserViewModel, RecentUserViewModel>()
+                       .AddSingleton<ISearchUserViewModel, SearchUserViewModel>()
                        .AddSingleton<ISearchAlbumsViewModel, SearchAlbumsViewModel>()
+                       .AddSingleton<ISearchArtistsViewModel, SearchArtistsViewModel>()
                        .AddSingleton<ISearchPlaylistsViewModel, SearchPlaylistsViewModel>()
                        .AddSingleton<ISearchLibraryViewModel, SearchLibraryViewModel>()
                        .AddTransient<ITrackViewModel, TrackViewModel>()
-                       .AddTransient<ITrackListViewModel, TrackListViewModel>();
+                       .AddTransient<ITrackListViewModel, TrackListViewModel>()
+                       .AddTransient<IUserViewModel, UserViewModel>();
     }
 
     public static IServiceCollection RegisterViews(this IServiceCollection services)
@@ -194,7 +208,8 @@ internal static partial class DIServiceInitialiser
         return services.AddSingleton<ArtistPage>()
                        .AddSingleton<AlbumPage>()
                        .AddSingleton<PlaylistPage>()
-                       .AddSingleton<LibraryPage>();
+                       .AddSingleton<LibraryPage>()
+                       .AddSingleton<ArtistPage>();
     }
 }
 

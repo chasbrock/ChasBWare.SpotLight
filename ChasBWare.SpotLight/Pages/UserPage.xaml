@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
+             xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
+             xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:DataType="vm:RecentUserViewModel"
+             x:Class="ChasBWare.SpotLight.Pages.UserPage"
+              Style="{StaticResource AppBackground}">
+    <Grid RowDefinitions="*,Auto" >
+
+        <!-- body -->
+        <Grid ColumnDefinitions="300,*" Grid.Row="0">
+
+            <!-- selector -->
+            <Grid RowDefinitions="Auto,*" Grid.Column="0" >
+                <HorizontalStackLayout Grid.Row="0">
+                    <Picker ItemsSource="{Binding SorterNames}"
+	                        SelectedItem="{Binding SelectedSorterName}" 
+	                        Style="{StaticResource GroupPicker}" />
+                    <ImageButton Command="{Binding Path=OpenPopupCommand}"
+	                             Style="{StaticResource OpenMore}" />
+                </HorizontalStackLayout>
+
+                <CollectionView ItemsSource="{Binding SortedItems}"
+                                SelectionMode="Single" 
+                                SelectedItem="{Binding SelectedItem}"
+                                Grid.Row="1">
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:UserViewModel">
+                            <Label Text="{Binding Name}" 
+                                           Style="{StaticResource ListCaption}"
+                                           Padding="4"/>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                </CollectionView>
+            </Grid>
+
+            <!-- results-->
+            <Grid RowDefinitions="Auto,*" Grid.Column="1"  >
+                <tk:Expander IsExpanded="{Binding SearchViewModel.IsPopupOpen, Mode=TwoWay}" 
+                             Direction="Down" 
+                             Grid.Row="0">
+
+                    <tk:Expander.Header>
+                        <SearchBar SearchCommand="{Binding SearchViewModel.ExecuteSearchCommand}"
+                                Text="{Binding SearchViewModel.SearchText}"
+                                Placeholder="Search for User Id..." />
+                    </tk:Expander.Header>
+                    <CollectionView ItemsSource="{Binding SearchViewModel.FoundItems}"
+                                ItemsLayout="HorizontalList"
+                                SelectionMode="Single"
+                                SelectedItem="{Binding SearchViewModel.SelectedItem}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:UserViewModel">
+                                <Border Margin="8,4">
+                                    <Grid RowDefinitions="128,Auto" ColumnDefinitions="128" Margin="2" >
+                                        <Image Source="{Binding Image}" 
+                                                   VerticalOptions="Center" HorizontalOptions="Center" 
+                                                   Margin="4" Grid.Row="0"/>
+                                        <Label Text="{Binding Name}" 
+                                                   LineBreakMode="WordWrap" MaxLines="5" 
+                                                   HorizontalOptions="Fill" FontAttributes="Bold" 
+                                                   Grid.Row="1"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </tk:Expander>
+
+                <Grid IsVisible="{Binding SelectedItem, Converter={StaticResource NullToBool}}"  
+                      Grid.Row="1">
+                    <v:PlaylistListView BindingContext="{Binding SelectedItem}" 
+                                        VerticalOptions="Fill"/>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <v:PlayerControlView BindingContext="{Binding PlayerControlViewModel}" 
+                             Grid.Row="1"/>
+    </Grid>
+</ContentPage>

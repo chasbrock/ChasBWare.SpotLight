@@ -12,9 +12,10 @@ public abstract class BaseGroupedListViewModel<T>
                     : BaseListViewModel<T>,
                       IGroupedListViewModel<T> where T : class
 {
+    
     private List<IGroupHolder<T>> _groupedItems = [];
     private IGrouper<T> _selectedGrouper;
-
+   
     protected BaseGroupedListViewModel(IServiceProvider serviceProvider,
                                        IGrouper<T>[] groupers)
                    : base(serviceProvider)
@@ -39,6 +40,8 @@ public abstract class BaseGroupedListViewModel<T>
             group.IsExpanded = false;
         }
     }
+
+   
 
     public ICommand ItemSelectedCommand { get; private set; }
 

@@ -49,7 +49,7 @@
                                                                         NumberOfTapsRequired="1"/>
                                             </Label.GestureRecognizers>
                                         </Label>
-                                        <Label Text="{Binding Owner}" Style="{StaticResource ListDescription}" Grid.Row="1"
+                                        <Label Text="{Binding Owner.Key}" Style="{StaticResource ListDescription}" Grid.Row="1"
                                                IsVisible="{Binding x:DataType='vu:PlaylistGroup', 
                                                                     Source={RelativeSource AncestorType={x:Type vu:PlaylistGroup}},
                                                                     Path=ShowOwner}">

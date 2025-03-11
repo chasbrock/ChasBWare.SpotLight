@@ -16,7 +16,6 @@ public class Artist
     public string? Image { get; set; }
 }
 
-
 public static class ArtistHelper
 {
     public static List<KeyValue> UnpackOwners(this string? source)

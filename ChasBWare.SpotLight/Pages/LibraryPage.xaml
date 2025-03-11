@@ -17,9 +17,9 @@
             <Grid RowDefinitions="Auto,*" ColumnDefinitions="*,Auto" 
                   Grid.Column="0">
                 <Picker ItemsSource="{Binding GrouperNames}"
-                                SelectedItem="{Binding SelectedGrouperName}" 
-                                Style="{StaticResource GroupPicker}" 
-                                Grid.Row="0" Grid.Column="0"/>
+                        SelectedItem="{Binding SelectedGrouperName}" 
+                        Style="{StaticResource GroupPicker}" 
+                        Grid.Row="0" Grid.Column="0"/>
                 <ImageButton Command="{Binding Path=OpenPopupCommand}"
                              Style="{StaticResource OpenMore}" 
                              Grid.Row="0" Grid.Column="1"/>
@@ -57,7 +57,7 @@
                                                                       NumberOfTapsRequired="1"/>
                                                     </Label.GestureRecognizers>
                                                 </Label>
-                                                <Label Text="{Binding Owner}" Style="{StaticResource ListDescription}" Grid.Row="1"
+                                                <Label Text="{Binding Owner.Key}" Style="{StaticResource ListDescription}" Grid.Row="1"
                                              IsVisible="{Binding x:DataType='vu:PlaylistGroup', 
                                                                   Source={RelativeSource AncestorType={x:Type vu:PlaylistGroup}},
                                                                   Path=ShowOwner}">
@@ -89,10 +89,17 @@
                      Direction="Down" 
                      Grid.Row="0">
                     <tk:Expander.Header>
-
-                        <SearchBar SearchCommand="{Binding SearchViewModel.ExecuteSearchCommand}"
-                           Text="{Binding SearchViewModel.SearchText}"
-                           Placeholder="Search by name..." />
+                        <Grid ColumnDefinitions="*, Auto">
+                            <SearchBar SearchCommand="{Binding SearchViewModel.ExecuteSearchCommand}"
+                                       Text="{Binding SearchViewModel.SearchText}"
+                                       Placeholder="Search by name..." 
+                                       HorizontalOptions="Fill"
+                                       Grid.Column="0"/>
+                            <Picker ItemsSource="{Binding SearchViewModel.SearchTypes}"
+                                    SelectedItem="{Binding SearchViewModel.SelectedSearchType}" 
+                                    Style="{StaticResource GroupPicker}" 
+                                    Grid.Column="1"/>     
+                        </Grid>
                     </tk:Expander.Header>
                     <CollectionView ItemsSource="{Binding SearchViewModel.FoundItems}"
                                     SelectionMode="Single" 
@@ -101,11 +108,13 @@
 
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="vm:PlaylistViewModel">
-                                <Grid RowDefinitions="22,14" Padding="4">
+                                <Grid ColumnDefinitions="Auto,*" RowDefinitions="32,20" Padding="4">
+                                    <Image Source="{Binding Image}" Margin="4"
+                                           Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"/>
                                     <Label Text="{Binding Name}" Style="{StaticResource ListCaption}"
-                                 Grid.Row="0" Grid.Column="1"/>
-                                    <Label Text="{Binding Owner}" Style="{StaticResource TrackOwner}"
-                                 Grid.Row="1" Grid.Column="1"/>
+                                           Grid.Row="0" Grid.Column="1"/>
+                                    <Label Text="{Binding Owner.Key}" Style="{StaticResource TrackOwner}"
+                                           Grid.Row="1" Grid.Column="1"/>
                                 </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>

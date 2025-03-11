@@ -46,3 +46,4 @@ public class RemoveRecentArtistTask(IDispatcher _dispatcher,
         }
     }
 }
+

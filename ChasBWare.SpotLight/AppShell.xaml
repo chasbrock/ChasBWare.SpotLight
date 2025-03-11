@@ -9,11 +9,12 @@
     Shell.FlyoutBehavior="Flyout"
     Title="ChasBWare.SpotLight">
  
-    <TabBar FlyoutDisplayOptions="AsMultipleItems" Shell.NavBarIsVisible="False">
+    <TabBar FlyoutDisplayOptions="AsMultipleItems" Shell.NavBarIsVisible="False" >
         <ShellContent ContentTemplate="{DataTemplate p:LibraryPage}" Title="Library" Route="Library" Icon="page_library.png"/>
         <ShellContent ContentTemplate="{DataTemplate p:ArtistPage}" Title="Artists" Route="Artists" Icon="page_artist.png"/>
         <ShellContent ContentTemplate="{DataTemplate p:AlbumPage}" Title="Albums" Route="Albums" Icon="page_album.png"/>
-        <ShellContent ContentTemplate="{DataTemplate p:PlaylistPage}" Title="Playlists" Route="Playlists" Icon="pages_playlist.png"/>
+        <ShellContent ContentTemplate="{DataTemplate p:PlaylistPage}" Title="Playlists" Route="Playlists" Icon="page_playlist.png"/>
+        <ShellContent ContentTemplate="{DataTemplate p:UserPage}" Title="Users" Route="Users" Icon="page_user.png"/>
         <ShellContent ContentTemplate="{DataTemplate p:DevicesPage}" Title="Devices" Route="Devices" Icon="page_devices.png"/>
     </TabBar>
 

@@ -1,12 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace ChasBWare.SpotLight.Definitions.ViewModels
+namespace ChasBWare.SpotLight.Definitions.ViewModels;
+
+public interface IDeviceListViewModel
 {
-    public interface IDeviceListViewModel
-    {
-        ObservableCollection<IDeviceViewModel> Devices { get; }
-        IDeviceViewModel? SelectedDevice { get; set; }
-        ICommand OpenPopupCommand { get; }
-    }
+    ObservableCollection<IDeviceViewModel> Devices { get; }
+    IDeviceViewModel? SelectedDevice { get; set; }
+    ICommand OpenPopupCommand { get; }
 }

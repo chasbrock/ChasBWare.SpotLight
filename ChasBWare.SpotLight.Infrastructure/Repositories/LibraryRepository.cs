@@ -138,7 +138,7 @@ public class LibraryRepository(IDbContext _dbContext,
             }
             else 
             {
-                connection.DeleteAsync(new LibraryItem { Id = playlist.Id });
+                connection.ExecuteAsync("delete from LibraryItem where  Id = ?", playlist.Id);
                 return true;
             }
         }

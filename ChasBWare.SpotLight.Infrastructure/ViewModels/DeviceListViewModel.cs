@@ -53,7 +53,7 @@ public partial class DeviceListViewModel
     public void OnNavigationRecieved(Uri? callerPath) 
     {
         _lastCaller = callerPath;
-        if (PlayerControlViewModel.ConnectionStatus == ConnectionStatus.Connected)
+        if (PlayerControlViewModel.ConnectionStatus.IsActiveState())
         {
             Refresh();
         }
@@ -97,7 +97,7 @@ public partial class DeviceListViewModel
 
     private void OnConnectionStatusChanged(ConnectionStatusChangedMessage message)
     {
-        if (message.ConnectionStatus == ConnectionStatus.Connected)
+        if (message.ConnectionStatus.IsActiveState())
         {
              Refresh();
         }

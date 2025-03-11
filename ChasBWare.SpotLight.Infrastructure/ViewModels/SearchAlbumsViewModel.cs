@@ -10,9 +10,9 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
                : BaseSearchViewModel<IPlaylistViewModel>(serviceProvider), 
                  ISearchAlbumsViewModel
     {
-        public override void OpenInViewer(IPlaylistViewModel viewModel)
+        public override void OpenInViewer(IPlaylistViewModel? viewModel)
         {
-            _messageService.SendMessage(new ActiveItemChangedMessage(PageType.Albums, viewModel.Model));
+            _messageService.SendMessage(new ActiveItemChangedMessage(PageType.Albums, viewModel?.Model));
         }
 
         protected override void ExecuteSearch()
