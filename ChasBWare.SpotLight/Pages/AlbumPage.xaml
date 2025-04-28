@@ -15,13 +15,15 @@
 
             <!-- selector -->
             <Grid RowDefinitions="Auto,*" Grid.Column="0" >
-                <HorizontalStackLayout Grid.Row="0">
+                <Grid ColumnDefinitions="*,Auto" Grid.Row="0">
                     <Picker ItemsSource="{Binding SorterNames}"
                             SelectedItem="{Binding SelectedSorterName}" 
-                            Style="{StaticResource GroupPicker}" />
+                            Style="{StaticResource GroupPicker}" 
+                            Grid.Column="0"/>
                     <ImageButton Command="{Binding Path=OpenPopupCommand}"
-                                 Style="{StaticResource OpenMore}" />
-                </HorizontalStackLayout>
+                                 Style="{StaticResource OpenMore}"
+                                 Grid.Column="1"/>
+                </Grid>
 
                 <CollectionView ItemsSource="{Binding SortedItems}"
                        SelectionMode="Single" 

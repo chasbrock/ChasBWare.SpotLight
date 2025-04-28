@@ -41,8 +41,6 @@ public abstract class BaseGroupedListViewModel<T>
         }
     }
 
-   
-
     public ICommand ItemSelectedCommand { get; private set; }
 
     public List<string> GrouperNames
