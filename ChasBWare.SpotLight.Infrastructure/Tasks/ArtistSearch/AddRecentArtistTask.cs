@@ -12,7 +12,7 @@ public class AddRecentArtistTask(IServiceProvider _serviceProvider,
 {
     public void Execute(IRecentArtistsViewModel viewModel, Artist model)
     {
-        Task.Run(()=>RunTask(viewModel, model));
+        Task.Run(() => RunTask(viewModel, model));
     }
 
     private void RunTask(IRecentArtistsViewModel viewModel, Artist model)

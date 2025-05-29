@@ -1,22 +1,20 @@
-﻿using ChasBWare.SpotLight.Definitions.Enums;
+﻿using System.Collections.ObjectModel;
+using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Infrastructure.Utility;
 using CommunityToolkit.Maui.Core;
-using Microsoft.Maui.Controls;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace ChasBWare.SpotLight.Infrastructure.Popups;
 
-public class PopupMenuViewModel(IPopupService _popupService) 
+public class PopupMenuViewModel(IPopupService _popupService)
            : Notifyable,
              IPopupMenuViewModel
 {
-    private Size _size = new Size(200,100);
+    private Size _size = new Size(200, 100);
     public const string DefaultGroup = "";
 
     public ObservableCollection<IMenuItemGroup> MenuGroups { get; } = [];
 
-    public async void Close() 
+    public async void Close()
     {
         await _popupService.ClosePopupAsync();
     }
@@ -53,7 +51,7 @@ public class PopupMenuViewModel(IPopupService _popupService)
         return AddItem(PopupGroup.Default, activity, caption, action, toolTip, tag);
     }
 
-    public IMenuItem AddItem(PopupGroup popupGroup, PopupActivity activity, string caption, Action<object?> action, string? toolTip=null, object? tag=null) 
+    public IMenuItem AddItem(PopupGroup popupGroup, PopupActivity activity, string caption, Action<object?> action, string? toolTip = null, object? tag = null)
     {
         var group = MenuGroups.FirstOrDefault(g => g.Group == popupGroup);
         if (group == null)
@@ -63,7 +61,7 @@ public class PopupMenuViewModel(IPopupService _popupService)
         }
 
         var newItem = new MenuItem(activity, action, caption, toolTip, tag);
-       
+
         group.MenuItems.Add(newItem);
         return newItem;
     }
@@ -71,13 +69,13 @@ public class PopupMenuViewModel(IPopupService _popupService)
     public bool ShowSeparator(IMenuItemGroup menuItemGroup)
     {
         // if this is last group then never show separator
-        if (MenuGroups.Count > 0 && MenuGroups[MenuGroups.Count - 1] == menuItemGroup) 
+        if (MenuGroups.Count > 0 && MenuGroups[MenuGroups.Count - 1] == menuItemGroup)
         {
             return false;
         }
 
         // never show if all our items are hidden
-        if (!menuItemGroup.MenuItems.Any(m => m.Visible)) 
+        if (!menuItemGroup.MenuItems.Any(m => m.Visible))
         {
             return false;
         }
@@ -87,7 +85,7 @@ public class PopupMenuViewModel(IPopupService _popupService)
         foreach (var group in MenuGroups)
         {
             // we do not care about groups above us
-            if (!found )
+            if (!found)
             {
                 found = group == menuItemGroup;
                 continue;

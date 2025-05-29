@@ -2,7 +2,7 @@
 
 namespace ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch
 {
-    public interface ISearchForAlbumTask 
+    public interface ISearchForAlbumTask
     {
         void Execute(ISearchAlbumsViewModel viewModel);
     }

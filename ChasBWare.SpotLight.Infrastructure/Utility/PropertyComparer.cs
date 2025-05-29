@@ -1,6 +1,6 @@
-﻿using ChasBWare.SpotLight.Definitions.Enums;
+﻿using System.Reflection;
+using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Utility;
-using System.Reflection;
 
 namespace ChasBWare.SpotLight.Infrastructure.Utility
 {

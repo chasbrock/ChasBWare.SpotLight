@@ -3,7 +3,7 @@ using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasBWare.SpotLight.Definitions.Repositories
 {
-    public interface ISpotifyTrackRepository 
+    public interface ISpotifyTrackRepository
     {
         List<Track> GetPlaylistTracks(string playlistId, PlaylistType playlistType);
     }

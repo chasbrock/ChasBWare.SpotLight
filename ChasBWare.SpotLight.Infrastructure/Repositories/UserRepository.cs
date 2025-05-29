@@ -83,7 +83,7 @@ public class UserRepository(IDbContext _dbContext,
 
     public void UpdateLastAccessed(User user)
     {
-       var connection = _dbContext.GetConnection().Result;
+        var connection = _dbContext.GetConnection().Result;
         if (connection != null)
         {
             user.LastAccessed = DateTime.Now;

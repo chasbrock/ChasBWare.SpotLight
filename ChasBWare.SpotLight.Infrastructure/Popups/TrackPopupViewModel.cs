@@ -1,12 +1,7 @@
-﻿using System.ComponentModel;
-using System.Windows.Input;
-using ChasBWare.SpotLight.Definitions.Enums;
-using ChasBWare.SpotLight.Definitions.Services;
+﻿using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
-using ChasBWare.SpotLight.Infrastructure.Services;
-using ChasBWare.SpotLight.Infrastructure.Utility;
 using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.Popups;
@@ -24,7 +19,7 @@ public partial class TrackPopupViewModel(IPopupService popupService,
         }
 
         if (playlist != null)
-        { 
+        {
             _popupItemService.AddMenuItem(this, playlist, PopupActivity.Play);
             _popupItemService.AddMenuItem(this, playlist, PopupActivity.Save);
         }

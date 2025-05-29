@@ -1,7 +1,6 @@
 ﻿using ChasBWare.SpotLight.Definitions.Tasks.ArtistSearch;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.ViewModels;
-using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Domain.Messaging;
@@ -11,8 +10,8 @@ using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
-public class RecentArtistsViewModel 
-           : BaseRecentViewModel<IArtistViewModel>, 
+public class RecentArtistsViewModel
+           : BaseRecentViewModel<IArtistViewModel>,
              IRecentArtistsViewModel
 {
     public RecentArtistsViewModel(IPopupService popupService,
@@ -36,7 +35,7 @@ public class RecentArtistsViewModel
         var task = _serviceProvider.GetService<ILoadRecentArtistTask>();
         task?.Execute(this);
     }
-    
+
     protected override void SelectedItemChanged(IArtistViewModel? oldItem, IArtistViewModel? newItem)
     {
         if (newItem != null)
@@ -88,7 +87,7 @@ public class RecentArtistsViewModel
                 viewModel.LastAccessed = DateTime.Now;
                 SelectedItem = viewModel;
                 return;
-             }
+            }
 
             var task = _serviceProvider.GetRequiredService<IFindArtistTask>();
             task.Execute(this, message.Id);

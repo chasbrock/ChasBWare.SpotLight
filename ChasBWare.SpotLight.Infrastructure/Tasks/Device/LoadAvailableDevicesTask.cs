@@ -1,15 +1,13 @@
 ﻿using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks.Device;
 using ChasBWare.SpotLight.Definitions.ViewModels;
-using ChasBWare.SpotLight.Domain.Enums;
-using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Utility;
 using Microsoft.Extensions.Logging;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.Device;
 
 
-public class LoadAvailableDevicesTask(IServiceProvider _serviceProvider, 
+public class LoadAvailableDevicesTask(IServiceProvider _serviceProvider,
                                       IDispatcher _dispatcher,
                                       ILogger<LoadAvailableDevicesTask> _logger,
                                       ISpotifyDeviceRepository _deviceRepository)
@@ -22,14 +20,14 @@ public class LoadAvailableDevicesTask(IServiceProvider _serviceProvider,
 
     private void RunTask(IDeviceListViewModel viewModel)
     {
-         var devices = _deviceRepository.GetAvailableDevices();
-       
+        var devices = _deviceRepository.GetAvailableDevices();
+
         _dispatcher.Dispatch(() =>
         {
             try
             {
                 viewModel.Devices.Clear();
-         
+
                 if (devices.Count == 0)
                 {
                     var deviceViewModel = _serviceProvider.GetRequiredService<IDeviceViewModel>();

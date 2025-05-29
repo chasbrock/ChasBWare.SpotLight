@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
-using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Tasks.Device;
 using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
@@ -9,14 +8,12 @@ using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
-using ChasBWare.SpotLight.Infrastructure.ViewModels;
-using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
 public partial class DeviceListViewModel
-                   : Notifyable, 
+                   : Notifyable,
                      IDeviceListViewModel,
                      INavigationClient
 {
@@ -50,7 +47,7 @@ public partial class DeviceListViewModel
     public ICommand OpenPopupCommand { get; }
     public ICommand ActivateDeviceCommand { get; }
 
-    public void OnNavigationRecieved(Uri? callerPath) 
+    public void OnNavigationRecieved(Uri? callerPath)
     {
         _lastCaller = callerPath;
         if (PlayerControlViewModel.ConnectionStatus.IsActiveState())
@@ -80,7 +77,7 @@ public partial class DeviceListViewModel
         {
             _activeDeviceMessageService.SendMessage(new ActiveItemChangedMessage(PageType.Devices, _selectedDevice?.Model));
         }
-        else 
+        else
         {
             var task = _serviceProvider.GetRequiredService<IChangeActiveDeviceTask>();
             task.Execute(device);
@@ -99,7 +96,7 @@ public partial class DeviceListViewModel
     {
         if (message.ConnectionStatus.IsActiveState())
         {
-             Refresh();
+            Refresh();
         }
     }
 

@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasbWare.Spotlight.Converters;
@@ -64,7 +63,7 @@ public class DeviceTypesToStringConverter : IValueConverter
         {
             return DeviceTypes.Sonos;
         }
-      
+
         return DeviceTypes.Unknown;
     }
 }

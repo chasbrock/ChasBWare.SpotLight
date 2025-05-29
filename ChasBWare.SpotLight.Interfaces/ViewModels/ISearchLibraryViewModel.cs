@@ -1,7 +1,7 @@
 ﻿namespace ChasBWare.SpotLight.Definitions.ViewModels;
 
-public enum LibrarySearchTypes 
-{ 
+public enum LibrarySearchTypes
+{
     Name,
     Owner
 }

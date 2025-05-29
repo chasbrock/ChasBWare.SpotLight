@@ -21,7 +21,7 @@ public class LoadRecentPlaylistTask(IPlaylistViewModelProvider playlistProvider,
     private void RunTask(IRecentViewModel<IPlaylistViewModel> viewModel, PlaylistType playlistType)
     {
         var items = _searchRepo.GetPlaylists(playlistType);
-     
+
         _dispatcher.Dispatch(() =>
         {
             AddItems(viewModel, items);

@@ -12,7 +12,7 @@ public interface IPlayerControlViewModel
     ICommand PlayCommand { get; }
     ICommand PauseCommand { get; }
     ICommand ForwardCommand { get; }
-    ICurrentDeviceViewModel CurrentDevice { get;  }
+    ICurrentDeviceViewModel CurrentDevice { get; }
 
     double ProgressPercent { get; set; }
     TimeSpan Duration { get; set; }

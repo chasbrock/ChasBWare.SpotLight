@@ -3,7 +3,7 @@ using ChasBWare.SpotLight.Definitions.Services;
 
 namespace ChasBWare.SpotLight.Infrastructure.Services
 {
-    public class HatedService(IServiceProvider _serviceProvider) 
+    public class HatedService(IServiceProvider _serviceProvider)
                : IHatedService
     {
         private HashSet<string> _hatedItems = [];
@@ -12,7 +12,8 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
 
         public bool GetIsHated(string? itemId)
         {
-            if (itemId == null) {
+            if (itemId == null)
+            {
                 return false;
             }
             return _hatedItems.Contains(itemId);

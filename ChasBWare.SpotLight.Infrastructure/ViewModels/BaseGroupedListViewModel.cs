@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
@@ -12,10 +11,10 @@ public abstract class BaseGroupedListViewModel<T>
                     : BaseListViewModel<T>,
                       IGroupedListViewModel<T> where T : class
 {
-    
+
     private List<IGroupHolder<T>> _groupedItems = [];
     private IGrouper<T> _selectedGrouper;
-   
+
     protected BaseGroupedListViewModel(IServiceProvider serviceProvider,
                                        IGrouper<T>[] groupers)
                    : base(serviceProvider)
@@ -47,7 +46,7 @@ public abstract class BaseGroupedListViewModel<T>
     {
         get => Groupers.Select(g => g.Name).ToList();
     }
-    
+
     public string SelectedGrouperName
     {
         get => SelectedGrouper?.Name ?? string.Empty;
@@ -101,7 +100,7 @@ public abstract class BaseGroupedListViewModel<T>
         var settingsRepo = _serviceProvider.GetService<IAppSettingsRepository>();
         if (settingsRepo != null)
         {
-           Task.Run(()=> settingsRepo.Save(this.BuildKey(nameof(SelectedGrouperName)), SelectedGrouperName));
+            Task.Run(() => settingsRepo.Save(this.BuildKey(nameof(SelectedGrouperName)), SelectedGrouperName));
         }
     }
 
@@ -112,8 +111,8 @@ public abstract class BaseGroupedListViewModel<T>
 
     protected override void SelectedItemChanged(T? oldItem, T? newItem)
     {
-        if (IsUpdating) 
-        { 
+        if (IsUpdating)
+        {
             return;
         }
         if (newItem != null)

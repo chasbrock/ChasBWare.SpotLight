@@ -3,7 +3,7 @@ using ChasBWare.SpotLight.Definitions.ViewModels;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.Library;
 
-public class SearchLibraryTask(ILibraryViewModel _library )
+public class SearchLibraryTask(ILibraryViewModel _library)
            : ISearchLibraryTask
 {
     public void Execute(ISearchLibraryViewModel viewModel)
@@ -13,17 +13,17 @@ public class SearchLibraryTask(ILibraryViewModel _library )
 
         List<IPlaylistViewModel> found;
 
-        switch (viewModel.SelectedSearchType) 
+        switch (viewModel.SelectedSearchType)
         {
             case LibrarySearchTypes.Name:
                 found = _library.Items.Where(i => i.Name.Contains(viewModel.SearchText, StringComparison.OrdinalIgnoreCase)).ToList();
                 break;
-        
-                case LibrarySearchTypes.Owner:
+
+            case LibrarySearchTypes.Owner:
                 found = _library.Items.Where(pl => pl.Owners.Any(o => o.Key.Contains(viewModel.SearchText, StringComparison.OrdinalIgnoreCase))).ToList();
                 break;
 
-            default: 
+            default:
                 return;
         }
 

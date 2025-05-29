@@ -2,7 +2,7 @@
 
 namespace ChasBWare.SpotLight.Definitions.Repositories;
 
-public interface IUserRepository 
+public interface IUserRepository
 {
     User? FindUser(string userId);
 

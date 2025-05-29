@@ -4,9 +4,9 @@ namespace ChasBWare.SpotLight.Pages;
 
 public partial class UserPage : ContentPage
 {
-	public UserPage(IRecentUserViewModel viewModel)
-	{
-		InitializeComponent();
+    public UserPage(IRecentUserViewModel viewModel)
+    {
+        InitializeComponent();
         BindingContext = viewModel;
         Appearing += OnAppearing;
     }

@@ -6,8 +6,8 @@ using ChasBWare.SpotLight.Domain.Messaging;
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 {
     public class SearchAlbumsViewModel(IServiceProvider serviceProvider,
-                                      IMessageService<ActiveItemChangedMessage> _messageService) 
-               : BaseSearchViewModel<IPlaylistViewModel>(serviceProvider), 
+                                      IMessageService<ActiveItemChangedMessage> _messageService)
+               : BaseSearchViewModel<IPlaylistViewModel>(serviceProvider),
                  ISearchAlbumsViewModel
     {
         public override void OpenInViewer(IPlaylistViewModel? viewModel)

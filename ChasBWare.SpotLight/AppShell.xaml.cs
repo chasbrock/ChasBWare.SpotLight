@@ -1,7 +1,4 @@
-﻿using ChasBWare.SpotLight.Definitions.Utility;
-using ChasBWare.SpotLight.Install;
-
-namespace ChasBWare.SpotLight
+﻿namespace ChasBWare.SpotLight
 {
     public partial class AppShell : Shell
     {
@@ -9,9 +6,9 @@ namespace ChasBWare.SpotLight
         {
             InitializeComponent();
         }
-            
-        internal Navigator? Navigator { get;  set; }
-     
+
+        internal Navigator? Navigator { get; set; }
+
         protected override void OnNavigating(ShellNavigatingEventArgs args)
         {
             base.OnNavigating(args);

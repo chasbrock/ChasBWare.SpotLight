@@ -1,7 +1,7 @@
-﻿using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
+﻿using System.Windows.Input;
+using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
-using System.Windows.Input;
 
 namespace ChasBWare.SpotLight.Definitions.ViewModels;
 
@@ -16,9 +16,9 @@ public interface IPlaylistViewModel
     KeyValue? Owner { get; }
     PlaylistType PlaylistType { get; }
     string Uri { get; }
-    string? Image { get;  }
+    string? Image { get; }
     bool IsExpanded { get; set; }
-    DateTime ReleaseDate { get;  }
+    DateTime ReleaseDate { get; }
     DateTime LastAccessed { get; set; }
 
     /// <summary>

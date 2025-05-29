@@ -5,8 +5,8 @@ namespace ChasBWare.SpotLight.Popups;
 
 public partial class LibraryPopupMenu : Popup
 {
-	public LibraryPopupMenu(LibraryPopupViewModel viewModel)
-	{
+    public LibraryPopupMenu(LibraryPopupViewModel viewModel)
+    {
         CanBeDismissedByTappingOutsideOfPopup = true;
         BindingContext = viewModel;
         Content = new PopupMenu

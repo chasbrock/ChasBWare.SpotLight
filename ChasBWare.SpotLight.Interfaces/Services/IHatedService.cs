@@ -1,6 +1,6 @@
 ﻿namespace ChasBWare.SpotLight.Definitions.Services
 {
-    public interface IHatedService 
+    public interface IHatedService
     {
         bool Initialised { get; }
         void SetIsHated(string itemId, bool isHated);

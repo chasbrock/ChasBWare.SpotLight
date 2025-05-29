@@ -47,7 +47,7 @@ public class TrackListLoaderTask(IServiceProvider _serviceProvider,
                     trackViewModel.IsHated = _hatedService.GetIsHated(track.Id);
                     viewModel.TracksViewModel.Items.Add(trackViewModel);
                 }
-                
+
                 viewModel.TracksViewModel.LoadStatus = LoadState.Loaded;
             }
         });

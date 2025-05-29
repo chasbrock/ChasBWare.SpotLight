@@ -11,9 +11,9 @@ using ChasBWare.SpotLight.Infrastructure.Utility;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
-public class PlayerControlViewModel 
-           : Notifyable, 
-             IPlayerControlViewModel 
+public class PlayerControlViewModel
+           : Notifyable,
+             IPlayerControlViewModel
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly INavigator _navigator;
@@ -28,7 +28,7 @@ public class PlayerControlViewModel
     private double _progressPercent = 0;
     private TimeSpan _playedTime = TimeSpan.Zero;
     private TimeSpan _duration = TimeSpan.Zero;
-  
+
     public PlayerControlViewModel(IServiceProvider serviceProvider,
                                   INavigator navigator,
                                   IDispatcher dispatcher,
@@ -39,11 +39,11 @@ public class PlayerControlViewModel
                                   IMessageService<ConnectionStatusChangedMessage> connectionStatusService,
                                   IMessageService<AppActivationChanged> appActivationMessageService)
     {
-        _serviceProvider = serviceProvider;   
+        _serviceProvider = serviceProvider;
         _navigator = navigator;
         _dispatcher = dispatcher;
         CurrentDevice = currentDevice;
-        
+
         TrackPlayerService = trackPlayerService;
         TrackPlayerService.OnTrackProgress += ShowProgress;
 
@@ -62,12 +62,12 @@ public class PlayerControlViewModel
         appActivationMessageService.Register(OnAppActivationStateChanged);
     }
 
-   
-    public ICommand BackCommand { get;  }
+
+    public ICommand BackCommand { get; }
     public ICommand PlayCommand { get; }
-    public ICommand PauseCommand { get;  }
-    public ICommand ForwardCommand { get;  }
-    
+    public ICommand PauseCommand { get; }
+    public ICommand ForwardCommand { get; }
+
     public ICommand OpenDevicesPopupCommand { get; }
     public ICommand OpenArtistCommand { get; }
     public ICommand OpenAlbumCommand { get; }
@@ -81,7 +81,7 @@ public class PlayerControlViewModel
     public ConnectionStatus ConnectionStatus { get; private set; } = ConnectionStatus.NotInitialised;
 
     public string? CurrentTrackId { get; private set; }
-    
+
     public TrackStatus TrackStatus
     {
         get => CurrentTrackId == null ? TrackStatus.NotPlaying : IsPlaying ? TrackStatus.Playing : TrackStatus.Paused;
@@ -98,8 +98,8 @@ public class PlayerControlViewModel
         get => _artists;
         set => SetField(ref _artists, value);
     }
-    
-    public List<KeyValue> ArtistList 
+
+    public List<KeyValue> ArtistList
     {
         get => _artisList;
         set => SetField(ref _artisList, value);
@@ -115,7 +115,7 @@ public class PlayerControlViewModel
                 Notify(nameof(IsPaused));
             }
         }
-	}
+    }
 
     public bool IsPaused
     {
@@ -146,7 +146,7 @@ public class PlayerControlViewModel
         set => SetField(ref _image, value);
     }
 
-    public string AlbumId 
+    public string AlbumId
     {
         get => _albumId;
         set => SetField(ref _albumId, value);
@@ -167,9 +167,9 @@ public class PlayerControlViewModel
             {
                 SyncToDevice();
             }
-            else 
+            else
             {
-               CurrentDevice.IsActive = false;
+                CurrentDevice.IsActive = false;
             }
         });
     }
@@ -184,7 +184,7 @@ public class PlayerControlViewModel
 
     private void OnAppActivationStateChanged(AppActivationChanged message)
     {
-        if (message.IsActive && ConnectionStatus.IsActiveState()) 
+        if (message.IsActive && ConnectionStatus.IsActiveState())
         {
             SyncToDevice();
         }
@@ -203,12 +203,12 @@ public class PlayerControlViewModel
 
     private void Play()
     {
-       TrackPlayerService.Resume();
+        TrackPlayerService.Resume();
     }
 
     private void SkipBack()
     {
-       TrackPlayerService.SkipBackward();
+        TrackPlayerService.SkipBackward();
     }
 
     private void SyncToDevice()
@@ -223,7 +223,7 @@ public class PlayerControlViewModel
 
     private void NavigateToDevices()
     {
-       _navigator.NavigateTo(PageType.Devices);
+        _navigator.NavigateTo(PageType.Devices);
     }
 
     private void NavigateToArtist(string id)
@@ -232,10 +232,10 @@ public class PlayerControlViewModel
         {
             return;
         }
-        
+
         var messageService = _serviceProvider.GetRequiredService<IMessageService<FindItemMessage>>();
         messageService.SendMessage(new FindItemMessage(PageType.Artists, id));
-        
+
         _navigator.NavigateTo(PageType.Artists);
     }
 
@@ -260,7 +260,7 @@ public class PlayerControlViewModel
 
     private void ShowProgress(object? sender, PlayingTrack playingTrack)
     {
-        if (CurrentTrackId != playingTrack.Id) 
+        if (CurrentTrackId != playingTrack.Id)
         {
             CurrentTrackId = playingTrack.Id;
             TrackName = playingTrack.Name;
@@ -268,10 +268,10 @@ public class PlayerControlViewModel
             ArtistList = playingTrack.Artists;
             Duration = playingTrack.Duration;
             Image = playingTrack.Image ?? "";
-            AlbumId= playingTrack.AlbumId;
+            AlbumId = playingTrack.AlbumId;
         }
 
-        ProgressPercent = playingTrack.Progress.TotalMilliseconds / playingTrack.Duration.TotalMilliseconds ;
+        ProgressPercent = playingTrack.Progress.TotalMilliseconds / playingTrack.Duration.TotalMilliseconds;
         PlayedTime = playingTrack.Progress;
         IsPlaying = playingTrack.IsPlaying;
     }

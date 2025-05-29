@@ -1,9 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
-using ChasBWare.SpotLight.DependencyInjection;
+﻿using ChasBWare.SpotLight.DependencyInjection;
 using CommunityToolkit.Maui;
-using ChasBWare.SpotLight.Spotify.Interfaces;
-using Microsoft.Maui.Controls;
-using Microsoft.Extensions.Configuration;
 
 namespace ChasBWare.SpotLight;
 
@@ -20,7 +16,7 @@ public static class MauiProgram
                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                });
-        
+
         return builder.Build();
     }
 

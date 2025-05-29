@@ -2,7 +2,7 @@
 
 namespace ChasBWare.SpotLight.Definitions.Tasks.Device
 {
-    public interface ILoadAvailableDevicesTask 
+    public interface ILoadAvailableDevicesTask
     {
         void Execute(IDeviceListViewModel viewModel);
     }

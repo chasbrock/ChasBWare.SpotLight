@@ -1,8 +1,7 @@
 ﻿using ChasBWare.SpotLight.Definitions.Enums;
-using System.Xml.Linq;
-using CommunityToolkit.Maui.Core;
 using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
+using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.Popups;
 
@@ -26,7 +25,7 @@ public partial class RecentPlaylistPopupViewModel(IPopupService popupService,
 
         if (item != null)
         {
-            AddItem(PopupGroup.Recent, 
+            AddItem(PopupGroup.Recent,
                     PopupActivity.Delete,
                     caption: $"Delete '{item.Name}'",
                     toolTip: "Delete item from list",

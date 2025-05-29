@@ -4,7 +4,7 @@ using SpotifyAPI.Web;
 namespace ChasBWare.SpotLight.Spotify.Interfaces
 {
     public interface ISpotyConnectionSession
-    {  
+    {
         /// <summary>
         /// unique app id from spotify
         /// </summary>
@@ -13,7 +13,7 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// <summary>
         /// unique id created for me by spotify
         /// </summary>
-        public string ClientSecret { get; set; } 
+        public string ClientSecret { get; set; }
 
         /// <summary>
         /// port used by callback during call to spotify

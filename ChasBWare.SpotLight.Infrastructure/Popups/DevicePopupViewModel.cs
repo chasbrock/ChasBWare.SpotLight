@@ -1,10 +1,7 @@
 ﻿using ChasBWare.SpotLight.Definitions.Enums;
-using System.Xml.Linq;
-using CommunityToolkit.Maui.Core;
-using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
-using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Definitions.Tasks.Device;
-using ChasBWare.SpotLight.Definitions.Services;
+using ChasBWare.SpotLight.Definitions.ViewModels;
+using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.Popups;
 
@@ -26,7 +23,7 @@ public partial class DevicePopupViewModel(IPopupService popupService,
                     task.Execute(viewModel);
                     Close();
                 });
-        AddItem(PopupGroup.Settings, 
+        AddItem(PopupGroup.Settings,
                 PopupActivity.Clear,
                 caption: $"Reset Spotify",
                 toolTip: "Reset Spotify connection settings",
@@ -39,7 +36,7 @@ public partial class DevicePopupViewModel(IPopupService popupService,
 
     private void ClearSettings()
     {
-      //  var session = _serviceProvider.GetRequiredService<ISpotifyPlayerController>();
+        //  var session = _serviceProvider.GetRequiredService<ISpotifyPlayerController>();
     }
 }
 

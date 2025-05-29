@@ -1,12 +1,10 @@
-﻿using System.IO;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text.Json;
 using System.Windows.Input;
 using ChasBWare.SpotLight.Definitions.Tasks.Device;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 using ChasBWare.SpotLight.Infrastructure.Utility;
-using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 
@@ -15,18 +13,18 @@ namespace ChasBWare.SpotLight.Install;
 public partial class InstallViewModel : Notifyable
 {
     public const string Initialised = "Initialised";
-  
+
     private readonly IServiceProvider _serviceProvider;
     private readonly IAlertService _alertService;
     private readonly IPopupService _popupService;
 
     private string _key = "";
 
-    public InstallViewModel(IServiceProvider serviceProvider, 
+    public InstallViewModel(IServiceProvider serviceProvider,
                             IAlertService alertService,
                             IPopupService popupService)
     {
-        _serviceProvider = serviceProvider; 
+        _serviceProvider = serviceProvider;
         _alertService = alertService;
         _popupService = popupService;
 

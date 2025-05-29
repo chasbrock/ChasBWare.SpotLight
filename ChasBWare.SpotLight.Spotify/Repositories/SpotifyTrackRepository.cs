@@ -1,5 +1,4 @@
 ﻿using ChasBWare.SpotLight.Definitions.Repositories;
-using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Mappings.Mappers;

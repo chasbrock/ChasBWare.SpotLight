@@ -1,5 +1,4 @@
-﻿using ChasBWare.SpotLight.Definitions.ViewModels;
-using ChasBWare.SpotLight.Domain.Entities;
+﻿using ChasBWare.SpotLight.Domain.Entities;
 
 namespace ChasBWare.SpotLight.Definitions.Repositories;
 
@@ -18,7 +17,7 @@ public interface IArtistRepository
     /// <param name="artist"></param>
     /// <param name="albums"></param>
     void StoreArtistAndAlbums(Artist artist, List<Playlist> albums);
-    
+
     /// <summary>
     /// find artist in database
     /// </summary>

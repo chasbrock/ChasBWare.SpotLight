@@ -1,10 +1,9 @@
 ﻿using ChasBWare.SpotLight.Domain.Entities;
 
-namespace ChasBWare.SpotLight.Definitions.Repositories
+namespace ChasBWare.SpotLight.Definitions.Repositories;
+
+public interface ITrackRepository
 {
-    public interface ITrackRepository
-    {
-        int AddTracksToPlaylist(string playListId, IEnumerable<Track> tracks);
-        List<Track> GetPlaylistTracks(string playlistId);
-    }
+    int AddTracksToPlaylist(string playListId, IEnumerable<Track> tracks);
+    List<Track> GetPlaylistTracks(string playlistId);
 }

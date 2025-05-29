@@ -1,12 +1,10 @@
-﻿using System.Linq;
-using System.Runtime.Intrinsics.Arm;
-using ChasBWare.SpotLight.Definitions.Repositories;
+﻿using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.Library;
 
-public class TransferToLibraryTask (IDispatcher _dispatcher,
+public class TransferToLibraryTask(IDispatcher _dispatcher,
                                     ILibraryViewModel _library,
                                     ISpotifyPlaylistRepository spotifyPlaylistRepo,
                                     ILibraryRepository _libraryRepo)
@@ -14,7 +12,7 @@ public class TransferToLibraryTask (IDispatcher _dispatcher,
 {
     public void Execute(IPlaylistViewModel viewModel, bool save)
     {
-       
+
         Task.Run(() => RunTask(viewModel, save));
     }
 
@@ -40,7 +38,7 @@ public class TransferToLibraryTask (IDispatcher _dispatcher,
                     }
                     _library.RefreshView();
                 });
-            } 
+            }
         }
     }
 }

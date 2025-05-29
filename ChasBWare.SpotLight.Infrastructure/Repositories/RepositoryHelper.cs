@@ -1,7 +1,4 @@
-﻿
-using ChasBWare.SpotLight.Domain.Entities;
-
-namespace ChasBWare.SpotLight.Infrastructure.Repositories;
+﻿namespace ChasBWare.SpotLight.Infrastructure.Repositories;
 
 internal partial class RepositoryHelper
 {
@@ -56,6 +53,31 @@ DeleteOrphanPlaylists,
 DeleteOrphanPlaylistTracks,
 DeleteOrphanTracks];
 
+
+    /// <summary>
+    /// find playlist for track,
+    /// also check prior track to see if we can find an
+    /// exact match for playlist
+    /// param: trackId
+    /// param: priorTrack
+    /// param: trackId
+    /// </summary>
+    internal const string GetPlaylistForTrack =
+@"select PlaylistId
+    from (
+        select 1 priority, tnow.PlaylistId PlaylistId
+          from PlaylistTrack tnow 
+          join PlaylistTrack tprior 
+            on tnow.TrackOrder = tprior.trackorder+1
+	       and tnow.PlaylistId = tprior.PlaylistId
+         where tnow.TrackId = ?
+          and tprior.TrackId = ?
+        union
+        select 2 priority, playlistid 
+          from PlaylistTrack
+         where TrackId = ? )
+   order by priority";
+
     /// <summary>
     /// get all playlist in library
     /// param: PlaylistType 
@@ -64,7 +86,7 @@ DeleteOrphanTracks];
 @"select pl.Id
     from Playlist pl
     join LibraryItem li on li.Id = pl.Id";
-    
+
     /// <summary>
     /// get all playlist in library
     /// param: PlaylistType 
@@ -93,7 +115,7 @@ DeleteOrphanTracks];
     join SearchItem si on si.ItemId = pl.Id
    where pl.PlaylistType = ?";
 
-       /// <summary>
+    /// <summary>
     /// get all users in searchitems
     /// </summary>
     internal const string GetSearchUsers =
@@ -105,7 +127,7 @@ DeleteOrphanTracks];
     /// collection of scripts to remove a single
     /// playlist from search history
     /// </summary>
-    internal static string[] DeleteRecentPlaylist =[
+    internal static string[] DeleteRecentPlaylist = [
 @"delete from SearchItem where ItemId = ?",
 @"delete from playlist
    where id not in (select id from LibraryItem )
@@ -161,7 +183,7 @@ DeleteOrphanTracks];
     /// collection of scripts to remove all
     /// playlists from search history
     /// </summary>
-    internal static string[] DeleteAllRecentPlaylists =[
+    internal static string[] DeleteAllRecentPlaylists = [
 @"delete from SearchItem
     where ItemId in (
       select pl.id
@@ -204,5 +226,5 @@ DeleteOrphanTracks];
     join PlaylistTrack plt on plt.TrackId = t.Id
    where plt.PlaylistId = ?
    order by plt.TrackOrder";
-    
+
 }

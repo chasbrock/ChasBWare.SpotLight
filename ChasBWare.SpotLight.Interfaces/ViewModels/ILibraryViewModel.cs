@@ -2,7 +2,7 @@
 
 namespace ChasBWare.SpotLight.Definitions.ViewModels;
 
-public interface ILibraryViewModel 
+public interface ILibraryViewModel
                : IPlaylistSelectorViewModel
 {
     IPlayerControlViewModel PlayerControlViewModel { get; }

@@ -3,7 +3,7 @@ using ChasBWare.SpotLight.Domain.Entities;
 
 namespace ChasBWare.SpotLight.Infrastructure.Interfaces.Services
 {
-    public interface IPlaylistViewModelProvider 
+    public interface IPlaylistViewModelProvider
     {
         Func<string?, bool>? ExistsInlibrary { get; set; }
 

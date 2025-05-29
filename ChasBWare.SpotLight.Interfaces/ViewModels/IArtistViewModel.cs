@@ -8,6 +8,6 @@ public interface IArtistViewModel
     string Id { get; }
     string Name { get; }
     Artist Model { get; set; }
-    string? Image { get;  }
+    string? Image { get; }
     DateTime LastAccessed { get; set; }
 }

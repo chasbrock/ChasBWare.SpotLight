@@ -7,14 +7,14 @@ using ChasBWare.SpotLight.Domain.Messaging;
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.Device;
 
 public class ChangeActiveDeviceTask(IDispatcher _dispatcher,
-                                    ISpotifyDeviceRepository  _spotifyDeviceRepository,
+                                    ISpotifyDeviceRepository _spotifyDeviceRepository,
                                     IMessageService<ActiveItemChangedMessage> _activeItemChangedMessageService)
           : IChangeActiveDeviceTask
 {
     public void Execute(IDeviceViewModel selectedDevice)
     {
         Task.Run(() => RunTask(selectedDevice));
-   }
+    }
 
     private void RunTask(IDeviceViewModel selectedDevice)
     {

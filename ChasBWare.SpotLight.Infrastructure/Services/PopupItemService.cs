@@ -1,21 +1,14 @@
-﻿using System;
-using System.Diagnostics;
-using System.Runtime.Intrinsics.Arm;
-using ChasBWare.SpotLight.Definitions.Enums;
-using ChasBWare.SpotLight.Domain.Messaging;
+﻿using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
-using ChasBWare.SpotLight.Domain.Entities;
+using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 using ChasBWare.SpotLight.Infrastructure.Popups;
-using Microsoft.Maui;
-using Microsoft.Maui.Controls;
-using static System.Collections.Specialized.BitVector32;
 
 namespace ChasBWare.SpotLight.Infrastructure.Services;
 
-public class PopupItemService(IServiceProvider _serviceProvider) 
+public class PopupItemService(IServiceProvider _serviceProvider)
            : IPopupItemService
 {
     public void AddMenuItem(IPopupMenuViewModel popup, IPlaylistViewModel playlist, PopupActivity activity)
@@ -41,7 +34,7 @@ public class PopupItemService(IServiceProvider _serviceProvider)
                               });
                 break;
 
-          
+
 
             case PopupActivity.Play:
                 popup.AddItem(PopupGroup.Playlist,
@@ -55,7 +48,7 @@ public class PopupItemService(IServiceProvider _serviceProvider)
                                   popup.Close();
                               });
                 break;
-                 
+
             default:
                 return;
         }
@@ -63,7 +56,7 @@ public class PopupItemService(IServiceProvider _serviceProvider)
 
     public void AddMenuItem(IPopupMenuViewModel popup, ITrackViewModel track, PopupActivity activity)
     {
-        switch (activity) 
+        switch (activity)
         {
             case PopupActivity.Play:
                 popup.AddItem(PopupGroup.Track,
@@ -132,7 +125,7 @@ public class PopupItemService(IServiceProvider _serviceProvider)
                                   popup.Close();
                               });
                 break;
-                              
+
         }
     }
 }

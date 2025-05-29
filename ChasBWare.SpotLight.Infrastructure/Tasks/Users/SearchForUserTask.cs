@@ -1,7 +1,6 @@
 ﻿using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks.Users;
 using ChasBWare.SpotLight.Definitions.ViewModels;
-using ChasBWare.SpotLight.Domain.Entities;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.Users;
 

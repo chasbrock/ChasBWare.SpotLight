@@ -1,5 +1,4 @@
 ﻿using ChasBWare.SpotLight.Definitions.Repositories;
-using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.DbContext;
 using ChasBWare.SpotLight.Domain.Entities;
 using Microsoft.Extensions.Logging;
@@ -12,7 +11,7 @@ public class ArtistRepository(IDbContext _dbContext,
 {
     public int Add(Artist artist)
     {
-        var connection =  _dbContext.GetConnection().Result;
+        var connection = _dbContext.GetConnection().Result;
         if (connection != null)
         {
             var found = connection.Table<Artist>()
@@ -39,11 +38,11 @@ public class ArtistRepository(IDbContext _dbContext,
             return;
         }
 
-       var connection = _dbContext.GetConnection().Result;
+        var connection = _dbContext.GetConnection().Result;
         if (connection != null)
         {
             artist.LastAccessed = DateTime.Now;
-        
+
             var existingArtist = connection.Table<Artist>()
                                            .FirstOrDefaultAsync(a => a.Id == artist.Id)
                                            .Result;
@@ -51,30 +50,30 @@ public class ArtistRepository(IDbContext _dbContext,
             {
                 connection.InsertAsync(artist);
             }
-            else 
+            else
             {
                 connection.UpdateAsync(artist);
             }
 
             foreach (var album in albums)
+            {
+                var existingPlaylist = connection.Table<Playlist>()
+                                                  .FirstOrDefaultAsync(p => p.Id == album.Id)
+                                                  .Result;
+                if (existingPlaylist == null)
                 {
-                    var existingPlaylist = connection.Table<Playlist>()
-                                                      .FirstOrDefaultAsync(p => p.Id == album.Id)
-                                                      .Result;
-                    if (existingPlaylist == null)
-                    {
-                        connection.InsertAsync(album);
-                    }
-
-                    var existingLink = connection.Table<OwnedPlaylist>()
-                                                 .FirstOrDefaultAsync(ap => ap.OwnerId == artist.Id &&
-                                                                            ap.PlaylistId == album.Id)
-                                                 .Result;
-                    if (existingLink == null)
-                    {
-                        connection.InsertAsync(new OwnedPlaylist { OwnerId = artist.Id, PlaylistId = album.Id });
-                    }
+                    connection.InsertAsync(album);
                 }
+
+                var existingLink = connection.Table<OwnedPlaylist>()
+                                             .FirstOrDefaultAsync(ap => ap.OwnerId == artist.Id &&
+                                                                        ap.PlaylistId == album.Id)
+                                             .Result;
+                if (existingLink == null)
+                {
+                    connection.InsertAsync(new OwnedPlaylist { OwnerId = artist.Id, PlaylistId = album.Id });
+                }
+            }
         }
         _logger.LogError("Could not access db connection");
     }
@@ -98,7 +97,7 @@ public class ArtistRepository(IDbContext _dbContext,
         if (connection != null)
         {
             var sql = RepositoryHelper.GetArtistAlbums;
-            var playlists =  connection.QueryAsync<Playlist>(sql, artistId).Result;
+            var playlists = connection.QueryAsync<Playlist>(sql, artistId).Result;
         }
         _logger.LogError("Could not access db connection");
         return [];

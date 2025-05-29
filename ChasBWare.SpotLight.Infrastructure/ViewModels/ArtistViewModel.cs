@@ -16,7 +16,7 @@ public class ArtistViewModel(IServiceProvider serviceProvider)
         get => _model;
         set => SetField(ref _model, value);
     }
-         
+
     public string Id
     {
         get => Model.Id ?? string.Empty;
@@ -45,7 +45,7 @@ public class ArtistViewModel(IServiceProvider serviceProvider)
             oldItem.IsSelected = false;
         }
 
-        if (newItem != null )
+        if (newItem != null)
         {
             newItem.IsSelected = true;
             newItem.IsExpanded = true;

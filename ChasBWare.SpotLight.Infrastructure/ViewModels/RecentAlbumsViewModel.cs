@@ -11,8 +11,8 @@ using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
-public class RecentAlbumsViewModel 
-           : BaseRecentViewModel<IPlaylistViewModel>, 
+public class RecentAlbumsViewModel
+           : BaseRecentViewModel<IPlaylistViewModel>,
              IRecentAlbumsViewModel
 {
     private readonly ILibraryViewModel _library;
@@ -25,7 +25,7 @@ public class RecentAlbumsViewModel
                                  IMessageService<ActiveItemChangedMessage> activeAlbumChangedMessageService,
                                  IMessageService<CurrentTrackChangedMessage> currentTrackChangedMessage,
                                  ILibraryViewModel library)
-         : base(popupService,serviceProvider, playerControlViewModel, searchViewModel, SorterHelper.GetPlaylistSorters())
+         : base(popupService, serviceProvider, playerControlViewModel, searchViewModel, SorterHelper.GetPlaylistSorters())
     {
         _library = library;
         findItemMessageService.Register(OnFindItem);
@@ -69,7 +69,7 @@ public class RecentAlbumsViewModel
             var task = _serviceProvider.GetRequiredService<IAddRecentPlaylistTask>();
             task.Execute(this, playlist);
         }
-        else 
+        else
         {
             var task = _serviceProvider.GetRequiredService<IUpdateLastAccessedTask>();
             task.Execute(viewModel.Model);
@@ -102,7 +102,7 @@ public class RecentAlbumsViewModel
                 var task = _serviceProvider.GetRequiredService<IFindPlaylistTask>();
                 task.Execute(this, message.Id, PlaylistType.Album);
             }
-            message.Completed = true; 
+            message.Completed = true;
         }
     }
 

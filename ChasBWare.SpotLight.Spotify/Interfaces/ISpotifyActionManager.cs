@@ -124,7 +124,7 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// </summary>
         /// <returns></returns>
         List<FullPlaylist>? SearchForPlaylists(string searchText);
-      
+
         /// <summary>
         /// adds or removes album for user's spotify profile
         /// </summary>
@@ -139,7 +139,7 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// <param name="volumePercent"></param>
         /// <returns></returns>
         bool SetCurrentDeviceVolume(int volumePercent);
-    
+
         /// <summary>
         /// make this the active device
         /// </summary>
@@ -154,6 +154,6 @@ namespace ChasBWare.SpotLight.Spotify.Interfaces
         /// <param name="save"></param>
         /// <returns></returns>
         bool SetPlaylistSaveStatus(string id, bool save);
-        
+
     }
 }

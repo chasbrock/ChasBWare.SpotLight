@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using ChasBWare.SpotLight.Domain.Entities;
 
 namespace ChasBWare.SpotLight.Infrastructure.Utility;
 

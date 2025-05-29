@@ -10,19 +10,19 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 public abstract class BaseSortedListViewModel<T>
                     : BaseListViewModel<T>,
                       ISortedListViewModel<T>
-                      where T: class
+                      where T : class
 {
     private IPropertyComparer<T> _selectedSorter;
     private ObservableCollection<T> _sortedItems = [];
 
     protected BaseSortedListViewModel(IServiceProvider serviceProvider,
                                       IPropertyComparer<T>[] sorters)
-            : base(serviceProvider)                          
+            : base(serviceProvider)
     {
         Sorters = sorters;
         _selectedSorter = Sorters[0];
     }
-               
+
     public IPropertyComparer<T>[] Sorters { get; }
 
     public List<string> SorterNames
@@ -49,8 +49,8 @@ public abstract class BaseSortedListViewModel<T>
         }
     }
 
-    public ObservableCollection<T> SortedItems 
-    { 
+    public ObservableCollection<T> SortedItems
+    {
         get => _sortedItems;
         set => SetField(ref _sortedItems, value);
     }

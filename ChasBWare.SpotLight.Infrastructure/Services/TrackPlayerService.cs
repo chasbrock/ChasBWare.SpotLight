@@ -1,5 +1,4 @@
 ﻿using ChasBWare.SpotLight.Definitions.Services;
-using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Domain.Messaging;
@@ -15,10 +14,13 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
         private readonly IDispatcherTimer _timer;
         private readonly IHatedService _hatedService;
         private readonly ISpotifyPlayerController _playerController;
-
+        
         private DateTime? _playbackStarted = null;
-        private PlayingTrack? _nowPlaying = null;
-     
+        
+        public PlayingTrack? CurrentTrack { get; private set; }
+        public PlayingTrack? PriorTrack { get; private set; }
+        public string? CurrentPlaylistId { get; set; }
+
         public TrackPlayerService(IDispatcher dispatcher,
                                   IHatedService hatedService,
                                   ISpotifyPlayerController playerController,
@@ -41,7 +43,14 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
         {
             if (!string.IsNullOrWhiteSpace(playlist.Uri))
             {
-                UpdateNowPlaying(await _playerController.StartPlayback(playlist.Uri, trackNumber));
+                PriorTrack = null;
+                CurrentPlaylistId = playlist.Id;
+                var nowPlaying = await _playerController.StartPlayback(playlist.Uri, trackNumber);
+                UpdateNowPlaying(nowPlaying);
+            }
+            else
+            {
+                CurrentPlaylistId = null;
             }
         }
 
@@ -49,39 +58,44 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
         {
             _timer.Stop();
             PostPlayingTrackChange(TrackStatus.Paused);
-            UpdateNowPlaying(await _playerController.PausePlayback());
+            var nowPlaying = await _playerController.PausePlayback();
+            UpdateNowPlaying(nowPlaying);
         }
 
         public async void Resume()
         {
             // check to seee it anyone else has changed track / resumed playback
-            var currentlyPlaying = await GetCurrentlyPlaying();
-            if (currentlyPlaying != null && currentlyPlaying.Id == _nowPlaying?.Id)
+            var nowPlaying = await GetCurrentlyPlaying();
+            if (nowPlaying != null && nowPlaying.Id == CurrentTrack?.Id)
             {
-                currentlyPlaying = await _playerController.ResumePlayback(_nowPlaying.Uri, (int)_nowPlaying.Progress.TotalMilliseconds);
+                nowPlaying = await _playerController.ResumePlayback(CurrentTrack.Uri, (int)CurrentTrack.Progress.TotalMilliseconds);
             }
 
-            UpdateNowPlaying(currentlyPlaying);
+            UpdateNowPlaying(nowPlaying);
         }
 
         public async void SkipForward()
         {
-            UpdateNowPlaying(await _playerController.SkipNext());
+            PriorTrack = CurrentTrack;
+            var nowPlaying = await _playerController.SkipNext();
+            UpdateNowPlaying(nowPlaying);
         }
 
         public async void SkipBackward()
         {
+            PriorTrack = null;
             var nowPlaying = await _playerController.SkipPrevious();
             if (nowPlaying != null)
             {
                 UpdateNowPlaying(nowPlaying);
             }
         }
-        
+
         public void UpdateNowPlaying(PlayingTrack? nowPlaying)
         {
             if (nowPlaying == null)
             {
+                CurrentPlaylistId = null;
                 _timer.Stop();
                 PostPlayingTrackChange(TrackStatus.NotPlaying);
                 return;
@@ -90,17 +104,21 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
             // do we hate this track?
             if (_hatedService.GetIsHated(nowPlaying.Id))
             {
+                PriorTrack = nowPlaying; 
                 SkipForward();
                 return;
             }
 
             // alert any playlists viewing the current track
-            if (_nowPlaying != nowPlaying)
+            // that it has stopped
+            if (CurrentTrack?.Id != nowPlaying.Id)
             {
+                PriorTrack = CurrentTrack;
                 PostPlayingTrackChange(TrackStatus.NotPlaying);
             }
 
-            _nowPlaying = nowPlaying;
+
+            CurrentTrack = nowPlaying;
             _playbackStarted = DateTime.Now - nowPlaying.Progress;
             if (nowPlaying.IsPlaying)
             {
@@ -115,10 +133,10 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
 
             UpdateTrackProgress(nowPlaying);
         }
-            
+
         private void OnConnectionStatusChange(ConnectionStatusChangedMessage message)
         {
-            if (message.ConnectionStatus.IsActiveState()) 
+            if (message.ConnectionStatus.IsActiveState())
             {
                 _timer.Stop();
                 // if we disconnect we cannot resy
@@ -128,18 +146,18 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
 
         private async void OnTimerTick(object? sender, EventArgs e)
         {
-            if (_nowPlaying != null)
+            if (CurrentTrack != null)
             {
-                var progress = _playbackStarted==null ? TimeSpan.Zero : DateTime.Now - (DateTime)_playbackStarted;
+                var progress = _playbackStarted == null ? TimeSpan.Zero : DateTime.Now - (DateTime)_playbackStarted;
 
                 //have we finished playing track?
-                if (progress > _nowPlaying.Duration)
+                if (progress > CurrentTrack.Duration)
                 {
                     UpdateNowPlaying(await GetCurrentlyPlaying());
                 }
                 else
                 {
-                    UpdateTrackProgress(_nowPlaying);
+                    UpdateTrackProgress(CurrentTrack);
                 }
             }
             else
@@ -159,12 +177,12 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
             nowPlaying.Progress = progress;
             OnTrackProgress?.Invoke(this, nowPlaying);
         }
-               
+
         private void PostPlayingTrackChange(TrackStatus status)
         {
-            if (_nowPlaying != null)
+            if (CurrentTrack != null)
             {
-                _currentTrackMessageService.SendMessage(new CurrentTrackChangedMessage(_nowPlaying.Id, _nowPlaying.Album, status));
+                _currentTrackMessageService.SendMessage(new CurrentTrackChangedMessage(CurrentTrack.Id, CurrentTrack.Album, status));
             }
         }
     }

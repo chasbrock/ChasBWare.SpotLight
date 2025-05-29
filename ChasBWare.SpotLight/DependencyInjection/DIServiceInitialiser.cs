@@ -97,7 +97,7 @@ internal static partial class DIServiceInitialiser
         var navigatable = services.Where(sd => sd.Lifetime == ServiceLifetime.Singleton &&
                                                typeof(INavigationClient).IsAssignableFrom(sd.ServiceType))
                                   .Select(sd => sd.ServiceType)
-                                  .ToList(); 
+                                  .ToList();
 
         return services.AddSingleton<INavigator>(new Navigator(navigatable));
     }

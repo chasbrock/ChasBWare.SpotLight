@@ -4,7 +4,7 @@ using ChasBWare.SpotLight.Definitions.ViewModels;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.ArtistSearch;
 
-public class SearchForArtistTask(IDispatcher _dispatcher, 
+public class SearchForArtistTask(IDispatcher _dispatcher,
                                  ISpotifyArtistRepository _artistRepository)
      : ISearchForArtistTask
 {

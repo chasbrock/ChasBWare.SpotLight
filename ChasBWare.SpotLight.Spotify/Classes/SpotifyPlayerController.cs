@@ -1,18 +1,16 @@
 ﻿using ChasBWare.SpotLight.Definitions.Services;
 using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Entities;
-using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Mappings.Mappers;
 using ChasBWare.SpotLight.Spotify.Interfaces;
-using Microsoft.Extensions.Logging;
 using SpotifyAPI.Web;
 
 namespace ChasBWare.SpotLight.Spotify.Classes
 {
-    public class SpotifyPlayerController(ISpotifyConnectionManager _connectionManager) 
+    public class SpotifyPlayerController(ISpotifyConnectionManager _connectionManager)
                : ISpotifyPlayerController
     {
-        private async static Task<PlayingTrack?> GetCurrentlyPlaying(SpotifyClient client) 
+        private async static Task<PlayingTrack?> GetCurrentlyPlaying(SpotifyClient client)
         {
             Thread.Sleep(300);
             var currentlPlaying = await client.Player.GetCurrentlyPlaying(new PlayerCurrentlyPlayingRequest());
@@ -36,7 +34,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
 
         public async Task<PlayingTrack?> SkipPrevious()
         {
-            var client =  _connectionManager.GetClient();
+            var client = _connectionManager.GetClient();
             try
             {
                 await client.Player.SkipPrevious();
@@ -48,7 +46,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                 return null;
             }
         }
-        
+
         public async Task<PlayingTrack?> StartPlayback(string playlistUri, int trackOffset)
         {
             var client = _connectionManager.GetClient();
@@ -120,14 +118,14 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                 return false;
             }
         }
-               
+
         public async Task<List<Track>> GetQueue()
         {
             var client = _connectionManager.GetClient();
             try
             {
                 var queue = await client.Player.GetQueue();
-               return queue.Queue.Select(pi => pi.CopyToTrack()).ToList();
+                return queue.Queue.Select(pi => pi.CopyToTrack()).ToList();
             }
             catch (Exception ex)
             {

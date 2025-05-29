@@ -15,5 +15,5 @@ public interface IPopupMenuViewModel
     public IMenuItem? FindMenuItem(PopupGroup group, PopupActivity activity);
     public IMenuItem AddItem(PopupActivity activity, string caption, Action<object?> action, string? toolTip = null, object? tag = null);
     public IMenuItem AddItem(PopupGroup group, PopupActivity activity, string caption, Action<object?> action, string? toolTip = null, object? tag = null);
-   
+
 }

@@ -2,11 +2,11 @@
 
 namespace ChasBWare.SpotLight.Definitions.ViewModels
 {
-    public interface IRecentViewModel<T> 
+    public interface IRecentViewModel<T>
                    : ISortedListViewModel<T>,
                      INavigationClient
 
-                     where T: class
+                     where T : class
     {
         ISearchViewModel<T> SearchViewModel { get; }
         IPlayerControlViewModel PlayerControlViewModel { get; }

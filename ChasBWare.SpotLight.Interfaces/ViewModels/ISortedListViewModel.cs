@@ -3,9 +3,9 @@ using ChasBWare.SpotLight.Definitions.Utility;
 
 namespace ChasBWare.SpotLight.Definitions.ViewModels;
 
-public interface ISortedListViewModel<T> 
-               : IListViewModel<T> 
-               where T: class
+public interface ISortedListViewModel<T>
+               : IListViewModel<T>
+               where T : class
 {
     ObservableCollection<T> SortedItems { get; }
     IPropertyComparer<T>[] Sorters { get; }

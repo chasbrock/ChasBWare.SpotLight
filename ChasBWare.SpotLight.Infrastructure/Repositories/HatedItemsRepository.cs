@@ -36,7 +36,7 @@ public class HatedItemsRepository(IDbContext _dbContext,
             if (isHated)
             {
                 var found = await connection.Table<HatedItem>()
-                                            .FirstOrDefaultAsync(hi =>  hi.ItemId == itemId);
+                                            .FirstOrDefaultAsync(hi => hi.ItemId == itemId);
                 if (found == null)
                 {
                     return await connection.InsertAsync(new HatedItem { ItemId = itemId });

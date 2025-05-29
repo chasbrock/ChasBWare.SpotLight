@@ -2,6 +2,6 @@
 {
     public interface IPropertyComparer<T> : IComparer<T>
     {
-        public string PropertyName { get;}
+        public string PropertyName { get; }
     }
 }

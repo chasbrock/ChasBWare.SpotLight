@@ -1,5 +1,4 @@
 ﻿using ChasBWare.SpotLight.Definitions.Repositories;
-using ChasBWare.SpotLight.Domain.Models;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 
 namespace ChasBWare.SpotLight.Infrastructure.Services;

@@ -11,8 +11,8 @@ using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
-public class RecentPlaylistsViewModel 
-           : BaseRecentViewModel<IPlaylistViewModel>, 
+public class RecentPlaylistsViewModel
+           : BaseRecentViewModel<IPlaylistViewModel>,
              IRecentPlaylistsViewModel
 {
     private readonly ILibraryViewModel _library;
@@ -37,7 +37,7 @@ public class RecentPlaylistsViewModel
 
     protected override void LoadItems()
     {
-         var task = _serviceProvider.GetRequiredService<ILoadRecentPlaylistTask>();
+        var task = _serviceProvider.GetRequiredService<ILoadRecentPlaylistTask>();
         task.Execute(this, PlaylistType.Playlist);
     }
 

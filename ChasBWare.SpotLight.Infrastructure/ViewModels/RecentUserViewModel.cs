@@ -1,6 +1,4 @@
-﻿using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
-using ChasBWare.SpotLight.Definitions.Tasks.Library;
-using ChasBWare.SpotLight.Definitions.Tasks.PlaylistSearch;
+﻿using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.Tasks.Users;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
@@ -120,6 +118,6 @@ public class RecentUserViewModel
 
     private void OnTrackChangedMessage(CurrentTrackChangedMessage message)
     {
-       SelectedItem?.SelectedItem?.ShowPlayingTrack(message.TrackId, message.State);
+        SelectedItem?.SelectedItem?.ShowPlayingTrack(message.TrackId, message.State);
     }
 }

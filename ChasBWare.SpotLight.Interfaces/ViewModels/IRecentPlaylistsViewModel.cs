@@ -3,7 +3,7 @@
 /// <summary>
 /// view model holding a list of recently used albums
 /// </summary>
-public interface IRecentPlaylistsViewModel 
+public interface IRecentPlaylistsViewModel
                : IRecentViewModel<IPlaylistViewModel>
 {
 }

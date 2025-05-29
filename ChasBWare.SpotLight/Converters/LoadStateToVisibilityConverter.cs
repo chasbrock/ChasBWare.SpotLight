@@ -8,10 +8,10 @@ public class LoadStateToVisibilityConverter : IValueConverter
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value == null)
-        { 
-            return null; 
+        {
+            return null;
         }
-        
+
         switch ((LoadState)value)
         {
             case LoadState.Loaded:

@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using ChasBWare.SpotLight.Definitions.Enums;
 
 namespace ChasbWare.Spotlight.Converters;
 

@@ -6,5 +6,5 @@ public class ConnectionStatusChangedMessage(ConnectionStatus status)
            : Message()
 {
     public ConnectionStatus ConnectionStatus { get; } = status;
- 
+
 }

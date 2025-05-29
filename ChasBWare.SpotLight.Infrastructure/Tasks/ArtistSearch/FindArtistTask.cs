@@ -19,8 +19,8 @@ public class FindArtistTask(IServiceProvider _serviceProvider,
     private void RunTask(IRecentArtistsViewModel viewModel, string artistId)
     {
         if (string.IsNullOrWhiteSpace(artistId))
-        { 
-            return; 
+        {
+            return;
         }
 
         var artistViewModel = viewModel.Items.FirstOrDefault(a => a.Model.Id == artistId);
@@ -38,13 +38,13 @@ public class FindArtistTask(IServiceProvider _serviceProvider,
         {
             return;
         }
-        
+
         artistViewModel = _serviceProvider.GetRequiredService<IArtistViewModel>();
         artistViewModel.Model = artist;
 
         _dispatcher.Dispatch(() =>
         {
-            viewModel.SearchViewModel.Items.Clear();   
+            viewModel.SearchViewModel.Items.Clear();
             viewModel.Items.Add(artistViewModel);
             viewModel.RefreshView();
             viewModel.SelectedItem = artistViewModel;

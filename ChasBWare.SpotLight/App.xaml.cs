@@ -46,7 +46,7 @@ public partial class App : Application
             window.Activated += OnWindowActivated;
             return window;
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to create main window");
             throw;
@@ -60,8 +60,8 @@ public partial class App : Application
 
     private async void CheckForInitialisation()
     {
-        // make sure secure storeage is pouplatd
-        _logger.LogInformation("Starting CheckForInitialisation"); 
+        // make sure secure storage is populated
+        _logger.LogInformation("Starting CheckForInitialisation");
         Thread.Sleep(1000);
         try
         {
@@ -81,7 +81,7 @@ public partial class App : Application
                 task.Execute();
             }
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             _logger.LogError(ex, "CheckForInitialisation failed");
         }

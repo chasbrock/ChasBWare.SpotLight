@@ -1,4 +1,6 @@
-﻿using ChasBWare.SpotLight.Definitions.Utility;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
+using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Enums;
@@ -6,8 +8,6 @@ using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
 using CommunityToolkit.Maui.Core;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
@@ -26,7 +26,7 @@ public class TrackListViewModel : Notifyable, ITrackListViewModel
     {
         _serviceProvider = serviceProvider;
         _navigator = navigator;
-     
+
         OpenPopupCommand = new Command<ITrackViewModel>(track => popupService.ShowPopup<TrackPopupViewModel>(onPresenting: vm => vm.SetTrack(Playlist, track)));
         OpenArtistCommand = new Command<string>(id => NavigateToArtist(id));
     }
@@ -36,7 +36,7 @@ public class TrackListViewModel : Notifyable, ITrackListViewModel
 
     public ObservableCollection<ITrackViewModel> Items { get; } = [];
     public IPlaylistViewModel? Playlist { get; set; }
-     
+
     public ITrackViewModel? SelectedItem
     {
         get => _selectedItem;
@@ -46,7 +46,7 @@ public class TrackListViewModel : Notifyable, ITrackListViewModel
     public bool ShowHatedTracks
     {
         get => _showHatedTracks;
-        set => SetField(ref _showHatedTracks, value);  
+        set => SetField(ref _showHatedTracks, value);
     }
 
     public LoadState LoadStatus

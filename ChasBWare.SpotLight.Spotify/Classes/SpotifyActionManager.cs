@@ -1,6 +1,5 @@
 ﻿using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Spotify.Interfaces;
-using Microsoft.Extensions.Logging;
 using SpotifyAPI.Web;
 using SpotifyDevice = SpotifyAPI.Web.Device;
 
@@ -9,7 +8,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes;
 public class SpotifyActionManager(ISpotifyConnectionManager _spotifyConnectionManager)
            : ISpotifyActionManager
 {
-    public string? CountryCode { get; private set;}
+    public string? CountryCode { get; private set; }
 
     public ConnectionStatus Status { get => _spotifyConnectionManager.Status; }
 
@@ -149,7 +148,7 @@ public class SpotifyActionManager(ISpotifyConnectionManager _spotifyConnectionMa
             {
                 var fullPlaylists = new List<FullPlaylist>();
                 var page = client.Playlists.CurrentUsers().Result;
-               
+
                 await foreach (var playlist in client.Paginate(page))
                 {
                     if (playlist != null)
@@ -249,7 +248,7 @@ public class SpotifyActionManager(ISpotifyConnectionManager _spotifyConnectionMa
                 return fullPlaylists;
             });
     }
-  
+
     public bool SetAlbumSaveStatus(string id, bool save)
     {
         return SpotifyErrorCatcher.Execute<bool>(_spotifyConnectionManager,

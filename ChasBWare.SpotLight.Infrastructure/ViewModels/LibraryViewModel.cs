@@ -12,12 +12,12 @@ using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
-public partial class LibraryViewModel 
+public partial class LibraryViewModel
                    : BaseGroupedListViewModel<IPlaylistViewModel>,
                      ILibraryViewModel
 {
     private readonly IPlaylistViewModelProvider _playlistProvider;
-
+   
     public LibraryViewModel(IServiceProvider serviceProvider,
                             IPopupService popupService,
                             IPlayerControlViewModel playerControlViewModel,
@@ -46,8 +46,8 @@ public partial class LibraryViewModel
     public IPlayerControlViewModel PlayerControlViewModel { get; }
     public ISearchLibraryViewModel SearchViewModel { get; }
     public ICommand OpenPopupCommand { get; }
-  
-   
+
+
     public bool Exists(string? playlistId)
     {
         return !string.IsNullOrEmpty(playlistId) &&
@@ -57,13 +57,13 @@ public partial class LibraryViewModel
     public void AddItems(IEnumerable<Playlist> items)
     {
         var added = false;
-        foreach (var item in items.Where(m => !Items.Any(vm => vm.Model.Id == m.Id))) 
+        foreach (var item in items.Where(m => !Items.Any(vm => vm.Model.Id == m.Id)))
         {
             Items.Add(_playlistProvider.CreatePlaylist(item, true));
             added = true;
         }
 
-        if (added) 
+        if (added)
         {
             RefreshView();
         }
@@ -89,7 +89,7 @@ public partial class LibraryViewModel
     }
 
     private void Initialise()
-    {   
+    {
         var loadPlaylistsTask = _serviceProvider.GetRequiredService<ILibraryLoaderTask>();
         loadPlaylistsTask.Load(this);
     }
@@ -123,7 +123,7 @@ public partial class LibraryViewModel
         }
     }
 
-    private void OnActiveItemChanged(ActiveItemChangedMessage message) 
+    private void OnActiveItemChanged(ActiveItemChangedMessage message)
     {
         if (message.PageType == PageType.Library)
         {

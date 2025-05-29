@@ -2,8 +2,8 @@
 
 namespace ChasBWare.SpotLight.Definitions.Utility
 {
-    public interface INavigationClient 
-    { 
+    public interface INavigationClient
+    {
         PageType PageType { get; }
         void OnNavigationRecieved(Uri? callerUri);
     }
@@ -11,7 +11,7 @@ namespace ChasBWare.SpotLight.Definitions.Utility
     /// <summary>
     /// encapsulates code behind on appshell
     /// </summary>
-    public interface INavigator 
+    public interface INavigator
     {
         void NavigateTo(PageType pageType);
         void NavigateTo(Uri uri);

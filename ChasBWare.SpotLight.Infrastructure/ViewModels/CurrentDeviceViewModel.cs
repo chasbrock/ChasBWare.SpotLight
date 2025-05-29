@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using System.Windows.Input;
-using System.Xml.Linq;
+﻿using System.Windows.Input;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Domain.Models;
@@ -9,7 +7,7 @@ using ChasBWare.SpotLight.Infrastructure.Utility;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
-public partial class CurrentDeviceViewModel : Notifyable, ICurrentDeviceViewModel 
+public partial class CurrentDeviceViewModel : Notifyable, ICurrentDeviceViewModel
 {
     private readonly IDeviceService _deviceService;
     private DeviceModel _device = DeviceHelper.GetLocalDevice();
@@ -26,7 +24,7 @@ public partial class CurrentDeviceViewModel : Notifyable, ICurrentDeviceViewMode
 
     public string Name { get => Device.Name; }
     public DeviceTypes DeviceType { get => Device.DeviceType; }
-    public ICommand MuteCommand { get;}
+    public ICommand MuteCommand { get; }
     public ICommand VolumeUpdatedCommand { get; }
 
     public DeviceModel Device
@@ -38,7 +36,7 @@ public partial class CurrentDeviceViewModel : Notifyable, ICurrentDeviceViewMode
             NotifyAll();
         }
     }
-    
+
     public int VolumePercent
     {
         get => Device.VolumePercent;

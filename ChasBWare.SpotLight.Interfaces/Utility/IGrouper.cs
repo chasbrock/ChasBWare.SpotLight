@@ -1,8 +1,6 @@
-﻿using ChasBWare.SpotLight.Definitions.ViewModels;
-
-namespace ChasBWare.SpotLight.Definitions.Utility
+﻿namespace ChasBWare.SpotLight.Definitions.Utility
 {
-    public interface IGrouper<T> where T: class
+    public interface IGrouper<T> where T : class
     {
         string Name { get; }
 

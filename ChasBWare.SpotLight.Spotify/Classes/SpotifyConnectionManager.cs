@@ -14,8 +14,8 @@ public class SpotifyConnectionManager
     private readonly ISpotyConnectionSession _session;
     private readonly IMessageService<ConnectionStatusChangedMessage> _connectionStatusChangedService;
     private readonly EmbedIOAuthServer _server;
-    private ConnectionStatus _status  = ConnectionStatus.NotInitialised;
-    
+    private ConnectionStatus _status = ConnectionStatus.NotInitialised;
+
     public SpotifyConnectionManager(ILogger<SpotifyConnectionManager> logger,
                                     ISpotyConnectionSession session,
                                     IMessageService<ConnectionStatusChangedMessage> connectionStatusChangedService)
@@ -78,7 +78,7 @@ public class SpotifyConnectionManager
 
             return _session.GetClient();
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             Status = ConnectionStatus.NotConnected;
             _session.ClearAccessTokens();
@@ -106,7 +106,7 @@ public class SpotifyConnectionManager
             _logger.LogError(ex, "Error refreshing token");
         }
     }
-        
+
     private async void AuthoriseConnection()
     {
         try
@@ -157,7 +157,7 @@ public class SpotifyConnectionManager
                                                          new Uri(_session.RedirectUrl));
 
         var reply = await new OAuthClient(config).RequestToken(request);
-         _session.UpdateTokens(reply.AccessToken, reply.RefreshToken);
+        _session.UpdateTokens(reply.AccessToken, reply.RefreshToken);
 
         if (!string.IsNullOrWhiteSpace(_session.AccessToken))
         {

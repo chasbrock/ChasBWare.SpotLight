@@ -1,5 +1,4 @@
 ﻿using ChasBWare.SpotLight.Domain.Entities;
-using ChasBWare.SpotLight.Domain.Enums;
 using SpotifyAPI.Web;
 
 namespace ChasBWare.SpotLight.Mappings.Mappers;
@@ -22,9 +21,9 @@ public static class PlayingTrackMapper
             AlbumId = track.Album.Id,
             Image = track.Album.Images.GetSmallImage(),
             Uri = track.Uri,
-            Progress = TimeSpan.FromMilliseconds(currentlyPlaying.ProgressMs??0),
+            Progress = TimeSpan.FromMilliseconds(currentlyPlaying.ProgressMs ?? 0),
             Duration = TimeSpan.FromMilliseconds(track.DurationMs),
-            IsPlaying = currentlyPlaying.IsPlaying 
+            IsPlaying = currentlyPlaying.IsPlaying
         };
     }
 
@@ -51,6 +50,6 @@ public static class PlayingTrackMapper
     }
 
 
-    public static readonly PlayingTrack Empty = new PlayingTrack { Id = "", Name = "", Artists = [], Uri = "", Album = "",AlbumId=""};
+    public static readonly PlayingTrack Empty = new PlayingTrack { Id = "", Name = "", Artists = [], Uri = "", Album = "", AlbumId = "" };
 }
 

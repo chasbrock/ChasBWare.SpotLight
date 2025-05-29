@@ -33,7 +33,7 @@ public static class TrackMapper
         };
     }
 
-    public static Track CopyToTrack(this IPlayableItem source) 
+    public static Track CopyToTrack(this IPlayableItem source)
     {
         if (source is SimpleTrack simpleTrack)
         {

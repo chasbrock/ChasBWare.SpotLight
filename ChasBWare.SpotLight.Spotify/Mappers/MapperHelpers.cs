@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using ChasBWare.SpotLight.Domain.Entities;
 using SpotifyAPI.Web;
 
 namespace ChasBWare.SpotLight.Mappings.Mappers;
@@ -24,7 +23,7 @@ public static class MapperHelpers
             {
                 month = int.Parse(parts[1]);
             }
-            
+
             if (parts.Length >= 3)
             {
                 day = int.Parse(parts[2]);

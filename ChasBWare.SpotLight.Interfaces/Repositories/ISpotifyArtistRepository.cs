@@ -11,7 +11,7 @@ public interface ISpotifyArtistRepository
     /// <param name="artistId"></param>
     /// <returns></returns>
     Artist? FindArtist(string artistId);
-   
+
     /// <summary>
     /// search for artists with given name
     /// </summary>

@@ -1,6 +1,5 @@
 ﻿using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Domain.Models;
-using SpotifyAPI.Web;
 
 namespace ChasBWare.SpotLight.Mappings.Mappers;
 

@@ -4,9 +4,9 @@ namespace ChasBWare.SpotLight.Install;
 
 public partial class InstallPopup : Popup
 {
-	public InstallPopup(InstallViewModel viewModel)
-	{
-		InitializeComponent();
-		BindingContext = viewModel;
-	}
+    public InstallPopup(InstallViewModel viewModel)
+    {
+        InitializeComponent();
+        BindingContext = viewModel;
+    }
 }

@@ -3,7 +3,6 @@ using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
-using ChasBWare.SpotLight.Infrastructure.Services;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.AlbumSearch;
 

@@ -1,12 +1,11 @@
 ﻿using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks.ArtistSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
-using ChasBWare.SpotLight.Domain.Entities;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.ArtistSearch;
 
 public class RemoveRecentArtistTask(IDispatcher _dispatcher,
-                                    ISearchItemRepository _searchRepo) 
+                                    ISearchItemRepository _searchRepo)
            : IRemoveRecentArtistTask
 {
 

@@ -1,6 +1,6 @@
 ﻿namespace ChasBWare.SpotLight.Definitions.Tasks.Device
 {
-    public interface IReconnectToSpotifyTask 
+    public interface IReconnectToSpotifyTask
     {
         void Execute();
     }

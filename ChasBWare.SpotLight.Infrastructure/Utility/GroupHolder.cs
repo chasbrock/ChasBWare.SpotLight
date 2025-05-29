@@ -1,6 +1,5 @@
 ﻿using System.Windows.Input;
 using ChasBWare.SpotLight.Definitions.Utility;
-using ChasBWare.SpotLight.Definitions.ViewModels;
 
 namespace ChasBWare.SpotLight.Infrastructure.Utility
 {
@@ -12,10 +11,10 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
         {
             Items = items;
             Key = key;
-            SetExpandedCommand =  new Command(() => IsExpanded = !IsExpanded); 
+            SetExpandedCommand = new Command(() => IsExpanded = !IsExpanded);
         }
 
-        public object Key { get; } 
+        public object Key { get; }
         public List<TItem> Items { get; }
         public ICommand SetExpandedCommand { get; }
 

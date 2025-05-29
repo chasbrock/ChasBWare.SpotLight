@@ -4,8 +4,6 @@ using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using Microsoft.Extensions.Logging;
 
-using SQLite;
-
 namespace ChasBWare.SpotLight.Infrastructure.Repositories;
 
 public class SearchItemRepository(IDbContext _dbContext,
@@ -23,11 +21,11 @@ public class SearchItemRepository(IDbContext _dbContext,
             {
                 connection.InsertAsync(artist);
             }
-            else 
+            else
             {
                 connection.UpdateAsync(artist);
             }
-            if (connection.Table<SearchItem>().FirstOrDefaultAsync(si => si.ItemId == artist.Id).Result == null) 
+            if (connection.Table<SearchItem>().FirstOrDefaultAsync(si => si.ItemId == artist.Id).Result == null)
             {
                 connection.InsertAsync(new SearchItem { ItemId = artist.Id });
             }
@@ -101,10 +99,10 @@ public class SearchItemRepository(IDbContext _dbContext,
 
         return [];
     }
-      
+
     public List<Playlist> GetPlaylists(PlaylistType playlistType)
     {
-       var connection = _dbContext.GetConnection().Result;
+        var connection = _dbContext.GetConnection().Result;
         if (connection != null)
         {
             var sql = RepositoryHelper.GetSearchPlaylists;
@@ -151,7 +149,7 @@ public class SearchItemRepository(IDbContext _dbContext,
 
         return false;
     }
-     
+
 
     public bool RemoveArtist(string id)
     {

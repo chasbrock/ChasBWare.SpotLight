@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ChasBWare.SpotLight.Domain.Enums;
+﻿using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Domain.Models;
 
 namespace ChasBWare.SpotLight.Infrastructure.Utility;

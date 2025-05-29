@@ -4,9 +4,9 @@ namespace ChasBWare.SpotLight.Pages;
 
 public partial class PlaylistPage : ContentPage
 {
-	public PlaylistPage(IRecentPlaylistsViewModel viewModel)
-	{
-		InitializeComponent();
+    public PlaylistPage(IRecentPlaylistsViewModel viewModel)
+    {
+        InitializeComponent();
         BindingContext = viewModel;
         Appearing += OnAppearing;
     }

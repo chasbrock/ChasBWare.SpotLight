@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasbWare.Spotlight.Converters
@@ -35,7 +30,7 @@ namespace ChasbWare.Spotlight.Converters
         {
             if (value == null)
             {
-                return TrackStatus.NotPlaying; 
+                return TrackStatus.NotPlaying;
             }
 
             if ((string)value == PausedValue)

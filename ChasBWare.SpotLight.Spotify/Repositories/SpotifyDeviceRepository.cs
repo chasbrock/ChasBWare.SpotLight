@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using ChasBWare.SpotLight.Definitions.Repositories;
-using ChasBWare.SpotLight.Definitions.Services;
+﻿using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
@@ -53,8 +50,8 @@ public class SpotifyDeviceRepository(IServiceProvider _serviceProvider,
             foreach (var model in devices.Select(d => d.CopyToDevice()))
             {
                 var viewModel = _serviceProvider.GetService<IDeviceViewModel>();
-                if (viewModel != null) 
-                { 
+                if (viewModel != null)
+                {
                     viewModel.Model = model;
                     viewModels.Add(viewModel);
                 }

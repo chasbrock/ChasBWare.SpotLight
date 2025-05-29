@@ -14,7 +14,7 @@ public class Navigator : INavigator
         _navigatable = navigatable;
     }
 
-    internal void SetShell(AppShell appShell, IServiceProvider serviceProvider) 
+    internal void SetShell(AppShell appShell, IServiceProvider serviceProvider)
     {
         _shell = appShell;
         appShell.Navigator = this;
@@ -27,7 +27,7 @@ public class Navigator : INavigator
             }
         }
     }
-          
+
     public void NavigateTo(PageType pageType)
     {
         if (_shell != null)

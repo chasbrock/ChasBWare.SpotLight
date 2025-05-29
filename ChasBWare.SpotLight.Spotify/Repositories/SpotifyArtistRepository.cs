@@ -8,7 +8,7 @@ using ChasBWare.SpotLight.Spotify.Interfaces;
 namespace ChasBWare.SpotLight.Spotify.Repositories;
 
 public class SpotifyArtistRepository(IServiceProvider _serviceProvider,
-                                     ISpotifyActionManager _actionManager) 
+                                     ISpotifyActionManager _actionManager)
            : ISpotifyArtistRepository
 {
     public Artist? FindArtist(string artistId)
@@ -33,8 +33,8 @@ public class SpotifyArtistRepository(IServiceProvider _serviceProvider,
             return [];
         }
 
-        var savedAlbums =  _actionManager.GetArtistAlbums(artistId);
-        if (savedAlbums != null) 
+        var savedAlbums = _actionManager.GetArtistAlbums(artistId);
+        if (savedAlbums != null)
         {
             List<Playlist> playlists = savedAlbums.Select(sa => sa.CopyToPlaylist()).ToList();
             return playlists;
@@ -42,7 +42,7 @@ public class SpotifyArtistRepository(IServiceProvider _serviceProvider,
 
         return [];
     }
-    
+
     public List<IArtistViewModel> SearchForArtists(string searchText)
     {
         if (!_actionManager.Status.IsActiveState())

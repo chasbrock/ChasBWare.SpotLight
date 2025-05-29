@@ -1,6 +1,5 @@
 ﻿using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Enums;
-using ChasBWare.SpotLight.Infrastructure.ViewModels;
 
 namespace ChasBWare.SpotLight.Infrastructure.Utility
 {
@@ -22,6 +21,6 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
             }
         }
 
-        public bool ShowOwner { get;  }
+        public bool ShowOwner { get; }
     }
 }

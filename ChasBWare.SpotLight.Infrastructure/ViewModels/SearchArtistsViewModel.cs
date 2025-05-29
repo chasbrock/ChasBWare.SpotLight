@@ -7,7 +7,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
 public class SearchArtistsViewModel(IServiceProvider serviceProvider,
                                     IMessageService<ActiveItemChangedMessage> _messageService)
-           : BaseSearchViewModel<IArtistViewModel>(serviceProvider), 
+           : BaseSearchViewModel<IArtistViewModel>(serviceProvider),
              ISearchArtistsViewModel
 {
 

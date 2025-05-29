@@ -2,9 +2,7 @@
 using ChasBWare.SpotLight.Domain.DbContext;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
-using ChasBWare.SpotLight.Domain.Models;
 using Microsoft.Extensions.Logging;
-using SQLite;
 
 namespace ChasBWare.SpotLight.Infrastructure.Repositories;
 
@@ -14,7 +12,7 @@ public class LibraryRepository(IDbContext _dbContext,
 {
     public int AddPlaylists(List<Playlist> playlists)
     {
-         var connection = _dbContext.GetConnection().Result;
+        var connection = _dbContext.GetConnection().Result;
         if (connection != null)
         {
             var count = 0;
@@ -35,7 +33,7 @@ public class LibraryRepository(IDbContext _dbContext,
                                  .Result;
                     if (link == null)
                     {
-                        count += connection.InsertAsync(new LibraryItem { Id = playlist.Id}).Result;
+                        count += connection.InsertAsync(new LibraryItem { Id = playlist.Id }).Result;
                     }
                 }
             }
@@ -45,6 +43,18 @@ public class LibraryRepository(IDbContext _dbContext,
         _logger.LogError("Could not access db connection");
 
         return -1;
+    }
+
+    public string FindAllPlaylistsForTrack(string? trackId, string? priorTrack)
+    {
+        var connection = _dbContext.GetConnection().Result;
+        if (connection != null)
+        {
+            var sql = RepositoryHelper.GetPlaylistForTrack;
+            return connection.ExecuteScalarAsync<string>(sql, trackId, priorTrack, trackId)
+                             .Result;
+        }
+        return string.Empty;
     }
 
     public Playlist? FindPlaylist(string playlistId)
@@ -105,7 +115,7 @@ public class LibraryRepository(IDbContext _dbContext,
             var paramText = string.Join(',', playlistIds);
             foreach (var sql in RepositoryHelper.DeleteLibraryItems)
             {
-               _= connection.ExecuteAsync(sql, paramText).Result;
+                _ = connection.ExecuteAsync(sql, paramText).Result;
             }
             return true;
         }
@@ -136,7 +146,7 @@ public class LibraryRepository(IDbContext _dbContext,
                 }
                 return true;
             }
-            else 
+            else
             {
                 connection.ExecuteAsync("delete from LibraryItem where  Id = ?", playlist.Id);
                 return true;
@@ -163,7 +173,7 @@ public class LibraryRepository(IDbContext _dbContext,
             return;
         }
         _logger.LogError("Could not access db connection");
-       
+
     }
 
 }

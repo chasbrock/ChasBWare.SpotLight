@@ -3,11 +3,11 @@ using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 
-public interface ITrackViewModel 
+public interface ITrackViewModel
 {
     public IPlaylistViewModel? Playlist { get; set; }
     public Track Model { get; set; }
-  
+
     string Id { get; }
     string Name { get; }
     string Album { get; }

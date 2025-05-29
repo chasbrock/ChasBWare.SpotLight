@@ -1,10 +1,8 @@
-﻿using ChasBWare.SpotLight.Definitions.Utility;
+﻿using System.Windows.Input;
+using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
-using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Enums;
-using ChasBWare.SpotLight.Domain.Messaging;
 using CommunityToolkit.Maui.Core;
-using System.Windows.Input;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
@@ -53,5 +51,5 @@ public abstract class BaseRecentViewModel<T>
 
     protected abstract void LoadItems();
     protected abstract void OpenPopup();
-    
+
 }

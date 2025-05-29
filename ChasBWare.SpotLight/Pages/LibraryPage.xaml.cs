@@ -4,11 +4,11 @@ namespace ChasBWare.SpotLight.Pages;
 
 public partial class LibraryPage : ContentPage
 {
-	public LibraryPage(ILibraryViewModel viewModel)
-	{
-		InitializeComponent();
-		BindingContext = viewModel;
-		Appearing += OnAppearing;
+    public LibraryPage(ILibraryViewModel viewModel)
+    {
+        InitializeComponent();
+        BindingContext = viewModel;
+        Appearing += OnAppearing;
     }
 
     private void OnAppearing(object? sender, EventArgs e)

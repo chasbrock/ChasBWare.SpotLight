@@ -10,7 +10,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
               : BaseSearchViewModel<IPlaylistViewModel>(serviceProvider),
                 ISearchLibraryViewModel
     {
-          private LibrarySearchTypes _selectedSearchType = LibrarySearchTypes.Name;
+        private LibrarySearchTypes _selectedSearchType = LibrarySearchTypes.Name;
 
 
         public override void OpenInViewer(IPlaylistViewModel? item)

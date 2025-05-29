@@ -5,8 +5,8 @@ namespace ChasBWare.SpotLight.Popups;
 
 public partial class TrackPopupMenu : Popup
 {
-	public TrackPopupMenu(TrackPopupViewModel viewModel)
-	{
+    public TrackPopupMenu(TrackPopupViewModel viewModel)
+    {
         CanBeDismissedByTappingOutsideOfPopup = true;
         BindingContext = viewModel;
         Content = new PopupMenu
@@ -19,5 +19,5 @@ public partial class TrackPopupMenu : Popup
     }
 
 
-  
+
 }

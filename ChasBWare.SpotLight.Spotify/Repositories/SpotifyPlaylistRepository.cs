@@ -1,10 +1,8 @@
 ﻿using ChasBWare.SpotLight.Definitions.Repositories;
-using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Mappings.Mappers;
 using ChasBWare.SpotLight.Spotify.Interfaces;
-using SpotifyAPI.Web;
 
 namespace ChasBWare.SpotLight.Spotify.Repositories;
 
@@ -14,7 +12,7 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
 
     public Playlist? FindPlaylist(string playlistId, PlaylistType playlistType)
     {
-        if (!_actionManager.Status.IsActiveState()) 
+        if (!_actionManager.Status.IsActiveState())
         {
             return null;
         }
@@ -37,7 +35,7 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
         }
         return null;
     }
-    
+
     public List<Playlist> SearchForAlbums(string searchText)
     {
         if (!_actionManager.Status.IsActiveState())
@@ -118,7 +116,7 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
         }
 
         List<Playlist> playlists = [];
-        var savedAlbums =  _actionManager.GetCurrentUsersAlbums();
+        var savedAlbums = _actionManager.GetCurrentUsersAlbums();
         if (savedAlbums != null)
         {
             // push last accessed date to way back so the
@@ -134,7 +132,7 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
                 }
             }
         }
-        return playlists; 
+        return playlists;
     }
 
     private List<Playlist> GetCurrentUsersPlaylists()
@@ -145,7 +143,7 @@ public class SpotifyPlaylistRepository(ISpotifyActionManager _actionManager)
         }
 
         List<Playlist> playlists = [];
-        var fullPlaylists =  _actionManager.GetCurrentUsersPlaylists();
+        var fullPlaylists = _actionManager.GetCurrentUsersPlaylists();
         if (fullPlaylists != null)
         {
             // push last accessed date to way back so the

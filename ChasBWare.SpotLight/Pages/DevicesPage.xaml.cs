@@ -4,9 +4,9 @@ namespace ChasBWare.SpotLight.Pages;
 
 public partial class DevicesPage : ContentPage
 {
-	public DevicesPage(IDeviceListViewModel viewModel)
+    public DevicesPage(IDeviceListViewModel viewModel)
     {
-		InitializeComponent();
-		BindingContext = viewModel;
-	}
+        InitializeComponent();
+        BindingContext = viewModel;
+    }
 }

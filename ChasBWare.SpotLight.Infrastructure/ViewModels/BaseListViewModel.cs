@@ -6,16 +6,16 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
 public abstract class BaseListViewModel<T>(IServiceProvider serviceProvider)
                     : Notifyable,
-                      IListViewModel<T> 
-                      where T: class
+                      IListViewModel<T>
+                      where T : class
 {
     protected readonly IServiceProvider _serviceProvider = serviceProvider;
     private T? _selectedItem;
     private List<T> _items = [];
     private LoadState _loadStatus = LoadState.NotLoaded;
 
-    public bool IsUpdating{ get; set;}
- 
+    public bool IsUpdating { get; set; }
+
     public List<T> Items
     {
         get => _items;
@@ -61,12 +61,12 @@ public abstract class BaseListViewModel<T>(IServiceProvider serviceProvider)
     protected abstract void LoadSettings();
 
 
-    public virtual void RefreshView() 
-    { 
+    public virtual void RefreshView()
+    {
     }
 
-    protected virtual void LoadStatusChanged(LoadState loadStatus) 
-    { 
+    protected virtual void LoadStatusChanged(LoadState loadStatus)
+    {
     }
 
     protected virtual void SelectedItemChanged(T? oldItem, T? newItem)

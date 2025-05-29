@@ -1,11 +1,11 @@
-﻿using ChasBWare.SpotLight.Definitions.Repositories;
+﻿using System.Text.Json;
+using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Domain.DbContext;
 using ChasBWare.SpotLight.Domain.Entities;
-using System.Text.Json;
 
 namespace ChasBWare.SpotLight.Infrastructure.Repositories;
 
-public class AppSettingsRepository(IDbContext _dbContext) 
+public class AppSettingsRepository(IDbContext _dbContext)
            : IAppSettingsRepository
 {
     public async Task Delete(string name)

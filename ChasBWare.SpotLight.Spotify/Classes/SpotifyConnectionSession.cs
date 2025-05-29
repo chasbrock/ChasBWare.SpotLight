@@ -10,7 +10,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
     public class SpotifyConnectionSession : ISpotyConnectionSession
     {
         private const int defaultPort = 8888;
-        private  SpotifyClientConfig _config  = SpotifyClientConfig.CreateDefault();
+        private SpotifyClientConfig _config = SpotifyClientConfig.CreateDefault();
 
         public string ClientId { get; set; } = "";
         public string ClientSecret { get; set; } = "";
@@ -19,7 +19,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
         public string? AccessToken { get; private set; }
         public string? RefreshToken { get; private set; }
 
-    
+
         /// <summary>
         /// get a new spotify client
         /// </summary>
@@ -35,8 +35,8 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             {
                 _config = SpotifyClientConfig.CreateDefault();
             }
-        
-            var client =  new SpotifyClient(_config);
+
+            var client = new SpotifyClient(_config);
             return client;
         }
 
@@ -51,11 +51,11 @@ namespace ChasBWare.SpotLight.Spotify.Classes
         {
             AccessToken = accessToken;
             SecureStorage.SetAsync(nameof(ISpotyConnectionSession.AccessToken), accessToken);
-      
+
             return string.IsNullOrWhiteSpace(AccessToken) ? ConnectionStatus.Unauthorised : ConnectionStatus.Connected;
         }
 
-        public void ClearAccessTokens() 
+        public void ClearAccessTokens()
         {
             AccessToken = null;
             RefreshToken = null;
@@ -74,7 +74,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
 
             AccessToken = SecureStorage.Default.GetAsync(nameof(ISpotyConnectionSession.AccessToken)).Result;
             RefreshToken = SecureStorage.Default.GetAsync(nameof(ISpotyConnectionSession.RefreshToken)).Result;
-            
+
             return string.IsNullOrWhiteSpace(AccessToken) ? ConnectionStatus.Unauthorised : ConnectionStatus.TokenExpired;
         }
 

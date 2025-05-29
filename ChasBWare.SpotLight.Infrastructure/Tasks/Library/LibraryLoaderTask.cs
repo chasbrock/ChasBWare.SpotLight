@@ -42,10 +42,10 @@ public class LibraryLoaderTask(IDispatcher _dispatcher,
         {
             var items = _libraryRepo.GetPlaylists(playlistType);
             refreshNeeded |= items.Count == 0;
-           _dispatcher.Dispatch(() =>
-            {
-                viewModel.AddItems(items);
-            });
+            _dispatcher.Dispatch(() =>
+             {
+                 viewModel.AddItems(items);
+             });
         }
 
         if (refreshNeeded)

@@ -1,5 +1,5 @@
-﻿using ChasBWare.SpotLight.Domain.Enums;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 

@@ -1,10 +1,9 @@
-﻿using ChasBWare.SpotLight.Definitions.Repositories;
-using ChasBWare.SpotLight.Definitions.Tasks.Device;
+﻿using ChasBWare.SpotLight.Definitions.Tasks.Device;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.Device;
 
-public class ReconnectToSpotifyTask(IServiceProvider _serviceProvider)                            
+public class ReconnectToSpotifyTask(IServiceProvider _serviceProvider)
            : IReconnectToSpotifyTask
 {
 

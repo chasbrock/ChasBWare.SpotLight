@@ -22,7 +22,7 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
     private bool _isSelected = false;
     private bool _inLibrary = false;
     private Playlist _model = new() { Id = "" };
-   
+
     public PlaylistViewModel(IServiceProvider serviceProvider,
                              INavigator navigator,
                              ITrackListViewModel tracksViewModel,
@@ -40,20 +40,20 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
         OpenArtistCommand = new Command<string>(id => NavigateToArtist(id));
     }
 
-    public Playlist Model 
-    { 
+    public Playlist Model
+    {
         get => _model;
-        set 
+        set
         {
             _model = value;
-            Owners = Model!.Owner!.UnpackOwners()??[];
+            Owners = Model!.Owner!.UnpackOwners() ?? [];
             TracksViewModel.Playlist = this;
         }
     }
 
     public ICommand OpenTrackPopupCommand { get; }
     public ICommand SetExpandedCommand { get; }
-    public ICommand PlayTracklistCommand { get; } 
+    public ICommand PlayTracklistCommand { get; }
     public ICommand OpenArtistCommand { get; }
 
     public ITrackListViewModel TracksViewModel { get; }
@@ -73,7 +73,7 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
     {
         get => Model.Image;
     }
-         
+
     public bool IsExpanded
     {
         get => _isExpanded;
@@ -105,18 +105,18 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
         if (TracksViewModel.LoadStatus == LoadState.NotLoaded)
         {
             TracksViewModel.LoadStatus = LoadState.Loading;
-            var task = _serviceProvider.GetService<ITrackListLoaderTask>();
-            task?.Execute(this);
+            var task = _serviceProvider.GetRequiredService<ITrackListLoaderTask>();
+            task.Execute(this);
         }
     }
-      
+
     public string Name
     {
-        get => Model.Name??"";
+        get => Model.Name ?? "";
     }
 
     public List<KeyValue> Owners { get; private set; } = [];
-    
+
     public KeyValue? Owner
     {
         get => Owners.FirstOrDefault();
@@ -140,12 +140,12 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
     public DateTime LastAccessed
     {
         get => Model.LastAccessed;
-        set => SetField(Model, value); 
+        set => SetField(Model, value);
     }
 
-    public bool InLibrary 
-    { 
-        get => _inLibrary; 
+    public bool InLibrary
+    {
+        get => _inLibrary;
         set => SetField(ref _inLibrary, value);
     }
 
@@ -169,9 +169,9 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
         }
     }
 
-    public void ShowPlayingTrack(string? trackId, TrackStatus status) 
+    public void ShowPlayingTrack(string? trackId, TrackStatus status)
     {
-        if (trackId != null && TracksViewModel.LoadStatus == LoadState.Loaded) 
+        if (trackId != null && TracksViewModel.LoadStatus == LoadState.Loaded)
         {
             var track = TracksViewModel.Items.FirstOrDefault(t => t.Id == trackId);
             if (track != null)

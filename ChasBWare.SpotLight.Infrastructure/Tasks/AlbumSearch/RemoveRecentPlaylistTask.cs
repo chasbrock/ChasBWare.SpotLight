@@ -2,7 +2,6 @@
 using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Enums;
-using ChasBWare.SpotLight.Infrastructure.Repositories;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.AlbumSearch;
 

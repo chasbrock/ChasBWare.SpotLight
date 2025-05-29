@@ -3,11 +3,11 @@ using ChasBWare.SpotLight.Domain.Models;
 
 namespace ChasBWare.SpotLight.Definitions.ViewModels;
 
-public interface IDeviceViewModel 
+public interface IDeviceViewModel
 {
-    DeviceTypes DeviceType { get;  }
+    DeviceTypes DeviceType { get; }
     bool IsActive { get; set; }
-    string Name { get;  }
+    string Name { get; }
     DeviceModel Model { get; set; }
     string RawDeviceType { get; }
 }

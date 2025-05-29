@@ -4,10 +4,10 @@ namespace ChasBWare.SpotLight.Pages;
 
 public partial class AlbumPage : ContentPage
 {
-	public AlbumPage(IRecentAlbumsViewModel viewModel)
-	{
-		InitializeComponent();
-		BindingContext = viewModel;
+    public AlbumPage(IRecentAlbumsViewModel viewModel)
+    {
+        InitializeComponent();
+        BindingContext = viewModel;
         Appearing += OnAppearing;
     }
 

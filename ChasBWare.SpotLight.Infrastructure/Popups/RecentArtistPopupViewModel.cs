@@ -25,7 +25,7 @@ public partial class RecentArtistPopupViewModel(IPopupService popupService,
 
         if (item != null)
         {
-            AddItem(PopupGroup.Recent, 
+            AddItem(PopupGroup.Recent,
                     PopupActivity.Delete,
                     caption: $"Delete",
                     toolTip: "Delete item from list",
@@ -39,5 +39,5 @@ public partial class RecentArtistPopupViewModel(IPopupService popupService,
         RecalcSize();
     }
 
-   
+
 }

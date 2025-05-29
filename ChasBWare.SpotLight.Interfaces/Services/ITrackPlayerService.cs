@@ -4,6 +4,10 @@ namespace ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 
 public interface ITrackPlayerService
 {
+    PlayingTrack? CurrentTrack { get; }
+    PlayingTrack? PriorTrack { get; }
+    string? CurrentPlaylistId { get; set; }
+
     event EventHandler<PlayingTrack>? OnTrackProgress;
 
     void Pause();

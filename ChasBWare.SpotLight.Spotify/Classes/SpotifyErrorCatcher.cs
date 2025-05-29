@@ -26,11 +26,11 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                 }
             }
             // not sure what error is so just disconnect
-          //  connectionManager.Status = ConnectionStatus.NotConnected;
+            //  connectionManager.Status = ConnectionStatus.NotConnected;
             return default;
         }
 
-        public static bool ProcessException(ISpotifyConnectionManager spotifyConnectionManager, Exception ex) 
+        public static bool ProcessException(ISpotifyConnectionManager spotifyConnectionManager, Exception ex)
         {
             var apiEx = ex as APIException;
             if (apiEx == null && ex.InnerException is APIException)
@@ -55,6 +55,6 @@ namespace ChasBWare.SpotLight.Spotify.Classes
             spotifyConnectionManager.Status = ConnectionStatus.NotConnected;
             return false;
         }
-      
+
     }
 }

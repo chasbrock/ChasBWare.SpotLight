@@ -6,7 +6,7 @@ using ChasBWare.SpotLight.Infrastructure.Tasks.Base;
 
 namespace ChasBWare.SpotLight.Infrastructure.Tasks.AlbumSearch;
 
-public class SearchForPlaylistTask(IPlaylistViewModelProvider playlistProvider, 
+public class SearchForPlaylistTask(IPlaylistViewModelProvider playlistProvider,
                                    IDispatcher dispatcher,
                                    ISpotifyPlaylistRepository _playlistRepository)
            : BasePlaylistLoaderTask(playlistProvider, dispatcher),

@@ -21,7 +21,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
         {
             if (propertyName == null)
             {
-                return false; 
+                return false;
             }
 
             if (!EqualityComparer<T>.Default.Equals(field, value))

@@ -1,6 +1,5 @@
 ﻿using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.Utility;
-using ChasBWare.SpotLight.Definitions.ViewModels;
 
 namespace ChasBWare.SpotLight.Infrastructure.Utility
 {
@@ -19,11 +18,11 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
                             IPropertyComparer<T> _subListSorter,
                             Func<object, List<T>, IGroupHolder<T>> _createHolder)
                 : IGrouper<T>
-                 where T: class
+                 where T : class
     {
         public string Name { get; } = name;
 
-        public List<IGroupHolder<T>> BuildGroups( List<T> values)
+        public List<IGroupHolder<T>> BuildGroups(List<T> values)
         {
             // build hashmap with groups
             var keys = new Dictionary<object, List<T>>();
@@ -43,12 +42,12 @@ namespace ChasBWare.SpotLight.Infrastructure.Utility
             return SortGroups(keys);
         }
 
-        private List<IGroupHolder<T>> SortGroups( Dictionary<object, List<T>> groups)
+        private List<IGroupHolder<T>> SortGroups(Dictionary<object, List<T>> groups)
         {
             List<IGroupHolder<T>> grouped;
             if (_groupSortDirection == SortDirection.Ascending)
             {
-               grouped = groups.Select(nvp => _createHolder(nvp.Key, nvp.Value)).OrderBy(gh=>gh.Key).ToList(); 
+                grouped = groups.Select(nvp => _createHolder(nvp.Key, nvp.Value)).OrderBy(gh => gh.Key).ToList();
             }
             else
             {

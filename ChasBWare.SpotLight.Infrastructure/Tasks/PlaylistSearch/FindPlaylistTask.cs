@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using ChasBWare.SpotLight.Definitions.Repositories;
-using ChasBWare.SpotLight.Definitions.Tasks.ArtistSearch;
+﻿using ChasBWare.SpotLight.Definitions.Repositories;
 using ChasBWare.SpotLight.Definitions.Tasks.PlaylistSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Entities;
@@ -15,7 +13,7 @@ public class FindPlaylistTask(IPlaylistViewModelProvider _playlistProvider,
                               ILibraryRepository _libraryRepo)
            : IFindPlaylistTask
 {
-   
+
     public void Execute(IRecentViewModel<IPlaylistViewModel> viewModel, string playlistId, PlaylistType playlistType)
     {
         Task.Run(() => RunTask(viewModel, playlistId, playlistType));
@@ -24,8 +22,8 @@ public class FindPlaylistTask(IPlaylistViewModelProvider _playlistProvider,
     private void RunTask(IRecentViewModel<IPlaylistViewModel> viewModel, string playlistId, PlaylistType playlistType)
     {
         if (string.IsNullOrWhiteSpace(playlistId))
-        { 
-            return; 
+        {
+            return;
         }
 
         var playlistViewModel = viewModel.Items.FirstOrDefault(a => a.Model.Id == playlistId);
@@ -45,7 +43,7 @@ public class FindPlaylistTask(IPlaylistViewModelProvider _playlistProvider,
         }
 
         playlistViewModel = _playlistProvider.CreatePlaylist(playlist);
-       
+
         _dispatcher.Dispatch(() =>
         {
             viewModel.Items.Add(playlistViewModel);
