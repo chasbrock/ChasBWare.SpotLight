@@ -5,6 +5,7 @@ public enum PopupActivity
     Save,
     Play,
     Hate,
+    Copy,
     CollapseAll,
     ExpandAll,
     Clear,

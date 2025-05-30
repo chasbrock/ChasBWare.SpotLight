@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using System.Text;
+using SQLite;
 
 namespace ChasBWare.SpotLight.Domain.Entities;
 
@@ -21,7 +22,7 @@ public static class ArtistHelper
     public static List<KeyValue> UnpackOwners(this string? source)
     {
         List<KeyValue> list = [];
-        foreach (var part in source?.Split(',') ?? [])
+        foreach (var part in source?.Split('|') ?? [])
         {
             if (string.IsNullOrEmpty(source))
             {
@@ -43,6 +44,35 @@ public static class ArtistHelper
         }
         return list;
     }
+
+    public static string RepackOwners(this string? source, char delim=';')
+    {
+        StringBuilder list = new();
+        bool first = true;
+        foreach (var part in source?.Split('|') ?? [])
+        {
+            if (string.IsNullOrEmpty(source))
+            {
+                continue;
+            }
+
+            var sub = part.Split('=');
+            if (sub.Length >= 1 && sub[0].Length>0)
+            {
+                if (!first)
+                {
+                    list.Append(delim);
+                }
+                else
+                {
+                    first = false;
+                }
+                list.Append(sub[0]);
+            }
+        }
+        return list.ToString();
+    }
+
 
     public static string PackOwner(this Artist source)
     {

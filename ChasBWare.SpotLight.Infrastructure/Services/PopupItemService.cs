@@ -2,6 +2,7 @@
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
+using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 using ChasBWare.SpotLight.Infrastructure.Popups;
@@ -48,6 +49,22 @@ public class PopupItemService(IServiceProvider _serviceProvider)
                                   popup.Close();
                               });
                 break;
+           
+                case PopupActivity.Copy:
+                popup.AddItem(PopupGroup.Track,
+                           activity,
+                           caption: $"Copy {playlist.Name}",
+                           toolTip: $"Copy playlist to clipboard",
+                           action: (t) =>
+                           {
+                               if (playlist != null)
+                               {
+                                   var task = _serviceProvider.GetRequiredService<IExportPlaylistTask>();
+                                   task.ExportPlaylist(playlist.Id);
+                               }
+                               popup.Close();
+                           });
+                break;
 
             default:
                 return;
@@ -86,6 +103,22 @@ public class PopupItemService(IServiceProvider _serviceProvider)
                                   task.Execute(track);
                                   popup.Close();
                               });
+                break;
+
+            case PopupActivity.Copy:
+                popup.AddItem(PopupGroup.Track,
+                           activity,
+                           caption: $"Copy {track.Name}",
+                           toolTip: $"Copy track to clipboard",
+                           action: (t) =>
+                           {
+                               if (track != null)
+                               {
+                                   var task = _serviceProvider.GetRequiredService<IExportPlaylistTask>();
+                                   task.ExportTrack(track.Id);
+                               }
+                               popup.Close();
+                           });
                 break;
         }
     }

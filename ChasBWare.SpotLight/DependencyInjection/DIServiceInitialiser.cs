@@ -155,6 +155,7 @@ internal static partial class DIServiceInitialiser
                        .AddTransient<IArtistAlbumsLoaderTask, ArtistAlbumsLoaderTask>()
                        .AddTransient<IUserAlbumsLoaderTask, UserAlbumsLoaderTask>()
                        .AddTransient<IChangeActiveDeviceTask, ChangeActiveDeviceTask>()
+                       .AddTransient<IExportPlaylistTask, ExportPlaylistTask>()
                        .AddTransient<IFindArtistTask, FindArtistTask>()
                        .AddTransient<IFindPlaylistTask, FindPlaylistTask>()
                        .AddTransient<IFindUserTask, FindUserTask>()

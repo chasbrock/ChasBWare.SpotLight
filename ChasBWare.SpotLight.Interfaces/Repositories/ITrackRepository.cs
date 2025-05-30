@@ -6,4 +6,5 @@ public interface ITrackRepository
 {
     int AddTracksToPlaylist(string playListId, IEnumerable<Track> tracks);
     List<Track> GetPlaylistTracks(string playlistId);
+    Track? GetTrack(string trackId);
 }

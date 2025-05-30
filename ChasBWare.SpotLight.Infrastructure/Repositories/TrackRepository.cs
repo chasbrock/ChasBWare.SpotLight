@@ -55,4 +55,15 @@ public class TrackRepository(IDbContext _dbContext,
         return -1;
     }
 
+    public Track? GetTrack(string trackId)
+    {
+        var connection = _dbContext.GetConnection().Result;
+        if (connection != null)
+        {
+            return connection.Table<Track>().FirstOrDefaultAsync(t=>t.Id == trackId).Result;
+        }
+        _logger.LogError("Could not access db connection");
+
+        return null;
+    }
 }

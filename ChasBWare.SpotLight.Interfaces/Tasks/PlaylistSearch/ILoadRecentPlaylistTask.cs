@@ -2,10 +2,9 @@
 using ChasBWare.SpotLight.Domain.Enums;
 
 
-namespace ChasBWare.SpotLight.Definitions.Tasks.PlaylistSearch
+namespace ChasBWare.SpotLight.Definitions.Tasks.PlaylistSearch;
+
+public interface ILoadRecentPlaylistTask
 {
-    public interface ILoadRecentPlaylistTask
-    {
-        void Execute(IRecentViewModel<IPlaylistViewModel> viewModel, PlaylistType playlistType);
-    }
+    void Execute(IRecentViewModel<IPlaylistViewModel> viewModel, PlaylistType playlistType);
 }

@@ -69,7 +69,7 @@ public static class MapperHelpers
         }
 
         var result = new StringBuilder();
-        source.ForEach(sa => result.Append($"{sa.PackOwner()},"));
+        source.ForEach(sa => result.Append($"{sa.PackOwner()}|"));
         return result.ToString();
     }
 

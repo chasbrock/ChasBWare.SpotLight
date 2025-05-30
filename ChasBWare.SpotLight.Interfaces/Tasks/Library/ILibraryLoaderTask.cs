@@ -1,11 +1,10 @@
 ﻿using ChasBWare.SpotLight.Definitions.ViewModels;
 
-namespace ChasBWare.SpotLight.Definitions.Tasks.Library
+namespace ChasBWare.SpotLight.Definitions.Tasks.Library;
+
+public interface ILibraryLoaderTask
 {
-    public interface ILibraryLoaderTask
-    {
-        void Load(ILibraryViewModel viewModel);
-        void Refresh(ILibraryViewModel viewModel);
-    }
+    void Load(ILibraryViewModel viewModel);
+    void Refresh(ILibraryViewModel viewModel);
 }
 
