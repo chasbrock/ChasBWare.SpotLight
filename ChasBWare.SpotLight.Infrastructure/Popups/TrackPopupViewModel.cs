@@ -2,6 +2,7 @@
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.Popups;
@@ -10,28 +11,50 @@ public partial class TrackPopupViewModel(IPopupService popupService,
                                         IPopupItemService _popupItemService)
                    : PopupMenuViewModel(popupService)
 {
-    public void SetTrack(IPlaylistViewModel? playlist, ITrackViewModel? track)
+
+    public const string PlaylistName = "Playlist";
+    public const string TrackName = "Track";
+
+    public override void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         MenuGroups.Clear();
-        if (track != null)
+        object? obj=null;
+        if ((query.TryGetValue(TrackName, out obj) && obj is ITrackViewModel track))
         {
             _popupItemService.AddMenuItem(this, track, PopupActivity.Play);
             _popupItemService.AddMenuItem(this, track, PopupActivity.Copy);
+            _popupItemService.AddMenuItem(this, track, PopupActivity.Hate);
         }
 
-        if (playlist != null)
+        if ((query.TryGetValue(PlaylistName, out obj) && obj is IPlaylistViewModel playlist))
         {
             _popupItemService.AddMenuItem(this, playlist, PopupActivity.Play);
-            _popupItemService.AddMenuItem(this, playlist, PopupActivity.Save);
             _popupItemService.AddMenuItem(this, playlist, PopupActivity.Copy);
+        }
+
+       // RecalcSize();
+    }
+
+
+    /// <summary>
+    /// correctly builds params for show popup call
+    /// </summary>
+    /// <param name="viewModel"></param>
+    /// <returns></returns>
+    public static IDictionary<string, object> BuildParams(IPlaylistViewModel? playlist, ITrackViewModel? track)
+    {
+        var paramList = new Dictionary<string, object>();
+        if (playlist != null) 
+        {
+            paramList.Add(PlaylistName, playlist);
         }
 
         if (track != null)
         {
-            _popupItemService.AddMenuItem(this, track, PopupActivity.Hate);
+            paramList.Add(TrackName, track);
         }
 
-        RecalcSize();
+        return paramList;
     }
 }
 

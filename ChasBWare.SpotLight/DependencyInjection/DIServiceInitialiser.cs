@@ -5,6 +5,7 @@ using ChasBWare.SpotLight.Definitions.Tasks.ArtistSearch;
 using ChasBWare.SpotLight.Definitions.Tasks.Device;
 using ChasBWare.SpotLight.Definitions.Tasks.Library;
 using ChasBWare.SpotLight.Definitions.Tasks.PlaylistSearch;
+using ChasBWare.SpotLight.Definitions.Tasks.Recorder;
 using ChasBWare.SpotLight.Definitions.Tasks.Users;
 using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
@@ -164,6 +165,7 @@ internal static partial class DIServiceInitialiser
                        .AddTransient<ILoadRecentArtistTask, LoadRecentArtistTask>()
                        .AddTransient<ILoadRecentPlaylistTask, LoadRecentPlaylistTask>()
                        .AddTransient<ILoadRecentUserTask, LoadRecentUserTask>()
+                       .AddTransient<IParseClipboardTask, ParseClipboardTask>()
                        .AddTransient<IReconnectToSpotifyTask, ReconnectToSpotifyTask>()
                        .AddTransient<IRemovePlaylistTask, RemoveRecentPlaylistTask>()
                        .AddTransient<IRemoveRecentArtistTask, RemoveRecentArtistTask>()
@@ -188,12 +190,13 @@ internal static partial class DIServiceInitialiser
                        .AddTransient<IDeviceViewModel, DeviceViewModel>()
                        .AddSingleton<ILibraryViewModel, LibraryViewModel>()
                        .AddSingleton<IPlayerControlViewModel, PlayerControlViewModel>()
-                       .AddTransient<IPlaylistListViewModel, PlaylistListViewModel>()
+                       .AddTransient<IPlayableListViewModel, PlaylistListViewModel>()
                        .AddTransient<IPlaylistViewModel, PlaylistViewModel>()
                        .AddSingleton<IRecentAlbumsViewModel, RecentAlbumsViewModel>()
                        .AddSingleton<IRecentArtistsViewModel, RecentArtistsViewModel>()
                        .AddSingleton<IRecentPlaylistsViewModel, RecentPlaylistsViewModel>()
                        .AddSingleton<IRecentUserViewModel, RecentUserViewModel>()
+                       .AddTransient<IRecorderViewModel, RecorderViewModel>()
                        .AddSingleton<ISearchUserViewModel, SearchUserViewModel>()
                        .AddSingleton<ISearchAlbumsViewModel, SearchAlbumsViewModel>()
                        .AddSingleton<ISearchArtistsViewModel, SearchArtistsViewModel>()

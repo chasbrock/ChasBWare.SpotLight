@@ -1,33 +1,24 @@
-﻿using System.Windows.Input;
-using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
+﻿using ChasBWare.SpotLight.Definitions.ViewModels.Tracks;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasBWare.SpotLight.Definitions.ViewModels;
 
-public interface IPlaylistViewModel
+public interface IPlaylistViewModel 
 {
-    public Playlist Model { get; set; }
-
-    string Id { get; }
-    string Name { get; }
     string Description { get; }
+    string Id { get; }
+    string? Image { get; }
+    bool IsSelected { get; set; }
+    bool IsExpanded { get; set; }
+    DateTime LastAccessed { get; set; }
+    Playlist Playlist { get; set; }
+    string Name { get; }
     List<KeyValue> Owners { get; }
     KeyValue? Owner { get; }
     PlaylistType PlaylistType { get; }
-    string Uri { get; }
-    string? Image { get; }
-    bool IsExpanded { get; set; }
     DateTime ReleaseDate { get; }
-    DateTime LastAccessed { get; set; }
-
-    /// <summary>
-    /// list of tracks, tends to be lazy loaded on selection
-    /// </summary>        
     ITrackListViewModel TracksViewModel { get; }
-    ICommand PlayTracklistCommand { get; }
+    string Uri { get; }
     bool InLibrary { get; set; }
-    bool IsSelected { get; set; }
-
-    void ShowPlayingTrack(string? trackId, TrackStatus status);
 }

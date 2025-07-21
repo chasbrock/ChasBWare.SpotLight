@@ -15,7 +15,7 @@ public partial class RecentArtistPopupMenu : Popup
             VerticalOptions = LayoutOptions.Fill,
             BindingContext = viewModel
         };
-        this.SetBinding(Popup.SizeProperty, nameof(IPopupMenuViewModel.Size));
+    //    this.SetBinding(Popup.SizeProperty, nameof(IPopupMenuViewModel.Size));
     }
 }
 

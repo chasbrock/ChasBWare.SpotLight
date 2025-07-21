@@ -22,7 +22,7 @@ public class AddRecentUserTask(IServiceProvider _serviceProvider,
             _dispatcher.Dispatch(() =>
             {
                 var item = _serviceProvider.GetRequiredService<IUserViewModel>();
-                item.Model = model;
+                item.User = model;
                 viewModel.Items.Add(item);
                 viewModel.SelectedItem = item;
                 viewModel.RefreshView();

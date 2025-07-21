@@ -12,7 +12,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
     {
         public override void OpenInViewer(IPlaylistViewModel? viewModel)
         {
-            _messageService.SendMessage(new ActiveItemChangedMessage(PageType.Albums, viewModel?.Model));
+            _messageService.SendMessage(new ActiveItemChangedMessage(PageType.Albums, viewModel?.Playlist));
         }
 
         protected override void ExecuteSearch()

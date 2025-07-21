@@ -15,6 +15,6 @@ public partial class LibraryPopupMenu : Popup
             VerticalOptions = LayoutOptions.Fill,
             BindingContext = viewModel
         };
-        this.SetBinding(Popup.SizeProperty, nameof(IPopupMenuViewModel.Size));
+     //   this.SetBinding(Popup.SizeProperty, nameof(IPopupMenuViewModel.Size));
     }
 }

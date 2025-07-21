@@ -24,7 +24,7 @@ public class UserAlbumsLoaderTask(IPlaylistViewModelProvider _playlistProvider,
         if (albums.Count == 0)
         {
             albums = _spotifyUserRepo.LoadUserPlaylist(viewModel.Id);
-            _userRepo.StoreUserAndAlbums(viewModel.Model, albums);
+            _userRepo.StoreUserAndAlbums(viewModel.User, albums);
         }
         _dispatcher.Dispatch(() =>
         {

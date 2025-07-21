@@ -83,7 +83,7 @@ public partial class TrackViewModel
         if (Playlist != null)
         {
             var offset = Playlist.TracksViewModel.Items.ToList().FindIndex(tm => tm.Id == Id);
-            _messageService.SendMessage(new PlayPlaylistMessage(Playlist.Model, offset));
+            _messageService.SendMessage(new PlayPlaylistMessage(Playlist.Playlist, offset));
         }
     }
 

@@ -48,7 +48,7 @@ namespace ChasBWare.SpotLight.Spotify.Classes
                     case "Player command failed: No active device found":
                         return false;
                     default:
-                        spotifyConnectionManager.Status = ConnectionStatus.NotConnected;
+                 //       spotifyConnectionManager.Status = ConnectionStatus.NotConnected;
                         return false;
                 }
             }

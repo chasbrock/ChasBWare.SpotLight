@@ -2,6 +2,8 @@
 using ChasBWare.SpotLight.Definitions.Tasks.AlbumSearch;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui;
+using ChasBWare.SpotLight.Infrastructure.ViewModels;
 
 namespace ChasBWare.SpotLight.Infrastructure.Popups;
 
@@ -9,8 +11,17 @@ public partial class RecentPlaylistPopupViewModel(IPopupService popupService,
                                                IServiceProvider _serviceProvider)
                     : PopupMenuViewModel(popupService)
 {
-    public void SetItem(IRecentViewModel<IPlaylistViewModel> viewModel, IPlaylistViewModel? item)
+    public const string ViewModelName = "ViewModel";
+    public const string ItemName = "Item";
+
+    public override void ApplyQueryAttributes(IDictionary<string, object> query)
     {
+        if (!(query[ViewModelName] is IRecentViewModel<IPlaylistViewModel> viewModel))
+        {
+            return;
+        }
+        var item = query[ViewModelName] as IPlaylistViewModel;
+
         MenuGroups.Clear();
 
         AddItem(PopupActivity.Clear,
@@ -39,5 +50,17 @@ public partial class RecentPlaylistPopupViewModel(IPopupService popupService,
         RecalcSize();
 
     }
+
+    public static IDictionary<string, object>? BuildParams(IRecentViewModel<IPlaylistViewModel> recentAlbumsViewModel,
+                                                           IPlaylistViewModel? selectedItem)
+    {
+        var paramList = new Dictionary<string, object> { { ViewModelName, recentAlbumsViewModel } };
+        if (selectedItem != null)
+        {
+            paramList.Add(ItemName, selectedItem);
+        }
+        return paramList;
+    }
+
 }
 

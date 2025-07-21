@@ -1,12 +1,13 @@
 ﻿using System.Collections.ObjectModel;
 using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.Popups;
 
-public class PopupMenuViewModel(IPopupService _popupService)
-           : Notifyable,
+public abstract class PopupMenuViewModel(IPopupService _popupService)
+           : Notifyable, IQueryAttributable,
              IPopupMenuViewModel
 {
     private Size _size = new Size(200, 100);
@@ -16,7 +17,7 @@ public class PopupMenuViewModel(IPopupService _popupService)
 
     public async void Close()
     {
-        await _popupService.ClosePopupAsync();
+        await _popupService.ClosePopupAsync(Shell.Current);
     }
 
     public Size Size
@@ -27,6 +28,7 @@ public class PopupMenuViewModel(IPopupService _popupService)
 
     public void RecalcSize()
     {
+        /*
         var totalHeight = 18 + (MenuGroups.Count - 1) * 4;
         foreach (var group in MenuGroups)
         {
@@ -34,6 +36,7 @@ public class PopupMenuViewModel(IPopupService _popupService)
                                           .Sum(mi => (1 + mi.Caption.Length / 28) * 28);
         }
         Size = new Size(Size.Width, totalHeight);
+        */
     }
 
     public IMenuItem? FindMenuItem(PopupGroup group, PopupActivity activity)
@@ -99,4 +102,11 @@ public class PopupMenuViewModel(IPopupService _popupService)
         }
         return false;
     }
+
+    /// <summary>
+    /// oveeride in child class, extract named values from dictionary
+    /// </summary>
+    /// <param name="query">dictionary of names params</param>
+    public abstract void ApplyQueryAttributes(IDictionary<string, object> query);
+
 }

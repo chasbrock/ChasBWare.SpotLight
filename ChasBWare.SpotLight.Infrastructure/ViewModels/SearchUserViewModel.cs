@@ -13,7 +13,7 @@ public class SearchUserViewModel(IServiceProvider serviceProvider,
 
     public override void OpenInViewer(IUserViewModel? viewModel)
     {
-        _messageService.SendMessage(new ActiveItemChangedMessage(PageType.Users, viewModel?.Model));
+        _messageService.SendMessage(new ActiveItemChangedMessage(PageType.Users, viewModel?.User));
     }
 
     protected override void ExecuteSearch()

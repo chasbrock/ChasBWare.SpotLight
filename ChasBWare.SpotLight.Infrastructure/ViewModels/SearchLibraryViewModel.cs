@@ -15,7 +15,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels
 
         public override void OpenInViewer(IPlaylistViewModel? item)
         {
-            _messageService.SendMessage(new ActiveItemChangedMessage(PageType.Library, item?.Model));
+            _messageService.SendMessage(new ActiveItemChangedMessage(PageType.Library, item?.Playlist));
         }
 
         public List<LibrarySearchTypes> SearchTypes { get; } = Enum.GetValues<LibrarySearchTypes>().ToList();

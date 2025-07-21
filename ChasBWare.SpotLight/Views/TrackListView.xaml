@@ -17,7 +17,7 @@
     </ContentView.Resources>
 
     <Grid>
-        <CollectionView ItemsSource="{Binding Path=Items}" 
+        <CollectionView ItemsSource="{Binding Items}" 
                         VerticalScrollBarVisibility="Always"
                         SelectionMode="Single"
                         SelectedItem="{Binding SelectedItem}"

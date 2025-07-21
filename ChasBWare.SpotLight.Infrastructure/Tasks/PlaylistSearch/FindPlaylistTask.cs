@@ -26,8 +26,8 @@ public class FindPlaylistTask(IPlaylistViewModelProvider _playlistProvider,
             return;
         }
 
-        var playlistViewModel = viewModel.Items.FirstOrDefault(a => a.Model.Id == playlistId);
-        Playlist? playlist = playlistViewModel?.Model;
+        var playlistViewModel = viewModel.Items.FirstOrDefault(a => a.Playlist.Id == playlistId);
+        Playlist? playlist = playlistViewModel?.Playlist;
         if (playlist == null)
         {
             playlist = _libraryRepo.FindPlaylist(playlistId);

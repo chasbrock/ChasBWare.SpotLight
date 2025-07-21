@@ -8,6 +8,7 @@ using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
@@ -36,12 +37,13 @@ public partial class DeviceListViewModel
         _navigator.RegisterOnNavigate(this);
 
         PlayerControlViewModel = playerControlViewModel;
-        OpenPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<DevicePopupViewModel>(onPresenting: vm => vm.SetItem(this)));
+        OpenPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<DevicePopupViewModel>(Shell.Current, null, DevicePopupViewModel.BuildParams(this)));
         ActivateDeviceCommand = new Command<IDeviceViewModel>(OnActivateDeviceCommand);
         connectionStatusService.Register(OnConnectionStatusChanged);
 
         Refresh();
     }
+
     public PageType PageType { get; } = PageType.Devices;
     public IPlayerControlViewModel PlayerControlViewModel { get; }
     public ICommand OpenPopupCommand { get; }
@@ -89,7 +91,6 @@ public partial class DeviceListViewModel
             _navigator.NavigateTo(_lastCaller);
             _lastCaller = null;
         }
-
     }
 
     private void OnConnectionStatusChanged(ConnectionStatusChangedMessage message)

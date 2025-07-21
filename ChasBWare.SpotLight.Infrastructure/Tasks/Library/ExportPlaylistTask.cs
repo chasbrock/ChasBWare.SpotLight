@@ -24,29 +24,24 @@ public class ExportPlaylistTask(IDispatcher _dispatcher,
     {
         StringBuilder text = new();
         var tracks = _trackRepository.GetPlaylistTracks(playlistId);
-        tracks.ForEach(t=>text.AppendLine(WriteTrack(t)));
+        tracks.ForEach(track => text.AppendLine(PlaylistClipboardHelper.WriteTrack(track)));
         CopyToClipboard(text.ToString());
     }
 
-    private  void RunExportTrack(string trackId)
+    private void RunExportTrack(string trackId)
     {
         var track = _trackRepository.GetTrack(trackId);
         if (track != null)
         {
-            CopyToClipboard(WriteTrack(track));
+            CopyToClipboard(PlaylistClipboardHelper.WriteTrack(track));
         }
-    }
-
-    private static string WriteTrack(Track track)
-    {
-        return $"{track.Id}\t{track.Name}\t{track.Duration.MSecsToMinsSecs()}\t{track.Album}\t{track.Artists.RepackOwners(';')}\t{track.Uri}";
     }
 
     private void CopyToClipboard(string text)
     {
         _dispatcher.Dispatch(() =>
-           {
-               Clipboard.SetTextAsync(text);
-           });
+        {
+            Clipboard.SetTextAsync(text);
+        });
     }
 }

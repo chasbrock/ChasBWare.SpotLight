@@ -6,6 +6,7 @@ using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
@@ -48,12 +49,12 @@ public class RecentUserViewModel
 
     protected override void OpenPopup()
     {
-        _popupService.ShowPopup<RecentUserPopupViewModel>(onPresenting: vm => vm.SetItem(this, SelectedItem));
+        _popupService.ShowPopup<RecentUserPopupViewModel>(Shell.Current, null, RecentUserPopupViewModel.BuildParams(this, SelectedItem));
     }
 
     private IUserViewModel? AddItemToList(User user, DateTime lastAccessed)
     {
-        var viewModel = Items.FirstOrDefault(a => a.Model.Id == user.Id);
+        var viewModel = Items.FirstOrDefault(a => a.User.Id == user.Id);
         if (viewModel == null)
         {
             var task = _serviceProvider.GetRequiredService<IAddRecentUserTask>();
@@ -62,7 +63,7 @@ public class RecentUserViewModel
         else
         {
             var task = _serviceProvider.GetRequiredService<IUpdateLastAccessedTask>();
-            task.Execute(viewModel.Model);
+            task.Execute(viewModel.User);
         }
 
         return viewModel;
@@ -118,6 +119,6 @@ public class RecentUserViewModel
 
     private void OnTrackChangedMessage(CurrentTrackChangedMessage message)
     {
-        SelectedItem?.SelectedItem?.ShowPlayingTrack(message.TrackId, message.State);
+        SelectedItem?.SelectedItem?.ShowPlayingTrack(message.Track.Id, message.State);
     }
 }

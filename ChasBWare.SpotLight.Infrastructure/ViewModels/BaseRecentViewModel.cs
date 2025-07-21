@@ -2,6 +2,7 @@
 using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Domain.Enums;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;

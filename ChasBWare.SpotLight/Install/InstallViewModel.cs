@@ -5,6 +5,7 @@ using ChasBWare.SpotLight.Definitions.Tasks.Device;
 using ChasBWare.SpotLight.Domain.Entities;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 
@@ -71,7 +72,7 @@ public partial class InstallViewModel : Notifyable
             var task = _serviceProvider.GetRequiredService<IReconnectToSpotifyTask>();
             task.Execute();
 
-            _popupService.ClosePopup(this);
+            await _popupService.ClosePopupAsync(Shell.Current);
         }
         catch (CryptographicException crex)
         {

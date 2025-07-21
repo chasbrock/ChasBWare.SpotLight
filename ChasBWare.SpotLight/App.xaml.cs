@@ -2,6 +2,7 @@
 using ChasBWare.SpotLight.Definitions.Utility;
 using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Install;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 using Microsoft.Extensions.Logging;
 
@@ -72,7 +73,7 @@ public partial class App : Application
                 dispatcher.Dispatch(() =>
                 {
                     var popupService = _serviceProvider.GetRequiredService<IPopupService>();
-                    popupService.ShowPopupAsync<InstallViewModel>();
+                    popupService.ShowPopupAsync<InstallViewModel>(Shell.Current);
                 });
             }
             else

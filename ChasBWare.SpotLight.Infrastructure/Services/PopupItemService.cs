@@ -45,13 +45,13 @@ public class PopupItemService(IServiceProvider _serviceProvider)
                               action: (t) =>
                               {
                                   var messageService = _serviceProvider.GetRequiredService<IMessageService<PlayPlaylistMessage>>();
-                                  messageService.SendMessage(new PlayPlaylistMessage(playlist.Model, 0));
+                                  messageService.SendMessage(new PlayPlaylistMessage(playlist.Playlist, 0));
                                   popup.Close();
                               });
                 break;
            
                 case PopupActivity.Copy:
-                popup.AddItem(PopupGroup.Track,
+                popup.AddItem(PopupGroup.Playlist,
                            activity,
                            caption: $"Copy {playlist.Name}",
                            toolTip: $"Copy playlist to clipboard",
@@ -86,25 +86,11 @@ public class PopupItemService(IServiceProvider _serviceProvider)
                                   {
                                       var offset = track.Playlist.TracksViewModel.Items.ToList().FindIndex(tm => tm.Id == track.Id);
                                       var messageService = _serviceProvider.GetRequiredService<IMessageService<PlayPlaylistMessage>>();
-                                      messageService.SendMessage(new PlayPlaylistMessage(track.Playlist.Model, offset));
+                                      messageService.SendMessage(new PlayPlaylistMessage(track.Playlist.Playlist, offset));
                                   }
                                   popup.Close();
                               });
                 break;
-
-            case PopupActivity.Hate:
-                popup.AddItem(PopupGroup.Library,
-                              activity,
-                              caption: track.IsHated ? $"Unhate '{track.Name}'" : $"Hate '{track.Name}'",
-                              toolTip: "Hated tracks will never be played by this app, does not effect Spotify App",
-                              action: (t) =>
-                              {
-                                  var task = _serviceProvider.GetRequiredService<ISetHatedTrackTask>();
-                                  task.Execute(track);
-                                  popup.Close();
-                              });
-                break;
-
             case PopupActivity.Copy:
                 popup.AddItem(PopupGroup.Track,
                            activity,
@@ -120,6 +106,20 @@ public class PopupItemService(IServiceProvider _serviceProvider)
                                popup.Close();
                            });
                 break;
+
+            case PopupActivity.Hate:
+                popup.AddItem(PopupGroup.Library,
+                              activity,
+                              caption: track.IsHated ? $"Unhate '{track.Name}'" : $"Hate '{track.Name}'",
+                              toolTip: "Hated tracks will never be played by this app, does not effect Spotify App",
+                              action: (t) =>
+                              {
+                                  var task = _serviceProvider.GetRequiredService<ISetHatedTrackTask>();
+                                  task.Execute(track);
+                                  popup.Close();
+                              });
+                break;
+
         }
     }
 

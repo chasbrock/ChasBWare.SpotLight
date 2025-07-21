@@ -11,7 +11,7 @@ public class UserViewModel(IServiceProvider serviceProvider)
 {
     private User _model = new() { Id = "" };
 
-    public User Model
+    public User User
     {
         get => _model;
         set => SetField(ref _model, value);
@@ -19,23 +19,23 @@ public class UserViewModel(IServiceProvider serviceProvider)
 
     public string Id
     {
-        get => Model.Id ?? string.Empty;
+        get => User.Id ?? string.Empty;
     }
 
     public string? Image
     {
-        get => Model.Image;
+        get => User.Image;
     }
 
     public string Name
     {
-        get => Model.Name ?? string.Empty;
+        get => User.Name ?? string.Empty;
     }
 
     public DateTime LastAccessed
     {
-        get => Model.LastAccessed;
-        set => SetField(Model, value);
+        get => User.LastAccessed;
+        set => SetField(User, value);
     }
 
     protected override void SelectedItemChanged(IPlaylistViewModel? oldItem, IPlaylistViewModel? newItem)

@@ -12,7 +12,7 @@ public class SearchPlaylistsViewModel(IServiceProvider serviceProvider,
 {
     public override void OpenInViewer(IPlaylistViewModel? viewModel)
     {
-        _messageService.SendMessage(new ActiveItemChangedMessage(PageType.Playlists, viewModel?.Model));
+        _messageService.SendMessage(new ActiveItemChangedMessage(PageType.Playlists, viewModel?.Playlist));
     }
 
     protected override void ExecuteSearch()

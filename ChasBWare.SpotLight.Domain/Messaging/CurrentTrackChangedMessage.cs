@@ -1,11 +1,11 @@
-﻿using ChasBWare.SpotLight.Domain.Enums;
+﻿using ChasBWare.SpotLight.Domain.Entities;
+using ChasBWare.SpotLight.Domain.Enums;
 
 namespace ChasBWare.SpotLight.Domain.Messaging;
 
-public class CurrentTrackChangedMessage(string trackId, string playlistName, TrackStatus trackStatus)
+public class CurrentTrackChangedMessage(PlayingTrack track, TrackStatus trackStatus)
       : Message()
 {
-    public string TrackId { get; } = trackId;
-    public string PlaylistName { get; } = playlistName;
+    public PlayingTrack Track { get; } = track;
     public TrackStatus State { get; } = trackStatus;
 }

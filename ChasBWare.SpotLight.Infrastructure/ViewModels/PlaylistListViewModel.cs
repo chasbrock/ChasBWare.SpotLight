@@ -5,7 +5,7 @@ namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
 public class PlaylistListViewModel
      : BaseSortedListViewModel<IPlaylistViewModel>,
-       IPlaylistListViewModel
+       IPlayableListViewModel
 {
     public PlaylistListViewModel(IServiceProvider serviceProvider)
          : base(serviceProvider, SorterHelper.GetPlaylistListSorters())

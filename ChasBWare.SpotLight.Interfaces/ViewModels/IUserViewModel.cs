@@ -6,7 +6,7 @@ namespace ChasBWare.SpotLight.Definitions.ViewModels
     {
         string Id { get; }
         string Name { get; }
-        User Model { get; set; }
+        User User { get; set; }
         string? Image { get; }
         DateTime LastAccessed { get; set; }
     }

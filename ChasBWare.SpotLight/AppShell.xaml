@@ -16,6 +16,7 @@
         <ShellContent ContentTemplate="{DataTemplate p:PlaylistPage}" Title="Playlists" Route="Playlists" Icon="page_playlist.png"/>
         <ShellContent ContentTemplate="{DataTemplate p:UserPage}" Title="Users" Route="Users" Icon="page_user.png"/>
         <ShellContent ContentTemplate="{DataTemplate p:DevicesPage}" Title="Devices" Route="Devices" Icon="page_devices.png"/>
+        <ShellContent ContentTemplate="{DataTemplate p:RecorderPage}" Title="Recorder" Route="Recorder" Icon="page_recorder.png"/>
     </TabBar>
 
 </Shell>

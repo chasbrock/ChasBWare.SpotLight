@@ -20,7 +20,7 @@ public class TransferToLibraryTask(IDispatcher _dispatcher,
     {
         if (spotifyPlaylistRepo.SetPlaylistSaveStatus(viewModel.Id, viewModel.PlaylistType, save))
         {
-            if (_libraryRepo.TransferPlaylistToLibrary(viewModel.Model, save))
+            if (_libraryRepo.TransferPlaylistToLibrary(viewModel.Playlist, save))
             {
                 _dispatcher.Dispatch(() =>
                 {

@@ -23,8 +23,8 @@ public class FindUserTask(IServiceProvider _serviceProvider,
             return;
         }
 
-        var UserViewModel = viewModel.Items.FirstOrDefault(a => a.Model.Id == UserId);
-        User? User = UserViewModel?.Model;
+        var UserViewModel = viewModel.Items.FirstOrDefault(a => a.User.Id == UserId);
+        User? User = UserViewModel?.User;
         if (User == null)
         {
             User = _userRepo.FindUser(UserId);
@@ -40,7 +40,7 @@ public class FindUserTask(IServiceProvider _serviceProvider,
         }
 
         UserViewModel = _serviceProvider.GetRequiredService<IUserViewModel>();
-        UserViewModel.Model = User;
+        UserViewModel.User = User;
 
         _dispatcher.Dispatch(() =>
         {

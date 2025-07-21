@@ -6,6 +6,7 @@ using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
@@ -47,7 +48,7 @@ public class RecentArtistsViewModel
 
     protected override void OpenPopup()
     {
-        _popupService.ShowPopup<RecentArtistPopupViewModel>(onPresenting: vm => vm.SetItem(this, SelectedItem));
+        _popupService.ShowPopup<RecentArtistPopupViewModel>(Shell.Current, null, RecentArtistPopupViewModel.BuildParams(this, SelectedItem));
     }
 
     private IArtistViewModel? AddItemToList(Artist artist, DateTime lastAccessed)
@@ -117,6 +118,6 @@ public class RecentArtistsViewModel
 
     private void OnTrackChangedMessage(CurrentTrackChangedMessage message)
     {
-        SelectedItem?.SelectedItem?.ShowPlayingTrack(message.TrackId, message.State);
+        SelectedItem?.SelectedItem?.ShowPlayingTrack(message.Track.Id, message.State);
     }
 }

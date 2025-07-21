@@ -7,6 +7,7 @@ using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
@@ -58,12 +59,12 @@ public class RecentAlbumsViewModel
 
     protected override void OpenPopup()
     {
-        _popupService.ShowPopup<RecentPlaylistPopupViewModel>(onPresenting: vm => vm.SetItem(this, SelectedItem));
+        _popupService.ShowPopup<RecentPlaylistPopupViewModel>(Shell.Current, null, RecentPlaylistPopupViewModel.BuildParams(this, SelectedItem));
     }
 
     private IPlaylistViewModel? AddItemToList(Playlist playlist)
     {
-        var viewModel = Items.FirstOrDefault(a => a.Model.Id == playlist.Id);
+        var viewModel = Items.FirstOrDefault(a => a.Playlist.Id == playlist.Id);
         if (viewModel == null)
         {
             var task = _serviceProvider.GetRequiredService<IAddRecentPlaylistTask>();
@@ -72,7 +73,7 @@ public class RecentAlbumsViewModel
         else
         {
             var task = _serviceProvider.GetRequiredService<IUpdateLastAccessedTask>();
-            task.Execute(viewModel.Model);
+            task.Execute(viewModel.Playlist);
             viewModel.InLibrary = _library.Exists(viewModel.Id);
         }
         return viewModel;
@@ -83,7 +84,7 @@ public class RecentAlbumsViewModel
         if (item!.TracksViewModel.LoadStatus == LoadState.NotLoaded)
         {
             var task = _serviceProvider.GetService<IUpdateLastAccessedTask>();
-            task?.Execute(item.Model);
+            task?.Execute(item.Playlist);
         }
     }
 
@@ -124,6 +125,6 @@ public class RecentAlbumsViewModel
 
     private void OnTrackChangedMessage(CurrentTrackChangedMessage message)
     {
-        SelectedItem?.ShowPlayingTrack(message.TrackId, message.State);
+        SelectedItem?.ShowPlayingTrack(message.Track.Id, message.State);
     }
 }

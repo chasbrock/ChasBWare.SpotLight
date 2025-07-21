@@ -27,7 +27,7 @@ public class LoadRecentUserTask(IServiceProvider _serviceProvider,
                 foreach (var item in items)
                 {
                     var UserViewModel = _serviceProvider.GetRequiredService<IUserViewModel>();
-                    UserViewModel.Model = item;
+                    UserViewModel.User = item;
                     viewModel.Items.Add(UserViewModel);
                 }
 

@@ -7,6 +7,7 @@ using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
@@ -27,7 +28,7 @@ public class TrackListViewModel : Notifyable, ITrackListViewModel
         _serviceProvider = serviceProvider;
         _navigator = navigator;
 
-        OpenPopupCommand = new Command<ITrackViewModel>(track => popupService.ShowPopup<TrackPopupViewModel>(onPresenting: vm => vm.SetTrack(Playlist, track)));
+        OpenPopupCommand = new Command<ITrackViewModel>(track => popupService.ShowPopup<TrackPopupViewModel>(Shell.Current, null, TrackPopupViewModel.BuildParams(Playlist, track)));
         OpenArtistCommand = new Command<string>(id => NavigateToArtist(id));
     }
 
@@ -53,6 +54,38 @@ public class TrackListViewModel : Notifyable, ITrackListViewModel
     {
         get => _loadStatus;
         set => SetField(ref _loadStatus, value);
+    }
+
+    public void DeleteSelectedItem()
+    {
+        if (SelectedItem != null)
+        {
+            Items.Remove(SelectedItem);
+        }
+    }
+
+    public void MoveSelectedTrackDown()
+    {
+        if (SelectedItem != null)
+        {
+            var index = Items.IndexOf(SelectedItem);
+            if (index >= 0 && index < Items.Count - 1)
+            {
+                Items.Move(index, index + 1);
+            }
+        }
+    }
+
+    public void MoveSelectedTrackUp()
+    {
+        if (SelectedItem != null)
+        {
+            var index = Items.IndexOf(SelectedItem);
+            if (index > 0 && index < Items.Count )
+            {
+                Items.Move(index, index -1);
+            }
+        }
     }
 
     private void NavigateToArtist(string id)

@@ -28,7 +28,7 @@ public class SearchForUserTask(IServiceProvider _serviceProvider,
             if (user != null)
             {
                 var userViewModel = _serviceProvider.GetRequiredService<IUserViewModel>();
-                userViewModel.Model = user;
+                userViewModel.User = user;
                 viewModel.Items.Add(userViewModel);
 
             }

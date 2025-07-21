@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:v="clr-namespace:ChasBWare.SpotLight.Views"
+             xmlns:vm="clr-namespace:ChasBWare.SpotLight.Infrastructure.ViewModels;assembly=ChasBWare.SpotLight.Infrastructure"
+             xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:DataType="vm:RecorderViewModel"
+             x:Class="ChasBWare.SpotLight.Pages.RecorderPage"
+             Style="{StaticResource AppBackground}">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto"  >
+
+        <!--- details -->
+        <Grid RowDefinitions="24,48"  ColumnDefinitions="Auto,*,Auto,Auto" Grid.Row="0">
+            <Label Text="Name" Style="{StaticResource ListCaption}" 
+                   Grid.Column="0" Grid.Row="0"/>
+            <Label Text="Description" Style="{StaticResource ListCaption}"
+                   Grid.Column="0" Grid.Row="1"/>
+            <Editor Text="{Binding Name}"  
+                   Grid.Column="1" Grid.Row="0"/>
+            <Editor Text="{Binding Description}" 
+                   Grid.Column="1" Grid.Row="1"/>
+        </Grid>
+
+        <HorizontalStackLayout Grid.Row="1" Grid.Column="1">
+            <HorizontalStackLayout >
+                <Label Text="Recording"/>
+                <CheckBox IsChecked="{Binding IsRecording}" />
+            </HorizontalStackLayout>
+            <Button Text="Upload"  Command="{Binding UploadCommand}" />
+            <Button Text="Paste"  Command="{Binding PasteFromClipboardCommand}" />
+            <Button Text="Move Up"  Command="{Binding MoveUpCommand}" />
+            <Button Text="Delete"  Command="{Binding DeleteCommand}" />
+            <Button Text="Move Down"  Command="{Binding MoveDownCommand}" />
+            <Button Text="Clear"  Command="{Binding ClearListCommand}" />
+        </HorizontalStackLayout>
+
+        <Grid Grid.Row="2"  ColumnDefinitions="*">
+            <v:TrackListView BindingContext="{Binding TracksViewModel}" />
+        </Grid>
+                        
+            <!-- playlist controller -->
+        <v:PlayerControlView BindingContext="{Binding PlayerControlViewModel}"
+                             Grid.Row="3"/>
+
+    </Grid>
+</ContentPage>

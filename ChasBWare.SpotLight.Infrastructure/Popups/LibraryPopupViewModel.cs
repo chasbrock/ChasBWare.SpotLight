@@ -1,6 +1,7 @@
 ﻿using ChasBWare.SpotLight.Definitions.Enums;
 using ChasBWare.SpotLight.Definitions.ViewModels;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.Popups;
@@ -21,5 +22,9 @@ public partial class LibraryPopupViewModel
 
         RecalcSize();
     }
+
+    public override void ApplyQueryAttributes(IDictionary<string, object> query) { }
+
+
 }
 

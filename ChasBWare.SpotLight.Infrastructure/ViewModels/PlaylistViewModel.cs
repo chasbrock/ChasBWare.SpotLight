@@ -8,13 +8,14 @@ using ChasBWare.SpotLight.Domain.Enums;
 using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
 
 public class PlaylistViewModel : Notifyable, IPlaylistViewModel
 {
-    private readonly IServiceProvider _serviceProvider;
+    protected readonly IServiceProvider _serviceProvider;
     private readonly INavigator _navigator;
     private readonly IMessageService<PlayPlaylistMessage> _messageService;
 
@@ -36,17 +37,17 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
 
         SetExpandedCommand = new Command(() => IsExpanded = !IsExpanded);
         PlayTracklistCommand = new Command(PlayTrackList);
-        OpenTrackPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<TrackPopupViewModel>(onPresenting: vm => vm.SetTrack(this, TracksViewModel.SelectedItem)));
+        OpenTrackPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<TrackPopupViewModel>(Shell.Current, null, TrackPopupViewModel.BuildParams(this, TracksViewModel.SelectedItem)));
         OpenArtistCommand = new Command<string>(id => NavigateToArtist(id));
     }
 
-    public Playlist Model
+    public Playlist Playlist
     {
         get => _model;
         set
         {
             _model = value;
-            Owners = Model!.Owner!.UnpackOwners() ?? [];
+            Owners = Playlist!.Owner!.UnpackOwners() ?? [];
             TracksViewModel.Playlist = this;
         }
     }
@@ -60,18 +61,18 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
 
     public string Description
     {
-        get => Model.Description ?? "";
-        set => SetField(Model, value);
+        get => Playlist.Description ?? "";
+        set => SetField(Playlist, value);
     }
 
     public string Id
     {
-        get => Model.Id ?? "";
+        get => Playlist.Id ?? "";
     }
 
     public string? Image
     {
-        get => Model.Image;
+        get => Playlist.Image;
     }
 
     public bool IsExpanded
@@ -97,7 +98,7 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
     private void PlayTrackList()
     {
         IsExpanded = true;
-        _messageService.SendMessage(new PlayPlaylistMessage(this.Model, 0));
+        _messageService.SendMessage(new PlayPlaylistMessage(this.Playlist, 0));
     }
 
     private void LoadTracks()
@@ -112,7 +113,7 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
 
     public string Name
     {
-        get => Model.Name ?? "";
+        get => Playlist.Name ?? "";
     }
 
     public List<KeyValue> Owners { get; private set; } = [];
@@ -124,23 +125,23 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
 
     public PlaylistType PlaylistType
     {
-        get => Model.PlaylistType;
+        get => Playlist.PlaylistType;
     }
 
     public DateTime ReleaseDate
     {
-        get => Model.ReleaseDate;
+        get => Playlist.ReleaseDate;
     }
 
     public string Uri
     {
-        get => Model.Uri ?? string.Empty;
+        get => Playlist.Uri ?? string.Empty;
     }
 
     public DateTime LastAccessed
     {
-        get => Model.LastAccessed;
-        set => SetField(Model, value);
+        get => Playlist.LastAccessed;
+        set => SetField(Playlist, value);
     }
 
     public bool InLibrary
@@ -169,17 +170,6 @@ public class PlaylistViewModel : Notifyable, IPlaylistViewModel
         }
     }
 
-    public void ShowPlayingTrack(string? trackId, TrackStatus status)
-    {
-        if (trackId != null && TracksViewModel.LoadStatus == LoadState.Loaded)
-        {
-            var track = TracksViewModel.Items.FirstOrDefault(t => t.Id == trackId);
-            if (track != null)
-            {
-                track.Status = status;
-            }
-        }
-    }
 
     public override string ToString()
     {

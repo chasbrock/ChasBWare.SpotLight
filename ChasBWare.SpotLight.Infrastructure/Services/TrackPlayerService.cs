@@ -182,7 +182,7 @@ namespace ChasBWare.SpotLight.Infrastructure.Services
         {
             if (CurrentTrack != null)
             {
-                _currentTrackMessageService.SendMessage(new CurrentTrackChangedMessage(CurrentTrack.Id, CurrentTrack.Album, status));
+                _currentTrackMessageService.SendMessage(new CurrentTrackChangedMessage(CurrentTrack, status));
             }
         }
     }

@@ -12,7 +12,7 @@ public class PlaylistViewModelProvider(IServiceProvider _serviceProvider)
     public IPlaylistViewModel CreatePlaylist(Playlist playlist, bool? addToLibrary = null)
     {
         var item = _serviceProvider.GetRequiredService<IPlaylistViewModel>();
-        item.Model = playlist;
+        item.Playlist = playlist;
         item.LastAccessed = playlist.LastAccessed;
         if (addToLibrary != null && (bool)addToLibrary)
         {

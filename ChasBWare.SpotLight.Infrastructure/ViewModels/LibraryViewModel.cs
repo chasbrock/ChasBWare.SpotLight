@@ -8,6 +8,7 @@ using ChasBWare.SpotLight.Domain.Messaging;
 using ChasBWare.SpotLight.Infrastructure.Interfaces.Services;
 using ChasBWare.SpotLight.Infrastructure.Popups;
 using ChasBWare.SpotLight.Infrastructure.Utility;
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Core;
 
 namespace ChasBWare.SpotLight.Infrastructure.ViewModels;
@@ -34,7 +35,7 @@ public partial class LibraryViewModel
         PlayerControlViewModel = playerControlViewModel;
         SearchViewModel = searchViewModel;
 
-        OpenPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<LibraryPopupViewModel>());
+        OpenPopupCommand = new Command<ITrackViewModel>(t => popupService.ShowPopup<LibraryPopupViewModel>(Shell.Current));
 
         activeItemChangedMessageService.Register(OnActiveItemChanged);
         findItemMessageService.Register(OnFindItem);
@@ -57,7 +58,7 @@ public partial class LibraryViewModel
     public void AddItems(IEnumerable<Playlist> items)
     {
         var added = false;
-        foreach (var item in items.Where(m => !Items.Any(vm => vm.Model.Id == m.Id)))
+        foreach (var item in items.Where(m => !Items.Any(vm => vm.Playlist.Id == m.Id)))
         {
             Items.Add(_playlistProvider.CreatePlaylist(item, true));
             added = true;
@@ -84,7 +85,7 @@ public partial class LibraryViewModel
             newItem.LastAccessed = DateTime.Now;
             var task = _serviceProvider.GetService<IUpdateLastAccessedTask>();
 
-            task?.Execute(newItem.Model);
+            task?.Execute(newItem.Playlist);
         }
     }
 
@@ -99,13 +100,13 @@ public partial class LibraryViewModel
         // if there is no playlist selected then try and find the one playing
         if (SelectedItem == null)
         {
-            SelectedItem = Items.FirstOrDefault(pl => pl.Name.Equals(message.PlaylistName, StringComparison.CurrentCultureIgnoreCase));
+            SelectedItem = Items.FirstOrDefault(pl => pl.Name.Equals(message.Track.Album, StringComparison.CurrentCultureIgnoreCase));
         }
 
         // try to find the track
         foreach (var playList in Items.Where(pl => pl.TracksViewModel.LoadStatus == LoadState.Loaded))
         {
-            playList.ShowPlayingTrack(message.TrackId, message.State);
+            playList.ShowPlayingTrack(message.Track.Id, message.State);
         }
     }
 
